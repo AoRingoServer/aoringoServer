@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Job
 
-import com.github.Ringoame196.Database
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
@@ -258,7 +257,7 @@ class Cook {
         return armorStandsInRange
     }
     fun isCookLevel(itemName: String, player: Player): Boolean {
-        val level = Database().getInt(player.uniqueId.toString(), "aoringoserver", "cook", "level")
+        val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
         levelUP(player, itemName)
         return cookLevel <= level

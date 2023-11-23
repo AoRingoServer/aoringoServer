@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Entity
 
-import com.github.Ringoame196.Database
 import com.github.Ringoame196.Scoreboard
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -8,8 +7,12 @@ import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
 class Player {
+    data class PlayerData(
+        var smartphone: MutableList<String>? = null
+    )
     fun setName(player: Player) {
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
@@ -32,18 +35,6 @@ class Player {
         val actionBarMessage = ChatColor.translateAlternateColorCodes('&', message)
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(actionBarMessage))
     }
-    fun setPlayerData(player: Player) {
-        val uuid = player.uniqueId.toString()
-        val playerName = player.name
-
-        if (!Database().isExists("playerData", "uuid", uuid)) {
-            // プレイヤーデータが登録されていない場合は新規登録
-            Database().insertStringString("playerData", "uuid", "name", uuid, playerName)
-        } else {
-            // プレイヤーデータが既に登録されている場合は名前を更新
-            Database().updateStrin("playerData", "uuid", "name", uuid, playerName)
-        }
-    }
     fun getPlayersInRadius(center: Location, radius: Double): List<Player>? {
         val playersInRadius = mutableListOf<Player>()
 
@@ -58,5 +49,10 @@ class Player {
         }
 
         return playersInRadius
+    }
+    fun addPermission(player: Player, plugin: Plugin, permission: String) {
+        val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
+        permissions.setPermission(permission, true)
+        player.recalculatePermissions()
     }
 }

@@ -51,21 +51,20 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val player = e.player
+        if (!player.scoreboardTags.contains("member")) {
+            AoringoEvents().onFastJoinEvent(e)
+        }
         Player().setName(player)
-        Player().setPlayerData(player)
     }
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
-        if (e.action != Action.RIGHT_CLICK_BLOCK) {
-            return
-        }
         val player = e.player
         val item = e.item
         val itemName = item?.itemMeta?.displayName
-        val block = e.clickedBlock ?: return
-        val upBlock = block.location.clone().add(0.0, 1.0, 0.0)?.block
-        val downBlock = block.location.add(0.0, -1.0, 0.0).block
-        if (block.type == Material.BARREL) {
+        val block = e.clickedBlock
+        val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
+        val downBlock = block?.location?.add(0.0, -1.0, 0.0)?.block
+        if (block?.type == Material.BARREL) {
             val shop = block.state as Barrel
             val PlayerItem = player.inventory.itemInMainHand
             if (player.isOp && player.gameMode == GameMode.CREATIVE && item?.type == Material.NAME_TAG) {
@@ -73,32 +72,30 @@ class Events(private val plugin: Plugin) : Listener {
                 BarrelShop().changeOwner(shop, PlayerItem.itemMeta?.displayName ?: return, player)
             }
         }
-        if (block.type != Material.OAK_SIGN || downBlock.type != Material.BARREL) {
-            return
-        }
-        val sign = block.state as Sign
-        val barrel = downBlock.state as Barrel
-        when (sign.getLine(0)) {
-            "shop" -> {
-                if (sign.getLine(2) == "") {
-                    BarrelShop().make(barrel, player, sign)
-                    return
+        if (block?.type == Material.OAK_SIGN || downBlock?.type == Material.BARREL) {
+            block ?: return
+            val sign = block.state as Sign
+            val barrel = downBlock?.state as Barrel
+            when (sign.getLine(0)) {
+                "shop" -> {
+                    if (sign.getLine(2) == "") {
+                        BarrelShop().make(barrel, player, sign)
+                        return
+                    }
+                }
+
+                "${ChatColor.GREEN}shop" -> {
+                    val price: Int = sign.getLine(1).replace("円", "").replace("${ChatColor.YELLOW}", "").toInt()
+                    BarrelShop().purchase(player, barrel, price)
+                }
+
+                "Fshop" -> {
+                    e.isCancelled = true
+                    val itemFrame = block.world.spawn(block?.location, org.bukkit.entity.ItemFrame::class.java)
+                    itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
+                    block.type = Material.AIR
                 }
             }
-
-            "${ChatColor.GREEN}shop" -> {
-                val price: Int = sign.getLine(1).replace("円", "").replace("${ChatColor.YELLOW}", "").toInt()
-                BarrelShop().purchase(player, barrel, price)
-            }
-            "Fshop" -> {
-                e.isCancelled = true
-                val itemFrame = block.world.spawn(block.location, org.bukkit.entity.ItemFrame::class.java)
-                itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
-                block.type = Material.AIR
-            }
-        }
-        if (e.action == Action.LEFT_CLICK_BLOCK) {
-            return
         }
         if (block?.type == Material.ANVIL || block?.type == Material.CHIPPED_ANVIL || block?.type == Material.DAMAGED_ANVIL) {
             if (player.gameMode == GameMode.CREATIVE) { return }
