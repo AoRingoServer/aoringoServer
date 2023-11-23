@@ -1,0 +1,9 @@
+Database:
+  host: ""
+  port: 3306
+  userName: ""
+  password: ""
+GetResourcePackURL: ""
+Discord:
+  cheat: ""
+  shopPromotion: ""
