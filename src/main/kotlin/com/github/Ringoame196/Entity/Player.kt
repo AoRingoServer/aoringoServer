@@ -55,4 +55,16 @@ class Player {
         permissions.setPermission(permission, true)
         player.recalculatePermissions()
     }
+    fun worldDisplay(player: Player, title: String) {
+        player.playerListHeader = "${ChatColor.AQUA}青りんごサーバー"
+        player.playerListFooter = "${ChatColor.YELLOW}" + when (title) {
+            "world" -> "ロビーワールド"
+            "Survival" -> "資源ワールド"
+            "Nether" -> "ネザー"
+            "shop" -> "ショップ"
+            "event" -> "イベントワールド"
+            "Home" -> "建築ワールド"
+            else -> title
+        }
+    }
 }

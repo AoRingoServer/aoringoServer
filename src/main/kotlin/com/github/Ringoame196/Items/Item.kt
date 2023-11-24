@@ -128,4 +128,12 @@ class Item {
         item.setItemMeta(meta)
         return item
     }
+    fun smartphone(): ItemStack {
+        val item = ItemStack(Material.ENCHANTED_BOOK)
+        val meta = item.itemMeta
+        meta?.setDisplayName("${ChatColor.YELLOW}スマートフォン")
+        meta?.setCustomModelData(1)
+        item.setItemMeta(meta)
+        return item
+    }
 }
