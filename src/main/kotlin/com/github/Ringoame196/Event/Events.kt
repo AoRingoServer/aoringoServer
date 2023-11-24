@@ -84,16 +84,13 @@ class Events(private val plugin: Plugin) : Listener {
             AoringoEvents().onFastJoinEvent(e)
         }
         Player().setName(player)
+        ResourcePack().adaptation(e.player)
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
         Scoreboard().set("blockCount", player.name, 0)
-        Player().addPermission(
-            player,
-            plugin,
-            "enderchest.size.${Scoreboard().getValue("haveEnderChest", player.uniqueId.toString()) + 1}"
-        )
-        ResourcePack().adaptation(e.player)
+        Player().setTab(player)
+        Player().addPermission(player, plugin, "enderchest.size.${Scoreboard().getValue("haveEnderChest", player.uniqueId.toString()) + 1}")
     }
 
     @EventHandler
@@ -113,7 +110,6 @@ class Events(private val plugin: Plugin) : Listener {
             }
         }
         if (block?.type == Material.OAK_SIGN || downBlock?.type == Material.BARREL) {
-            block ?: return
             val sign = block.state as Sign
             val barrel = downBlock?.state as Barrel
             when (sign.getLine(0)) {
@@ -327,8 +323,8 @@ class Events(private val plugin: Plugin) : Listener {
         if (entity.type != EntityType.ITEM_FRAME) {
             return
         }
-        val itemFrame = entity as ItemFrame
-        val name = itemFrame.customName ?: return
+        entity as ItemFrame
+        val name = entity.customName ?: return
         val item = entity.item
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name.contains("@Fshop")) {
@@ -337,7 +333,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
             } else {
                 e.isCancelled = true
-                val index = name.indexOf("price:") ?: return
+                val index = name.indexOf("price:")
                 val result = name.substring(index + 6, name.length)
                 Fshop().buyGUI(player, item, result, entity.uniqueId.toString())
             }
@@ -348,7 +344,6 @@ class Events(private val plugin: Plugin) : Listener {
                 return
             }
             val mainItem = player.inventory.itemInMainHand
-            val item = entity.item
             if (item.type == Material.AIR) {
                 return
             }
@@ -360,7 +355,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Cook().cut(item, player, entity)
             return
-        } else if (entity.item.itemMeta?.displayName == "衣") {
+        } else if (item.itemMeta?.displayName == "衣") {
             e.isCancelled = true
             if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
@@ -385,7 +380,7 @@ class Events(private val plugin: Plugin) : Listener {
                 return
             }
             Cook().bake(plugin, player, entity, smoker)
-        } else if (entity.item.itemMeta?.displayName == "${ChatColor.YELLOW}混ぜハンドル" && block.type == Material.BARREL) {
+        } else if (item.itemMeta?.displayName == "${ChatColor.YELLOW}混ぜハンドル" && block.type == Material.BARREL) {
             if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
                 AoringoEvents().onErrorEvent(player, "料理人のみ混ぜることができます")
@@ -398,24 +393,20 @@ class Events(private val plugin: Plugin) : Listener {
             }
             entity.setItem(ItemStack(Material.AIR))
             AoringoEvents().onErrorEvent(player, "ハンドルがぶっ壊れた")
-        }
-        if (entity is ItemFrame) {
-            val item = entity.item
-            if (item.itemMeta?.displayName == "${ChatColor.RED}ポスト") {
-                e.isCancelled = true
-                if (!player.isSneaking) { return }
-                if (player.inventory.itemInMainHand.type == Material.AIR) { return }
-                val playerItem = player.inventory.itemInMainHand.clone()
-                playerItem.amount = 1
-                val direction: Vector = entity.location.direction.normalize()
-                val blockBehindLocation: Location = entity.location.add(direction.multiply(-1))
-                val blockBehind: org.bukkit.block.Block = blockBehindLocation.block
-                if (blockBehind.type != Material.BARREL) { return }
-                val barrel = blockBehind.state as Barrel
-                barrel.inventory.addItem(playerItem)
-                player.inventory.removeItem(playerItem)
-                player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
-            }
+        } else if (item.itemMeta?.displayName == "${ChatColor.RED}ポスト") {
+            e.isCancelled = true
+            if (!player.isSneaking) { return }
+            if (player.inventory.itemInMainHand.type == Material.AIR) { return }
+            val playerItem = player.inventory.itemInMainHand.clone()
+            playerItem.amount = 1
+            val direction: Vector = entity.location.direction.normalize()
+            val blockBehindLocation: Location = entity.location.add(direction.multiply(-1))
+            val blockBehind: org.bukkit.block.Block = blockBehindLocation.block
+            if (blockBehind.type != Material.BARREL) { return }
+            val barrel = blockBehind.state as Barrel
+            barrel.inventory.addItem(playerItem)
+            player.inventory.removeItem(playerItem)
+            player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
         }
     }
 
@@ -1004,8 +995,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
-        val world = player.world.name
-        Player().worldDisplay(player, world)
+        Player().setTab(player)
     }
 
     @EventHandler

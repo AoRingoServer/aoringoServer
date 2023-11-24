@@ -1,7 +1,6 @@
 package com.github.Ringoame196.Job
 
 import com.github.Ringoame196.Data.Money
-import com.github.Ringoame196.Database
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard
@@ -73,7 +72,7 @@ class Job {
             2 -> 10000
             else -> 0
         }
-        Money().add(player.name, giveMoney, true)
+        Money().add(player.uniqueId.toString(), giveMoney, true)
     }
     fun selectGUI(player: Player) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}職業選択")
@@ -161,7 +160,7 @@ class Job {
     }
     fun titleStar(player: Player) {
         player.setPlayerListName(
-            player.playerListName + when (Database().getInt(player.uniqueId.toString(), "aoringoserver", "cook", "level")) {
+            player.playerListName + when (Scoreboard().getValue("cookLevel", player.uniqueId.toString())) {
                 1 -> "${ChatColor.YELLOW}★"
                 2 -> "${ChatColor.YELLOW}★★"
                 3 -> "${ChatColor.YELLOW}★★★"

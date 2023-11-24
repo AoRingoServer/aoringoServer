@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Entity
 
+import com.github.Ringoame196.Job.Job
 import com.github.Ringoame196.Scoreboard
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -14,6 +15,10 @@ class Player {
         var smartphone: MutableList<String>? = null
     )
     fun setName(player: Player) {
+        val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
+        val jobColor = mutableListOf("", "${ChatColor.DARK_PURPLE}", "${ChatColor.DARK_RED}", "${ChatColor.GRAY}")
+        player.setDisplayName("${jobColor[jobID]}${player.displayName}@${Job().get(player)}")
+        player.setPlayerListName("${jobColor[jobID]}${player.playerListName}")
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
             player.setPlayerListName("${ChatColor.YELLOW}[運営]" + player.playerListName)
@@ -55,16 +60,16 @@ class Player {
         permissions.setPermission(permission, true)
         player.recalculatePermissions()
     }
-    fun worldDisplay(player: Player, title: String) {
+    fun setTab(player: Player) {
         player.playerListHeader = "${ChatColor.AQUA}青りんごサーバー"
-        player.playerListFooter = "${ChatColor.YELLOW}" + when (title) {
+        player.playerListFooter = "${ChatColor.YELLOW}" + when (player.world.name) {
             "world" -> "ロビーワールド"
             "Survival" -> "資源ワールド"
             "Nether" -> "ネザー"
             "shop" -> "ショップ"
             "event" -> "イベントワールド"
             "Home" -> "建築ワールド"
-            else -> title
+            else -> "${ChatColor.RED}未設定"
         }
     }
 }
