@@ -101,18 +101,18 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item?.itemMeta?.displayName
         val block = e.clickedBlock
         val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
-        val downBlock = block?.location?.add(0.0, -1.0, 0.0)?.block
-        if (item != player.inventory.itemInMainHand) { return }
+        val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
+        if (item != player.inventory.itemInMainHand && item != null) { return }
         if (block?.type == Material.BARREL) {
             val shop = block.state as Barrel
-            if (player.isOp && player.gameMode == GameMode.CREATIVE && item.type == Material.NAME_TAG) {
+            if (player.isOp && player.gameMode == GameMode.CREATIVE && item?.type == Material.NAME_TAG) {
                 e.isCancelled = true
                 BarrelShop().changeOwner(shop, item.itemMeta?.displayName ?: return, player)
             }
         }
-        if (block?.type == Material.OAK_SIGN || downBlock?.type == Material.BARREL) {
+        if (block?.type == Material.OAK_SIGN && downBlock?.type == Material.BARREL) {
             val sign = block.state as Sign
-            val barrel = downBlock?.state as Barrel
+            val barrel = downBlock.state as Barrel
             when (sign.getLine(0)) {
                 "shop" -> {
                     if (sign.getLine(2) == "") {
@@ -272,7 +272,7 @@ class Events(private val plugin: Plugin) : Listener {
                 "[土地販売]" -> LandPurchase().make(player, sign)
                 "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
             }
-        } else if (item.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
+        } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
             e.isCancelled = true
             if (player.inventory.itemInMainHand != item) {
                 return
@@ -325,10 +325,10 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         entity as ItemFrame
-        val name = entity.customName ?: return
+        val name = entity.customName
         val item = entity.item
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
-        if (name.contains("@Fshop")) {
+        if (name?.contains("@Fshop") == true) {
             val owner = name.contains("userID:${player.uniqueId}")
             if (item.type == Material.AIR && owner) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
@@ -396,7 +396,10 @@ class Events(private val plugin: Plugin) : Listener {
             AoringoEvents().onErrorEvent(player, "ハンドルがぶっ壊れた")
         } else if (item.itemMeta?.displayName == "${ChatColor.RED}ポスト") {
             e.isCancelled = true
-            if (!player.isSneaking) { return }
+            if (!player.isSneaking) {
+                Player().sendActionBar(player, "${ChatColor.RED}スニークでアイテム投下")
+                return
+            }
             if (player.inventory.itemInMainHand.type == Material.AIR) { return }
             val playerItem = player.inventory.itemInMainHand.clone()
             playerItem.amount = 1
