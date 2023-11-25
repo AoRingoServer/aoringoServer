@@ -25,7 +25,7 @@ class Money {
             remove("unei", add, false)
         }
         Scoreboard().set("money", playerUUID, money)
-        Player().sendActionBar(Bukkit.getPlayer(playerUUID) ?: return, "${ChatColor.GREEN}+$add")
+        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return, "${ChatColor.GREEN}+$add")
     }
     fun remove(playerUUID: String, remove: Int, unei: Boolean): Boolean {
         val money = get(playerUUID) - remove
@@ -36,7 +36,7 @@ class Money {
             add("unei", remove, false)
         }
         Scoreboard().set("money", playerUUID, money)
-        Player().sendActionBar(Bukkit.getPlayer(playerUUID) ?: return true, "${ChatColor.RED}-$remove")
+        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return true, "${ChatColor.RED}-$remove")
         return true
     }
 }

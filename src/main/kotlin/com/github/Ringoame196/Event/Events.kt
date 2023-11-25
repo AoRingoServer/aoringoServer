@@ -84,6 +84,7 @@ class Events(private val plugin: Plugin) : Listener {
             AoringoEvents().onFastJoinEvent(e)
         }
         Player().setName(player)
+        player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString()).toDouble()
         ResourcePack().adaptation(e.player)
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
@@ -101,12 +102,12 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.clickedBlock
         val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
         val downBlock = block?.location?.add(0.0, -1.0, 0.0)?.block
+        if (item != player.inventory.itemInMainHand) { return }
         if (block?.type == Material.BARREL) {
             val shop = block.state as Barrel
-            val PlayerItem = player.inventory.itemInMainHand
-            if (player.isOp && player.gameMode == GameMode.CREATIVE && item?.type == Material.NAME_TAG) {
+            if (player.isOp && player.gameMode == GameMode.CREATIVE && item.type == Material.NAME_TAG) {
                 e.isCancelled = true
-                BarrelShop().changeOwner(shop, PlayerItem.itemMeta?.displayName ?: return, player)
+                BarrelShop().changeOwner(shop, item.itemMeta?.displayName ?: return, player)
             }
         }
         if (block?.type == Material.OAK_SIGN || downBlock?.type == Material.BARREL) {
@@ -127,7 +128,7 @@ class Events(private val plugin: Plugin) : Listener {
 
                 "Fshop" -> {
                     e.isCancelled = true
-                    val itemFrame = block.world.spawn(block?.location, org.bukkit.entity.ItemFrame::class.java)
+                    val itemFrame = block.world.spawn(block.location, org.bukkit.entity.ItemFrame::class.java)
                     itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
                     block.type = Material.AIR
                 }
@@ -271,7 +272,7 @@ class Events(private val plugin: Plugin) : Listener {
                 "[土地販売]" -> LandPurchase().make(player, sign)
                 "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
             }
-        } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
+        } else if (item.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
             e.isCancelled = true
             if (player.inventory.itemInMainHand != item) {
                 return

@@ -47,6 +47,7 @@ class Fshop {
         val block = itemFrame.location.add(0.0, -1.0, 0.0).block
         if (block.type != Material.BARREL) { return }
         val barrel = block.state as Barrel
+        itemFrame.setItem(ItemStack(Material.AIR))
         for (item in barrel.inventory) {
             item ?: continue
             itemFrame.setItem(item)
