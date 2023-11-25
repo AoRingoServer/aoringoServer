@@ -4,9 +4,6 @@ import com.github.Ringoame196.Database
 import org.bukkit.configuration.file.FileConfiguration
 
 class Config(private val dataManager: PluginData.DataManager, private val config: FileConfiguration) {
-    companion object {
-        lateinit var config: Config
-    }
     fun getDatabaseinfo() {
         val host = config.getString("Database.host")
         val port = config.getString("Database.port")

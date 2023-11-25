@@ -5,7 +5,6 @@ import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Event.AoringoEvents
-import com.github.Ringoame196.Handover
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -45,7 +44,6 @@ class Smartphone {
             "${ChatColor.GREEN}プレイヤー評価" -> 5
             "${ChatColor.GREEN}土地保護" -> 6
             "${ChatColor.YELLOW}OP用" -> 7
-            "${ChatColor.RED}引き継ぎ" -> 8
             else -> 0
         }
     }
@@ -71,8 +69,7 @@ class Smartphone {
             "${ChatColor.YELLOW}OP用" -> op(player)
             "${ChatColor.GREEN}プレイヤー評価" -> Evaluation().display(player)
             "${ChatColor.GREEN}土地保護" -> wgGUI(player)
-            "${ChatColor.YELLOW}アプリ並べ替え" -> APK().sortGUIOpen(player)
-            "${ChatColor.RED}引き継ぎ" -> Handover().giveItem(player, plugin)
+            "${ChatColor.YELLOW}アプリ並べ替え" -> APK().sortGUIOpen(player, plugin)
         }
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
@@ -95,7 +92,7 @@ class Smartphone {
                 }
                 Bukkit.broadcastMessage("${ChatColor.RED}[ショップ] ショップの購入土地がリセットされました")
             }
-            "${ChatColor.YELLOW}リソパ更新" -> ResourcePack().update(plugin)
+            "${ChatColor.YELLOW}リソパ更新" -> ResourcePack(plugin).update()
             "${ChatColor.GREEN}運営ギフトリセット" -> {
                 if (!Scoreboard().existence("admingift")) { return }
                 Scoreboard().delete("admingift")
