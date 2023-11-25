@@ -2,7 +2,6 @@ package com.github.Ringoame196.Smartphones
 
 import com.github.Ringoame196.APK
 import com.github.Ringoame196.Data.Money
-import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Event.AoringoEvents
@@ -25,15 +24,15 @@ class Smartphone {
     fun open(plugin: Plugin, player: org.bukkit.entity.Player) {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         val smartphone = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
-        val playerData = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { com.github.Ringoame196.Entity.Player.PlayerData() }.smartphone ?: load(plugin, player)
+        val apks = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
         player.openInventory(gui)
-        if (playerData.isNullOrEmpty()) {
+        if (apks.isNullOrEmpty()) {
             return
         }
 
-        val minSize = minOf(smartphone.size, playerData.size)
+        val minSize = minOf(smartphone.size, apks.size)
         for (i in 0 until minSize) {
-            val apkName = playerData[i]
+            val apkName = apks[i]
             gui.setItem(smartphone[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", null, giveCustomModel(apkName), 1))
         }
     }
@@ -49,11 +48,6 @@ class Smartphone {
             "${ChatColor.RED}引き継ぎ" -> 8
             else -> 0
         }
-    }
-    private fun load(plugin: Plugin, player: org.bukkit.entity.Player): List<String>? {
-        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { com.github.Ringoame196.Entity.Player.PlayerData() }.smartphone =
-            Yml().getList(plugin, "smartphone", player.uniqueId.toString()) as MutableList<String>?
-        return Yml().getList(plugin, "smartphone", player.uniqueId.toString())
     }
     fun clickItem(player: org.bukkit.entity.Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
         val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
@@ -89,14 +83,14 @@ class Smartphone {
         when (item.itemMeta?.displayName) {
             "${ChatColor.RED}ショップ保護リセット" -> {
                 if (!shift) { return }
-                val list = Yml().getList(plugin, "conservationLand", "protectedName") ?: return
+                val list = Yml().getList(plugin, "conservationLand", "", "protectedName") ?: return
                 for (name in list) {
                     if (Scoreboard().getValue("protectionContract", name) == 2) {
                         Scoreboard().remove("protectionContract", name, 1)
                         continue
                     }
                     WorldGuard().reset(name, Bukkit.getWorld("shop") ?: return)
-                    Yml().removeFromList(plugin, "conservationLand", "protectedName", name)
+                    Yml().removeToList(plugin, "", "conservationLand", "protectedName", name)
                 }
                 Bukkit.broadcastMessage("${ChatColor.RED}[ショップ] ショップの購入土地がリセットされました")
             }

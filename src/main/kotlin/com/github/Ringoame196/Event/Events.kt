@@ -85,7 +85,7 @@ class Events(private val plugin: Plugin) : Listener {
         }
         Player().setName(player)
         player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString()).toDouble()
-        ResourcePack().adaptation(e.player)
+        ResourcePack().adaptation(e.player, plugin)
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
@@ -264,7 +264,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
             } else {
-                AoringoEvents().onErrorEvent(player, "お金を受け取るにはシフトをしてください")
+                Player().sendActionBar(player, "お金を受け取るにはシフトをしてください")
             }
         } else if (block?.type == Material.OAK_SIGN) {
             val sign = block.state as Sign
@@ -559,10 +559,10 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (title.contains("@メンバー削除")) {
             e.isCancelled = true
             val name = gui.title.replace("${ChatColor.RED}", "").replace("@メンバー削除", "")
-            WorldGuard().removeMember(name, item?.itemMeta?.displayName ?: return, player.world)
+            WorldGuard().removeMember(name, item.itemMeta?.displayName ?: return, player.world)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
-        } else if (title.contains("${ChatColor.BLUE}保護設定") && item?.itemMeta?.displayName == "${ChatColor.GREEN}作成") {
+        } else if (title.contains("${ChatColor.BLUE}保護設定") && item.itemMeta?.displayName == "${ChatColor.GREEN}作成") {
             e.isCancelled = true
             Smartphone().protection(player, item, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
         } else if (title == "${ChatColor.RED}リンゴスクラッチ" && e.clickedInventory != player.inventory) {

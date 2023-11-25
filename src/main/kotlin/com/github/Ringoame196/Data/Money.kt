@@ -25,6 +25,7 @@ class Money {
             remove("unei", add, false)
         }
         Scoreboard().set("money", playerUUID, money)
+        if (!isUUIDFormat(playerUUID)) { return }
         Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return, "${ChatColor.GREEN}+$add")
     }
     fun remove(playerUUID: String, remove: Int, unei: Boolean): Boolean {
@@ -36,7 +37,16 @@ class Money {
             add("unei", remove, false)
         }
         Scoreboard().set("money", playerUUID, money)
+        if (!isUUIDFormat(playerUUID)) { return true }
         Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return true, "${ChatColor.RED}-$remove")
         return true
+    }
+    fun isUUIDFormat(input: String): Boolean {
+        return try {
+            UUID.fromString(input)
+            true
+        } catch (ex: IllegalArgumentException) {
+            false
+        }
     }
 }

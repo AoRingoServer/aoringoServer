@@ -8,6 +8,5 @@ class PluginData {
         var serverlog: String? = null
         var shopPromotionWebhook: String? = null
         val playerDataMap: MutableMap<UUID, Player.PlayerData> = mutableMapOf()
-        var resourcePack: String? = null
     }
 }
