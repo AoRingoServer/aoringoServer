@@ -57,6 +57,7 @@ class Smartphone {
             open(plugin, player)
             return
         }
+        if (shift) { return }
         when (itemName) {
             "${ChatColor.YELLOW}エンダーチェスト" -> EnderChest().open(player, plugin)
             "${ChatColor.GREEN}所持金変換" -> conversion(player)

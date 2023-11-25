@@ -600,7 +600,7 @@ class Events(private val plugin: Plugin) : Listener {
         when (gui.title) {
             "${ChatColor.BLUE}スマートフォン" -> {
                 e.isCancelled = true
-                Smartphone().clickItem(player, item ?: return, plugin, e.isShiftClick)
+                Smartphone().clickItem(player, item, plugin, e.isShiftClick)
             }
 
             "${ChatColor.GREEN}資源テレポート" -> {
