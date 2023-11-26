@@ -272,6 +272,17 @@ class Cook {
         Scoreboard().add("cookCount", player.uniqueId.toString(), 1)
         val levelUP = mutableListOf(100, 1000, 10000)
         if (levelUP.contains(Scoreboard().getValue("cookCount", player.uniqueId.toString()))) {
+            player.sendMessage("${ChatColor.YELLOW}料理人レベルアップ！")
+            player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
+            Scoreboard().add("cookLevel", player.uniqueId.toString(), 1)
+        } else {
+            val nextLevel = when (Scoreboard().getValue("cookLevel", player.uniqueId.toString())) {
+                in 0..100 -> 100
+                in 101..1000 -> 1000
+                in 1001..10000 -> 10000
+                else -> 0
+            } - Scoreboard().getValue("cookCount", player.uniqueId.toString())
+            com.github.Ringoame196.Entity.Player().sendActionBar(player, "${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
         }
     }
 }

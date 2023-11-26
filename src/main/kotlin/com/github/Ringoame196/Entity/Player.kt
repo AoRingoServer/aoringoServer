@@ -7,12 +7,13 @@ import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Sound
+import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class Player {
     data class PlayerData(
-        var smartphone: MutableList<String>? = null
+        var titleMoneyBossbar: BossBar? = null
     )
     fun setName(player: Player) {
         val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
@@ -55,9 +56,9 @@ class Player {
 
         return playersInRadius
     }
-    fun addPermission(player: Player, plugin: Plugin, permission: String) {
+    fun permission(player: Player, plugin: Plugin, permission: String, allow: Boolean) {
         val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
-        permissions.setPermission(permission, true)
+        permissions.setPermission(permission, allow)
         player.recalculatePermissions()
     }
     fun setTab(player: Player) {
@@ -71,5 +72,15 @@ class Player {
             "Home" -> "建築ワールド"
             else -> "${ChatColor.RED}未設定"
         }
+    }
+    fun setProtectionPermission(player: Player, plugin: Plugin) {
+        permission(
+            player, plugin, "blocklocker.protect",
+            when (player.world.name) {
+                "Survival" -> true
+                "Home" -> true
+                else -> false
+            }
+        )
     }
 }

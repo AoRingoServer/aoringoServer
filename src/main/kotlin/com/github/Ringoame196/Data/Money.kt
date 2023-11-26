@@ -7,6 +7,8 @@ import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
 import java.util.UUID
 
 class Money {
@@ -24,19 +26,19 @@ class Money {
             }
             remove("unei", add, false)
         }
-        Scoreboard().set("money", playerUUID, money)
+        set(playerUUID, money)
         if (!isUUIDFormat(playerUUID)) { return }
         Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return, "${ChatColor.GREEN}+$add")
     }
     fun remove(playerUUID: String, remove: Int, unei: Boolean): Boolean {
         val money = get(playerUUID) - remove
         if (money < 0) {
-            AoringoEvents().onErrorEvent(Bukkit.getPlayer(playerUUID) ?: return false, "所持金が足りません")
+            AoringoEvents().onErrorEvent(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return false, "所持金が足りません")
         }
         if (unei) {
             add("unei", remove, false)
         }
-        Scoreboard().set("money", playerUUID, money)
+        set(playerUUID, money)
         if (!isUUIDFormat(playerUUID)) { return true }
         Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return true, "${ChatColor.RED}-$remove")
         return true
@@ -47,6 +49,21 @@ class Money {
             true
         } catch (ex: IllegalArgumentException) {
             false
+        }
+    }
+    fun createBossbar(player: org.bukkit.entity.Player) {
+        val bossbar = Bukkit.createBossBar("${ChatColor.GOLD}所持金${Money().get(player.uniqueId.toString())}円", BarColor.YELLOW, BarStyle.SOLID)
+        bossbar.addPlayer(player)
+        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { Player.PlayerData() }.titleMoneyBossbar = bossbar
+    }
+    fun set(playerUUID: String, money: Int) {
+        Scoreboard().set("money", playerUUID, money)
+        if (!isUUIDFormat(playerUUID)) { return }
+        val bossbar = PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(playerUUID)) { Player.PlayerData() }.titleMoneyBossbar
+        if (bossbar == null) {
+            createBossbar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return)
+        } else {
+            bossbar.setTitle("${ChatColor.GOLD}所持金:${money}円")
         }
     }
 }

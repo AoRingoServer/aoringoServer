@@ -82,6 +82,7 @@ class Events(private val plugin: Plugin) : Listener {
             AoringoEvents().onFastJoinEvent(e)
         }
         Player().setName(player)
+        Player().setProtectionPermission(player, plugin)
         player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString()).toDouble()
         ResourcePack(plugin).adaptation(e.player)
         if (player.world.name == "Survival") {
@@ -89,7 +90,8 @@ class Events(private val plugin: Plugin) : Listener {
         }
         Scoreboard().set("blockCount", player.name, 0)
         Player().setTab(player)
-        Player().addPermission(player, plugin, "enderchest.size.${Scoreboard().getValue("haveEnderChest", player.uniqueId.toString()) + 1}")
+        Player().permission(player, plugin, "enderchest.size.${Scoreboard().getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true)
+        Money().createBossbar(player)
     }
 
     @EventHandler
@@ -592,25 +594,17 @@ class Events(private val plugin: Plugin) : Listener {
     fun onBlockBreak(e: BlockBreakEvent) {
         val player = e.player
         val block = e.block
-        if (block.type == Material.OAK_SIGN) {
-            val sign = block.state as Sign
-            if (sign.getLine(0) != "${ChatColor.GREEN}shop") {
-                return
-            }
-            val barrel = block.location.add(0.0, -1.0, 0.0).block
-            if (barrel.type != Material.BARREL) {
-                return
-            }
-            val shop = barrel.state as Barrel
-            shop.customName = null
-            player.sendMessage("${ChatColor.AQUA}ショップを撤去しました")
-            shop.update()
+        val worldName = player.world.name
+        if (worldName == "dungeon" && block.type != Material.OBSIDIAN && player.gameMode != GameMode.CREATIVE) {
+            AoringoEvents().onErrorEvent(player, "黒曜石以外破壊禁止されています")
+            e.isCancelled = true
         }
-        if (player.world.name == "shop") {
+        if (worldName == "shop" || worldName == "world" || worldName == "dungeon") {
             return
         }
         if (block.type.toString()
-            .contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター" && player.gameMode != GameMode.CREATIVE
+            .contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター" && player.gameMode != GameMode.CREATIVE &&
+            player.world.name != "shop"
         ) {
             e.isCancelled = true
             AoringoEvents().onErrorEvent(player, "${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
@@ -936,6 +930,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
         Player().setTab(player)
+        Player().setProtectionPermission(player, plugin)
     }
 
     @EventHandler
