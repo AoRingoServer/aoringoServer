@@ -5,10 +5,13 @@ import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Cage
 import com.github.Ringoame196.Contract
+import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.PluginData
+import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Discord
 import com.github.Ringoame196.EnderChest
+import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.Player
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Items.Food
@@ -25,7 +28,6 @@ import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtection
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Smartphone
-import com.github.Ringoame196.WorldGuard
 import org.bukkit.BanList
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -66,12 +68,15 @@ import org.bukkit.event.player.PlayerInteractEntityEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerJoinEvent
+import org.bukkit.event.player.PlayerMoveEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerRespawnEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import org.bukkit.potion.PotionEffectType
 import org.bukkit.util.Vector
+import java.util.UUID
 import kotlin.random.Random
 
 class Events(private val plugin: Plugin) : Listener {
@@ -289,6 +294,12 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (itemName?.contains("[アプリケーション]") == true) {
             APK().add(player, itemName, plugin)
             e.isCancelled = true
+        } else if (itemName == "${ChatColor.RED}会社情報本") {
+            if (!ItemProtection().isPlayerProtection(item, player)) {
+                AoringoEvents().onErrorEvent(player, "会社情報本を使うには、アイテムを保護を設定する必要があります")
+            } else {
+                Company().openGUI(player)
+            }
         }
     }
 
@@ -434,6 +445,10 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.BLUE}職業選択" -> {
                 e.isCancelled = true
                 Job().change(player, item?.itemMeta?.displayName ?: return)
+            }
+            "${ChatColor.BLUE}ヘルスケア" -> {
+                e.isCancelled = true
+                player.closeInventory()
             }
 
             "${ChatColor.RED}エンチャント" -> {
@@ -595,9 +610,15 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val block = e.block
         val worldName = player.world.name
-        if (worldName == "dungeon" && block.type != Material.OBSIDIAN && player.gameMode != GameMode.CREATIVE) {
-            AoringoEvents().onErrorEvent(player, "黒曜石以外破壊禁止されています")
-            e.isCancelled = true
+        if (worldName == "dungeon" && player.gameMode != GameMode.CREATIVE) {
+            when (block.type) {
+                Material.OBSIDIAN -> ArmorStand().summonMarker(block.location, " ").addScoreboardTag("breakObsidian")
+                Material.FIRE -> {}
+                else -> {
+                    AoringoEvents().onErrorEvent(player, "黒曜石以外破壊禁止されています")
+                    e.isCancelled = true
+                }
+            }
         }
         if (worldName == "shop" || worldName == "world" || worldName == "dungeon") {
             return
@@ -890,6 +911,10 @@ class Events(private val plugin: Plugin) : Listener {
         if (entity.type == EntityType.ARROW && (world == "shop" || world == "Home" || world == "testworld" || world == "world")) {
             e.isCancelled = true
         }
+        val ngMobs = mutableListOf(EntityType.MINECART_HOPPER, EntityType.MINECART_TNT, EntityType.MINECART_COMMAND)
+        if (ngMobs.contains(entity.type)) {
+            entity.remove()
+        }
         if (entity is Villager && (world == "Survival" || world == "Home")) {
             entity.remove()
         } else if (entity is Wither && (world != "Survival")) {
@@ -1051,5 +1076,27 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             AoringoEvents().onErrorEvent(player, "[アイテム保護]保護アイテムを捨てることはできません")
         }
+    }
+    @EventHandler
+    fun onPlayerMove(e: PlayerMoveEvent) {
+        val player = e.player
+        val location = player.location.clone()
+        if (player.gameMode == GameMode.CREATIVE) { return }
+        if (player.inventory.chestplate?.type == Material.ELYTRA && player.isGliding) { return }
+        if (player.hasPotionEffect(PotionEffectType.SPEED)) { return }
+        if (PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement) {
+            return
+        }
+        PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = true
+        Bukkit.getScheduler().runTaskLater(
+            plugin,
+            Runnable {
+                PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = false
+                if (location.world == player.location.world && Player().calculateDistance(location, player.location) >= 25) {
+                    player.teleport(location)
+                }
+            },
+            60L
+        ) // 20Lは1秒を表す（1秒 = 20ticks）
     }
 }

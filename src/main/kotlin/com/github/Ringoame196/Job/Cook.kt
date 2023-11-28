@@ -14,7 +14,6 @@ import org.bukkit.World
 import org.bukkit.block.Barrel
 import org.bukkit.block.Block
 import org.bukkit.block.Smoker
-import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -36,7 +35,7 @@ class Cook {
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         val completeTime = 10 - (level * 2)
         if (entity.isVisible) { entity.isVisible = false }
-        val armorStand = com.github.Ringoame196.Entity.ArmorStand().summon(entity.location, "")
+        val armorStand = com.github.Ringoame196.Entity.ArmorStand().cookSummon(entity.location, "")
         val world = entity.world
         object : BukkitRunnable() {
             override fun run() {
@@ -183,8 +182,8 @@ class Cook {
     }
     fun fry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
         if (Food().isExpirationDate(player, item)) { return }
-        val armorStand = com.github.Ringoame196.Entity.ArmorStand().summon(block.location.clone().add(0.5, -0.2, 0.5), " ")
-        val timer = com.github.Ringoame196.Entity.ArmorStand().summon(block.location.clone().add(0.5, 1.0, 0.5), " ")
+        val armorStand = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, -0.2, 0.5), " ")
+        val timer = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, 1.0, 0.5), " ")
         armorStand.equipment?.helmet = item
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 15 - (level * 2)
@@ -209,7 +208,7 @@ class Cook {
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
     private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
-        val armorStand = com.github.Ringoame196.Entity.ArmorStand().summon(block.location.clone().add(0.5, 1.0, 0.5), "")
+        val armorStand = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, 1.0, 0.5), "")
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 30 - (level * 2)
         val barrel = block.state as Barrel

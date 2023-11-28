@@ -2,6 +2,7 @@ package com.github.Ringoame196.Smartphones
 
 import com.github.Ringoame196.APK
 import com.github.Ringoame196.Data.Money
+import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Event.AoringoEvents
@@ -10,12 +11,12 @@ import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtection
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.WorldGuard
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
@@ -44,6 +45,8 @@ class Smartphone {
             "${ChatColor.GREEN}プレイヤー評価" -> 5
             "${ChatColor.GREEN}土地保護" -> 6
             "${ChatColor.YELLOW}OP用" -> 7
+            "${ChatColor.YELLOW}アプリ並べ替え" -> 8
+            "${ChatColor.AQUA}ヘルスケア" -> 9
             else -> 0
         }
     }
@@ -70,6 +73,7 @@ class Smartphone {
             "${ChatColor.GREEN}プレイヤー評価" -> Evaluation().display(player)
             "${ChatColor.GREEN}土地保護" -> wgGUI(player)
             "${ChatColor.YELLOW}アプリ並べ替え" -> APK().sortGUIOpen(player, plugin)
+            "${ChatColor.AQUA}ヘルスケア" -> healthcare(player)
         }
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
@@ -221,7 +225,7 @@ class Smartphone {
         gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", null, 4, 1))
         player.openInventory(gui)
     }
-    private fun moneyItem(player: org.bukkit.entity.Player, money: Int, item: ItemStack) {
+    private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
             AoringoEvents().onErrorEvent(player, "お金が足りません")
         } else {
@@ -231,5 +235,11 @@ class Smartphone {
             Money().remove(player.uniqueId.toString(), money, true)
         }
         player.closeInventory()
+    }
+    private fun healthcare(player: Player) {
+        val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}ヘルスケア")
+        gui.setItem(3, Item().make(Material.MELON_SLICE, "${ChatColor.RED}マックスHP", "${player.maxHealth.toInt()}HP", 92, 1))
+        gui.setItem(5, Item().make(Material.MELON_SLICE, "${ChatColor.GREEN}Power", "${Scoreboard().getValue("status_Power",player.uniqueId.toString())}パワー", 91, 1))
+        player.openInventory(gui)
     }
 }

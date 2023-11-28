@@ -52,7 +52,7 @@ class Money {
         }
     }
     fun createBossbar(player: org.bukkit.entity.Player) {
-        val bossbar = Bukkit.createBossBar("${ChatColor.GOLD}所持金${Money().get(player.uniqueId.toString())}円", BarColor.YELLOW, BarStyle.SOLID)
+        val bossbar = Bukkit.createBossBar("${ChatColor.GOLD}所持金${Money().get(player.uniqueId.toString())}円", BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { Player.PlayerData() }.titleMoneyBossbar = bossbar
     }

@@ -10,10 +10,13 @@ import org.bukkit.Sound
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 class Player {
     data class PlayerData(
-        var titleMoneyBossbar: BossBar? = null
+        var titleMoneyBossbar: BossBar? = null,
+        var speedMeasurement: Boolean = false
     )
     fun setName(player: Player) {
         val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
@@ -30,12 +33,13 @@ class Player {
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
     fun addPower(player: Player) {
-        Scoreboard().add("status_HP", player.uniqueId.toString(), 1)
-        levelupMessage(player, "${ChatColor.RED}最大HPアップ！！")
-    }
-    fun addMaxHP(player: Player) {
         Scoreboard().add("status_Power", player.uniqueId.toString(), 1)
         levelupMessage(player, "${ChatColor.YELLOW}パワーアップ！！")
+    }
+    fun addMaxHP(player: Player) {
+        Scoreboard().add("status_HP", player.uniqueId.toString(), 1)
+        levelupMessage(player, "${ChatColor.RED}最大HPアップ！！")
+        player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString())
     }
     fun sendActionBar(player: Player, message: String) {
         val actionBarMessage = ChatColor.translateAlternateColorCodes('&', message)
@@ -82,5 +86,14 @@ class Player {
                 else -> false
             }
         )
+    }
+    fun calculateDistance(pos1: Location, pos2: Location): Int {
+        val deltaX = (pos1.x - pos2.x).toDouble()
+        val deltaY = (pos1.y - pos2.y).toDouble()
+        val deltaZ = (pos1.z - pos2.z).toDouble()
+
+        // 3D空間での距離を計算
+
+        return sqrt(deltaX.pow(2) + deltaZ.pow(2)).toInt()
     }
 }

@@ -4,7 +4,15 @@ import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
 
 class ArmorStand {
-    fun summon(location: Location, name: String): ArmorStand {
+    fun cookSummon(location: Location, name: String): ArmorStand {
+        val world = location.world
+
+        // アーマースタンドの設定
+        val armorStand = summonMarker(location, name)
+        armorStand.addScoreboardTag("cookGame")
+        return armorStand
+    }
+    fun summonMarker(location: Location, name: String): ArmorStand {
         val world = location.world
         val armorStand: ArmorStand = world!!.spawn(location, org.bukkit.entity.ArmorStand::class.java)
 
@@ -16,7 +24,6 @@ class ArmorStand {
         armorStand.isCustomNameVisible = true
         armorStand.setGravity(false)
         armorStand.isMarker = true
-        armorStand.addScoreboardTag("cookGame")
         return armorStand
     }
 }
