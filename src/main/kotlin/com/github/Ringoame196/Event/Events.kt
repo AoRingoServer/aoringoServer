@@ -776,6 +776,14 @@ class Events(private val plugin: Plugin) : Listener {
             e.currentItem = Cook().knifeSharpness(item)
         }
         if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
+            if (Job().tool().contains(item?.type)) {
+                if (e.isShiftClick) {
+                    AoringoEvents().onErrorEvent(player, "ツールを一括作成はできません")
+                    e.isCancelled = true
+                } else {
+                    e.currentItem?.durability = Job().craftRandomDurable(item?.type ?: return).toShort()
+                }
+            }
             return
         }
         if (!Job().tool().contains(item?.type) && item?.hasItemMeta() == false) {
@@ -1084,19 +1092,19 @@ class Events(private val plugin: Plugin) : Listener {
         if (player.gameMode == GameMode.CREATIVE) { return }
         if (player.inventory.chestplate?.type == Material.ELYTRA && player.isGliding) { return }
         if (player.hasPotionEffect(PotionEffectType.SPEED)) { return }
-        if (PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement) {
-            return
-        }
+        if (player.vehicle != null) { return }
+        if (PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement) { return }
         PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = true
         Bukkit.getScheduler().runTaskLater(
             plugin,
             Runnable {
                 PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = false
-                if (location.world == player.location.world && Player().calculateDistance(location, player.location) >= 25) {
+                if (location.world == player.location.world && Player().calculateDistance(location, player.location) >= 15 && Player().calculateDistance(location, player.location) <= 100) {
                     player.teleport(location)
+                    player.sendMessage("${ChatColor.AQUA}[青りんごサーバー] スピード制限に引っかかりました")
                 }
             },
-            60L
+            30L
         ) // 20Lは1秒を表す（1秒 = 20ticks）
     }
 }

@@ -10,8 +10,6 @@ import org.bukkit.Sound
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import kotlin.math.pow
-import kotlin.math.sqrt
 
 class Player {
     data class PlayerData(
@@ -88,12 +86,9 @@ class Player {
         )
     }
     fun calculateDistance(pos1: Location, pos2: Location): Int {
-        val deltaX = (pos1.x - pos2.x).toDouble()
-        val deltaY = (pos1.y - pos2.y).toDouble()
-        val deltaZ = (pos1.z - pos2.z).toDouble()
+        val deltaX = Math.abs(pos1.x.toInt() - pos2.x.toInt())
+        val deltaZ = Math.abs(pos1.z.toInt() - pos2.z.toInt())
 
-        // 3D空間での距離を計算
-
-        return sqrt(deltaX.pow(2) + deltaZ.pow(2)).toInt()
+        return maxOf(deltaX, deltaZ)
     }
 }

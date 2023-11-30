@@ -168,4 +168,7 @@ class Job {
             }
         )
     }
+    fun craftRandomDurable(material: Material): Int {
+        return Random.nextInt(0, material.maxDurability.toInt() - 1)
+    }
 }
