@@ -1,11 +1,13 @@
 package com.github.Ringoame196.Event
 
 import com.github.Ringoame196.APK
+import com.github.Ringoame196.AntiCheats.AntiCheat
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Cage
 import com.github.Ringoame196.Contract
 import com.github.Ringoame196.Data.Company
+import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
@@ -132,9 +134,6 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
             }
         } else if (block?.type == Material.SMOKER) {
-            if (e.action == Action.LEFT_CLICK_BLOCK) {
-                return
-            }
             e.isCancelled = true
         } else if (itemName == "職業スター") {
             if (player.inventory.itemInMainHand != item) {
@@ -610,23 +609,22 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val block = e.block
         val worldName = player.world.name
-        if (worldName == "dungeon" && player.gameMode != GameMode.CREATIVE) {
+        if (player.gameMode == GameMode.CREATIVE) { return }
+        if (worldName == "dungeon") {
             when (block.type) {
                 Material.OBSIDIAN -> ArmorStand().summonMarker(block.location, " ").addScoreboardTag("breakObsidian")
-                Material.FIRE -> {}
+                Material.FIRE -> return
                 else -> {
                     AoringoEvents().onErrorEvent(player, "黒曜石以外破壊禁止されています")
                     e.isCancelled = true
                 }
             }
-        }
-        if (worldName == "shop" || worldName == "world" || worldName == "dungeon") {
             return
         }
-        if (block.type.toString()
-            .contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター" && player.gameMode != GameMode.CREATIVE &&
-            player.world.name != "shop"
-        ) {
+        if (worldName == "shop" || worldName == "world") {
+            return
+        }
+        if (block.type.toString().contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター") {
             e.isCancelled = true
             AoringoEvents().onErrorEvent(player, "${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         } else if (block.type == Material.SMOKER) {
@@ -764,15 +762,13 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onCraftItem(e: CraftItemEvent) {
         val player = e.whoClicked
-        if (player !is org.bukkit.entity.Player) {
-            return
-        }
+        if (player !is org.bukkit.entity.Player) { return }
         val item = e.currentItem
-        if (item?.type == Material.FERMENTED_SPIDER_EYE) {
-            e.currentItem =
-                Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目", null, null, 1)
-        }
-        if (item?.itemMeta?.displayName?.contains("包丁") == true) {
+        val type = item?.type
+        val ngItem = mutableListOf(Material.HOPPER,Material.TNT)
+        if (type == Material.FERMENTED_SPIDER_EYE) {
+            e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目", null, null, 1)
+        } else if (item?.itemMeta?.displayName?.contains("包丁") == true) {
             e.currentItem = Cook().knifeSharpness(item)
         }
         if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
@@ -786,18 +782,15 @@ class Events(private val plugin: Plugin) : Listener {
             }
             return
         }
-        if (!Job().tool().contains(item?.type) && item?.hasItemMeta() == false) {
-            return
-        }
-        if (item?.type == Material.HOPPER) {
+        if (!Job().tool().contains(item?.type) && item?.hasItemMeta() == true) {
+            e.isCancelled = true
+            AoringoEvents().onErrorEvent(player, "${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
+        } else if (ngItem.contains(item?.type)) {
             e.isCancelled = true
             AoringoEvents().onErrorEvent(player, "このアイテムをクラフトすることは禁止されています")
         } else if (item?.type == Material.WRITTEN_BOOK && item.itemMeta?.displayName?.contains("${ChatColor.RED}契約本@") == true) {
             e.currentItem = Contract().copyBlock(item, player)
         }
-
-        e.isCancelled = true
-        AoringoEvents().onErrorEvent(player, "${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
     }
 
     @EventHandler
@@ -805,13 +798,12 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
         when (gui.title) {
-            "${ChatColor.YELLOW}カスタム金床" -> Anvil().close(gui, player as org.bukkit.entity.Player)
+            "${ChatColor.YELLOW}カスタム金床" -> Anvil().close(gui, player)
             "${ChatColor.RED}エンチャント" -> {
                 val item = gui.getItem(4) ?: return
-                if (item.type == Material.ENCHANTED_BOOK) {
-                    return
+                if (item.type != Material.ENCHANTED_BOOK) {
+                    player.inventory.addItem(item)
                 }
-                player.inventory.addItem(item)
             }
 
             "${ChatColor.BLUE}カゴ" -> {
@@ -829,19 +821,19 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.block
         when (block.type) {
             Material.SMOKER -> {
-                if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                if (Job().get(player) == "${ChatColor.YELLOW}料理人") {
+                    Cook().furnace(block)
+                } else {
                     e.isCancelled = true
                     AoringoEvents().onErrorEvent(player, "使えるのは料理人だけです")
-                    return
                 }
-                Cook().furnace(block)
+            }
+            Material.HOPPER -> {
+                e.isCancelled = true
+                AoringoEvents().onErrorEvent(player, "ホッパーを設置することは禁止されています")
             }
 
             else -> {}
-        }
-        if (block.type == Material.HOPPER) {
-            e.isCancelled = true
-            AoringoEvents().onErrorEvent(player, "ホッパーを設置することは禁止されています")
         }
     }
 
@@ -876,28 +868,8 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onEntityDeath(e: EntityDeathEvent) {
         val entity = e.entity
-        when (entity.type) {
-            EntityType.COW -> Food().dropReplacement(e, Material.BEEF, Food().makeItem("${ChatColor.RED}牛肉", 78))
-            EntityType.SHEEP -> Food().dropReplacement(
-                e,
-                Material.MUTTON,
-                Food().makeItem("${ChatColor.RED}羊肉", 79)
-            )
-
-            EntityType.PIG -> Food().dropReplacement(
-                e,
-                Material.PORKCHOP,
-                Food().makeItem("${ChatColor.RED}豚肉", 81)
-            )
-
-            EntityType.CHICKEN -> Food().dropReplacement(
-                e,
-                Material.CHICKEN,
-                Food().makeItem("${ChatColor.RED}鶏肉", 80)
-            )
-
-            else -> {}
-        }
+        val dropITem = ItemData().getEntityDropItem(entity.type) ?: return
+        Food().dropReplacement(e, dropITem.material, Food().makeItem(dropITem.displayName, dropITem.customModelData))
     }
 
     @EventHandler
@@ -916,20 +888,19 @@ class Events(private val plugin: Plugin) : Listener {
     fun onEntitySpawn(e: EntitySpawnEvent) {
         val entity = e.entity
         val world = entity.world.name
-        if (entity.type == EntityType.ARROW && (world == "shop" || world == "Home" || world == "testworld" || world == "world")) {
-            e.isCancelled = true
-        }
-        val ngMobs = mutableListOf(EntityType.MINECART_HOPPER, EntityType.MINECART_TNT, EntityType.MINECART_COMMAND)
-        if (ngMobs.contains(entity.type)) {
-            entity.remove()
-        }
-        if (entity is Villager && (world == "Survival" || world == "Home")) {
-            entity.remove()
-        } else if (entity is Wither && (world != "Survival")) {
-            entity.remove()
-            val dropItems = mutableListOf(Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND)
-            for (item in dropItems) {
-                entity.world.dropItem(entity.location, ItemStack(item))
+        val ngMobs = setOf(EntityType.MINECART_HOPPER, EntityType.MINECART_TNT, EntityType.MINECART_COMMAND)
+        val witherSummonBlocks = listOf(
+            Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL, Material.WITHER_SKELETON_SKULL,
+            Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND, Material.SOUL_SAND
+        )
+
+        when {
+            entity.type == EntityType.ARROW && (world != "Survival" && world != "dungeon") -> e.isCancelled = true
+            ngMobs.contains(entity.type) -> entity.remove()
+            entity is Villager && (world == "Survival" || world == "Home") -> entity.remove()
+            entity is Wither && (world != "Survival") -> {
+                entity.remove()
+                witherSummonBlocks.forEach { item -> entity.world.dropItem(entity.location, ItemStack(item)) }
             }
         }
     }
@@ -945,16 +916,11 @@ class Events(private val plugin: Plugin) : Listener {
         if (player !is org.bukkit.entity.Player) {
             return
         }
-        if (entity.world.name != "event" && entity is org.bukkit.entity.Player) {
+        val health = maxOf(0.0, entity.health - damage)
+        if (entity is Villager) {
             e.isCancelled = true
-            return
-        } else if (player is org.bukkit.entity.Player) {
-            val health = entity.health - damage
-            if (entity is Villager) {
-                e.isCancelled = true
-            }
-            Player().sendActionBar(player, "${ChatColor.RED}" + if (health < 0) { "0" } else { health.toInt() } + "HP")
         }
+        Player().sendActionBar(player, "${ChatColor.RED}${health}HP")
         val power = Scoreboard().getValue("status_Power", player.uniqueId.toString())
         entity.damage(power * 0.1)
     }
@@ -985,8 +951,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerPortal(e: PlayerPortalEvent) {
         e.isCancelled = true
-        val player = e.player
-        AoringoEvents().onErrorEvent(player, "${ChatColor.RED}ポータルの使用は禁止されております")
+        AoringoEvents().onErrorEvent(e.player, "${ChatColor.RED}ポータルの使用は禁止されております")
     }
 
     @EventHandler
@@ -1000,31 +965,8 @@ class Events(private val plugin: Plugin) : Listener {
         if (downBlock.type == Material.COMMAND_BLOCK) {
             when (block.type) {
                 Material.IRON_BLOCK -> Resource().openTpGUI(player)
-                Material.QUARTZ_BLOCK -> {
-                    player.teleport(
-                        Bukkit.getWorld(
-                            if (player.world.name == "world") {
-                                "shop"
-                            } else {
-                                "world"
-                            }
-                        )?.spawnLocation!!
-                    )
-                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
-                }
-
-                Material.GOLD_BLOCK -> {
-                    player.teleport(
-                        Bukkit.getWorld(
-                            if (player.world.name == "world") {
-                                "Home"
-                            } else {
-                                "world"
-                            }
-                        )?.spawnLocation!!
-                    )
-                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
-                }
+                Material.QUARTZ_BLOCK -> AoringoEvents().onActivationTeleporterEvent(player, "shop")
+                Material.GOLD_BLOCK -> AoringoEvents().onActivationTeleporterEvent(player, "Home")
 
                 else -> return
             }
@@ -1041,8 +983,8 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val chat = e.message
         if (chat.contains("@")) {
-            player.sendMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
             e.isCancelled = true
+            player.sendMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
         } else if (chat.contains("!契約")) {
             e.isCancelled = true
             if (player.inventory.itemInMainHand.amount != 1) {
@@ -1058,7 +1000,8 @@ class Events(private val plugin: Plugin) : Listener {
             player.removeScoreboardTag("rg")
             Bukkit.getScheduler().runTask(
                 plugin,
-                Runnable {
+                Runnable
+                {
                     Smartphone().protectionGUI(player, chat)
                 }
             )
@@ -1088,23 +1031,11 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerMove(e: PlayerMoveEvent) {
         val player = e.player
-        val location = player.location.clone()
         if (player.gameMode == GameMode.CREATIVE) { return }
         if (player.inventory.chestplate?.type == Material.ELYTRA && player.isGliding) { return }
         if (player.hasPotionEffect(PotionEffectType.SPEED)) { return }
         if (player.vehicle != null) { return }
         if (PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement) { return }
-        PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = true
-        Bukkit.getScheduler().runTaskLater(
-            plugin,
-            Runnable {
-                PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(player.uniqueId.toString())) { Player.PlayerData() }.speedMeasurement = false
-                if (location.world == player.location.world && Player().calculateDistance(location, player.location) >= 15 && Player().calculateDistance(location, player.location) <= 100) {
-                    player.teleport(location)
-                    player.sendMessage("${ChatColor.AQUA}[青りんごサーバー] スピード制限に引っかかりました")
-                }
-            },
-            30L
-        ) // 20Lは1秒を表す（1秒 = 20ticks）
+        AntiCheat().speed(player, plugin, "${ChatColor.AQUA}[青りんごサーバー] スピード制限に引っかかりました")
     }
 }

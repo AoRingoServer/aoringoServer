@@ -31,6 +31,7 @@ class Item {
         }
         return item
     }
+
     fun getInventoryItemCount(inventory: Inventory): Int {
         var c = 0
         for (i in 0 until inventory.size) {
@@ -39,6 +40,7 @@ class Item {
         }
         return c
     }
+
     fun enchant(enchant: Enchantment, level: Int): ItemStack {
         val item = ItemStack(Material.ENCHANTED_BOOK)
         val meta = item.itemMeta as EnchantmentStorageMeta
@@ -57,11 +59,14 @@ class Item {
         item.amount = item.amount - 1
         player.inventory.setItemInMainHand(item)
     }
+
     fun request(player: Player, message: String) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val money = message.replace("!契約 ", "").toInt()
-        if (money == 0) { return }
+        if (money == 0) {
+            return
+        }
         meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
         val bookMessage = meta.getPage(1)
             .replace("甲方：[プレイヤー名]\nUUID：[UUID]", "甲方：${player.name}\nUUID：${player.uniqueId}")
@@ -71,6 +76,7 @@ class Item {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
+
     fun contract(player: Player, message: String) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
@@ -101,6 +107,7 @@ class Item {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
+
     fun returnMoney(player: Player) {
         val item = player.inventory.itemInMainHand
         val bookMessage = item.itemMeta as BookMeta
@@ -111,6 +118,7 @@ class Item {
         Money().add(player.name, money ?: return, false)
         player.inventory.setItemInMainHand(ItemStack(Material.AIR))
     }
+
     fun copyBlock(item: ItemStack, player: Player): ItemStack {
         val meta = item.itemMeta as BookMeta
         val currentDate = LocalDate.now()
@@ -128,6 +136,7 @@ class Item {
         item.setItemMeta(meta)
         return item
     }
+
     fun smartphone(): ItemStack {
         val item = ItemStack(Material.ENCHANTED_BOOK)
         val meta = item.itemMeta
