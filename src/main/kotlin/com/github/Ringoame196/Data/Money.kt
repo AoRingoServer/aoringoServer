@@ -63,7 +63,10 @@ class Money {
         if (bossbar == null) {
             createBossbar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return)
         } else {
-            bossbar.setTitle("${ChatColor.GOLD}所持金:${money}円")
+            bossbar.setTitle("${ChatColor.GOLD}所持金:${formalCurrency(money)}円")
         }
+    }
+    fun formalCurrency(money: Int): String {
+        return money.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
     }
 }

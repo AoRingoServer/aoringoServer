@@ -11,7 +11,6 @@ import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.Discord
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.Player
@@ -30,7 +29,6 @@ import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtection
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Smartphone
-import org.bukkit.BanList
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -427,7 +425,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onInventoryClick(e: InventoryClickEvent) {
         val player = e.whoClicked as? org.bukkit.entity.Player ?: return
         val gui = e.view
-        val item = e.currentItem?:return
+        val item = e.currentItem ?: return
         val title = gui.title
         if (player.openInventory.topInventory != e.clickedInventory && player.openInventory.topInventory.type == InventoryType.WORKBENCH) {
             if (item.hasItemMeta()) {
@@ -436,7 +434,7 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         when (gui.title) {
-            "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item , e)
+            "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)
             "${ChatColor.BLUE}職業選択" -> {
                 e.isCancelled = true
                 Job().change(player, item.itemMeta?.displayName ?: return)
@@ -475,7 +473,7 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
                 if (item.itemMeta?.displayName == "${ChatColor.GREEN}購入") {
                     val meta = item.itemMeta ?: return
-                    val price = meta.lore?.get(0)?.replace("円", "")?.toInt()?:return
+                    val price = meta.lore?.get(0)?.replace("円", "")?.toInt() ?: return
                     Fshop().buy(
                         player,
                         gui.getItem(3) ?: return,
@@ -619,7 +617,7 @@ class Events(private val plugin: Plugin) : Listener {
             AoringoEvents().onErrorEvent(player, "${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         }
         when (block.type) {
-            Material.GRASS,Material.TALL_GRASS -> {
+            Material.GRASS, Material.TALL_GRASS -> {
                 if (Job().get(player) != "${ChatColor.GOLD}ハンター") { return }
                 if (Random.nextInt(0, 3) != 0) { return }
                 Job().giveVegetables(block.location)
@@ -652,12 +650,12 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.SMOKER -> {
                 for (
-                entity in block.world.getNearbyEntities(
-                    block.location.clone().add(0.0, 1.0, 0.0),
-                    0.5,
-                    0.5,
-                    0.5
-                )
+                    entity in block.world.getNearbyEntities(
+                        block.location.clone().add(0.0, 1.0, 0.0),
+                        0.5,
+                        0.5,
+                        0.5
+                    )
                 ) {
                     if (entity !is ItemFrame) {
                         continue
@@ -666,7 +664,7 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
         }
-        AntiCheat().nuker(player,plugin,110)
+        AntiCheat().nuker(player, plugin, 110)
     }
 
     @EventHandler
