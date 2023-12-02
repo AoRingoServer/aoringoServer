@@ -118,6 +118,8 @@ class Events(private val plugin: Plugin) : Listener {
                     itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
                     block.type = Material.AIR
                 }
+                "[土地販売]" -> LandPurchase().make(player, sign)
+                "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
             }
         }
         if (block?.type == Material.ANVIL || block?.type == Material.CHIPPED_ANVIL || block?.type == Material.DAMAGED_ANVIL) {
@@ -248,12 +250,6 @@ class Events(private val plugin: Plugin) : Listener {
                 Contract().returnMoney(player)
             } else {
                 Player().sendActionBar(player, "お金を受け取るにはシフトをしてください")
-            }
-        } else if (block?.type == Material.OAK_SIGN) {
-            val sign = block.state as Sign
-            when (sign.getLine(0)) {
-                "[土地販売]" -> LandPurchase().make(player, sign)
-                "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
             }
         } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
             e.isCancelled = true
@@ -618,6 +614,7 @@ class Events(private val plugin: Plugin) : Listener {
         }
         when (block.type) {
             Material.GRASS, Material.TALL_GRASS -> {
+                if (WorldGuard().getOwnerOfRegion(player.location) != null) { return }
                 if (Job().get(player) != "${ChatColor.GOLD}ハンター") { return }
                 if (Random.nextInt(0, 3) != 0) { return }
                 Job().giveVegetables(block.location)

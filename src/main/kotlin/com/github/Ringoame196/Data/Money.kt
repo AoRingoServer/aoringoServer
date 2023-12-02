@@ -12,35 +12,39 @@ import org.bukkit.boss.BarStyle
 import java.util.UUID
 
 class Money {
-    fun get(playerUUID: String): Int {
-        return Scoreboard().getValue("money", playerUUID)
+    private val uneiAccount: String = "unei"
+    private fun bossbarTitle(accountID: String): String {
+        return "${ChatColor.GOLD}所持金${formalCurrency(Money().get(accountID))}円"
     }
-    fun add(playerUUID: String, add: Int, unei: Boolean) {
-        val money = get(playerUUID) + add
+    fun get(accountID: String): Int {
+        return Scoreboard().getValue("money", accountID)
+    }
+    fun add(accountID: String, add: Int, unei: Boolean) {
+        val money = get(accountID) + add
         if (unei) {
-            if (get("unei") < add) {
-                AoringoEvents().onErrorEvent(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return, "運営のお金が不足したため 運営手形が発行されました")
-                Bukkit.getPlayer(UUID.fromString(playerUUID))?.sendMessage("${ChatColor.GOLD}運営に発行された手形をお渡しください")
-                Bukkit.getPlayer(UUID.fromString(playerUUID))?.inventory?.addItem(Item().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${add}円)", "手形を運営に渡してください", 11, 1))
+            if (get(uneiAccount) < add) {
+                AoringoEvents().onErrorEvent(Bukkit.getPlayer(UUID.fromString(accountID)) ?: return, "運営のお金が不足したため 運営手形が発行されました")
+                Bukkit.getPlayer(UUID.fromString(accountID))?.sendMessage("${ChatColor.GOLD}運営に発行された手形をお渡しください")
+                Bukkit.getPlayer(UUID.fromString(accountID))?.inventory?.addItem(Item().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${add}円)", "手形を運営に渡してください", 11, 1))
                 return
             }
-            remove("unei", add, false)
+            remove(uneiAccount, add, false)
         }
-        set(playerUUID, money)
-        if (!isUUIDFormat(playerUUID)) { return }
-        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return, "${ChatColor.GREEN}+$add")
+        set(accountID, money)
+        if (!isUUIDFormat(accountID)) { return }
+        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(accountID)) ?: return, "${ChatColor.GREEN}+$add")
     }
-    fun remove(playerUUID: String, remove: Int, unei: Boolean): Boolean {
-        val money = get(playerUUID) - remove
+    fun remove(accountID: String, remove: Int, unei: Boolean): Boolean {
+        val money = get(accountID) - remove
         if (money < 0) {
-            AoringoEvents().onErrorEvent(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return false, "所持金が足りません")
+            AoringoEvents().onErrorEvent(Bukkit.getPlayer(UUID.fromString(accountID)) ?: return false, "所持金が足りません")
         }
         if (unei) {
-            add("unei", remove, false)
+            add(uneiAccount, remove, false)
         }
-        set(playerUUID, money)
-        if (!isUUIDFormat(playerUUID)) { return true }
-        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return true, "${ChatColor.RED}-$remove")
+        set(accountID, money)
+        if (!isUUIDFormat(accountID)) { return true }
+        Player().sendActionBar(Bukkit.getPlayer(UUID.fromString(accountID)) ?: return true, "${ChatColor.RED}-$remove")
         return true
     }
     fun isUUIDFormat(input: String): Boolean {
@@ -52,18 +56,18 @@ class Money {
         }
     }
     fun createBossbar(player: org.bukkit.entity.Player) {
-        val bossbar = Bukkit.createBossBar("${ChatColor.GOLD}所持金${Money().get(player.uniqueId.toString())}円", BarColor.BLUE, BarStyle.SOLID)
+        val bossbar = Bukkit.createBossBar(bossbarTitle(player.uniqueId.toString()), BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { Player.PlayerData() }.titleMoneyBossbar = bossbar
     }
-    fun set(playerUUID: String, money: Int) {
-        Scoreboard().set("money", playerUUID, money)
-        if (!isUUIDFormat(playerUUID)) { return }
-        val bossbar = PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(playerUUID)) { Player.PlayerData() }.titleMoneyBossbar
+    fun set(accountID: String, money: Int) {
+        Scoreboard().set("money", accountID, money)
+        if (!isUUIDFormat(accountID)) { return }
+        val bossbar = PluginData.DataManager.playerDataMap.getOrPut(UUID.fromString(accountID)) { Player.PlayerData() }.titleMoneyBossbar
         if (bossbar == null) {
-            createBossbar(Bukkit.getPlayer(UUID.fromString(playerUUID)) ?: return)
+            createBossbar(Bukkit.getPlayer(UUID.fromString(accountID)) ?: return)
         } else {
-            bossbar.setTitle("${ChatColor.GOLD}所持金:${formalCurrency(money)}円")
+            bossbar.setTitle(bossbarTitle(accountID))
         }
     }
     fun formalCurrency(money: Int): String {
