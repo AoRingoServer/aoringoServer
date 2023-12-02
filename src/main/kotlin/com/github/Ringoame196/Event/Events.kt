@@ -425,68 +425,113 @@ class Events(private val plugin: Plugin) : Listener {
 
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
-        val player = e.whoClicked
-        if (player !is org.bukkit.entity.Player) {
-            return
-        }
+        val player = e.whoClicked as? org.bukkit.entity.Player ?: return
         val gui = e.view
-        val item = e.currentItem
+        val item = e.currentItem?:return
         val title = gui.title
         if (player.openInventory.topInventory != e.clickedInventory && player.openInventory.topInventory.type == InventoryType.WORKBENCH) {
-            if (item?.hasItemMeta() == false) {
-                return
+            if (item.hasItemMeta()) {
+                e.isCancelled = true
             }
-            e.isCancelled = true
             return
         }
         when (gui.title) {
-            "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item ?: return, e)
+            "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item , e)
             "${ChatColor.BLUE}職業選択" -> {
                 e.isCancelled = true
-                Job().change(player, item?.itemMeta?.displayName ?: return)
+                Job().change(player, item.itemMeta?.displayName ?: return)
             }
             "${ChatColor.BLUE}ヘルスケア" -> {
                 e.isCancelled = true
                 player.closeInventory()
             }
-
             "${ChatColor.RED}エンチャント" -> {
                 val book = gui.getItem(4)
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                if (item?.type != Material.BOOK && item?.type != null) {
+                if (item.type != Material.BOOK) {
                     e.isCancelled = true
-                }
-                if (item?.type == Material.ENCHANTING_TABLE && book?.type == Material.BOOK && !book.hasItemMeta() && book.amount == 1) {
+                } else if (item.type == Material.ENCHANTING_TABLE && book?.type == Material.BOOK && !book.hasItemMeta() && book.amount == 1) {
                     Block().enchant(player, gui, plugin)
                 }
             }
 
             "${ChatColor.BLUE}カゴ" -> {
-                if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}カゴ") {
+                if (item.itemMeta?.displayName == "${ChatColor.YELLOW}カゴ") {
                     e.isCancelled = true
                 }
-                val lore = item?.itemMeta?.lore?.get(0)
-                if (lore?.contains("消費期限:") == true) {
-                    return
+                val lore = item.itemMeta?.lore?.get(0)
+                if (lore?.contains("消費期限:") == false) {
+                    e.isCancelled = true
                 }
-                e.isCancelled = true
             }
 
             "${ChatColor.GOLD}クエスト" -> {
                 e.isCancelled = true
-                if (item?.itemMeta?.displayName != "${ChatColor.RED}辞退") {
-                    return
+                if (item.itemMeta?.displayName == "${ChatColor.RED}辞退") {
+                    Mission().reset(player)
                 }
-                Mission().reset(player)
             }
             "${ChatColor.BLUE}Fショップ" -> {
                 e.isCancelled = true
-                if (item?.itemMeta?.displayName != "${ChatColor.GREEN}購入") {
-                    return
+                if (item.itemMeta?.displayName == "${ChatColor.GREEN}購入") {
+                    val meta = item.itemMeta ?: return
+                    val price = meta.lore?.get(0)?.replace("円", "")?.toInt()?:return
+                    Fshop().buy(
+                        player,
+                        gui.getItem(3) ?: return,
+                        price,
+                        gui.getItem(0)?.itemMeta?.lore?.get(0) ?: return
+                    )
                 }
-                val meta = item.itemMeta ?: return
-                val price = meta.lore?.get(0)?.replace("円", "")?.toInt()
-                Fshop().buy(player, gui.getItem(3) ?: return, price ?: return, gui.getItem(0)?.itemMeta?.lore?.get(0) ?: return)
+            }
+            "${ChatColor.BLUE}スマートフォン" -> {
+                e.isCancelled = true
+                Smartphone().clickItem(player, item, plugin, e.isShiftClick)
+            }
+
+            "${ChatColor.GREEN}資源テレポート" -> {
+                e.isCancelled = true
+                Resource().guiClick(player, item.itemMeta?.displayName ?: return)
+            }
+
+            "${ChatColor.YELLOW}アイテム保護" -> {
+                player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+                when (item.type) {
+                    Material.RED_STAINED_GLASS_PANE -> e.isCancelled = true
+                    Material.ANVIL -> {
+                        e.isCancelled = true
+                        gui.setItem(3, ItemProtection().chekcProtection(gui.getItem(3) ?: return, player))
+                    }
+                    else -> return
+                }
+            }
+
+            "${ChatColor.YELLOW}OP用" -> {
+                e.isCancelled = true
+                Smartphone().opClick(item ?: return, plugin, e.isShiftClick, player)
+            }
+
+            "${ChatColor.BLUE}プレイヤー評価" -> {
+                e.isCancelled = true
+                player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+                if (item.type == Material.PLAYER_HEAD) {
+                    if (item.itemMeta?.displayName != player.name) {
+                        Evaluation().voidGUI(player, item)
+                    }
+                } else if (item.type == Material.STONE_BUTTON) {
+                    Evaluation().void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
+                }
+            }
+
+            "${ChatColor.YELLOW}WorldGuardGUI" -> {
+                e.isCancelled = true
+                Smartphone().wgClick(item ?: return, plugin, player, e.isShiftClick)
+            }
+
+            "${ChatColor.BLUE}スマートフォン(並び替え)" -> {
+                if ((item.type != Material.GREEN_CONCRETE || !item.hasItemMeta())) {
+                    e.isCancelled = true
+                }
             }
         }
         if (title.contains("@土地購入")) {
@@ -495,9 +540,9 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (title.contains("@土地設定")) {
             e.isCancelled = true
             val name = gui.title.replace("${ChatColor.BLUE}", "").replace("@土地設定", "")
-            val money = item?.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt()
+            val money = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt()
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-            when (item?.itemMeta?.displayName) {
+            when (item.itemMeta?.displayName) {
                 "${ChatColor.GREEN}メンバー追加" -> LandPurchase().addMemberGUI(player, name)
                 "${ChatColor.RED}メンバー削除" -> LandPurchase().removeMemberGUI(player, name)
                 "${ChatColor.YELLOW}前払い" -> LandPurchase().advancePayment(player, name, money ?: return)
@@ -505,16 +550,16 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (title.contains("@メンバー追加")) {
             e.isCancelled = true
             val name = gui.title.replace("${ChatColor.BLUE}", "").replace("@メンバー追加", "")
-            WorldGuard().addMemberToRegion(name, Bukkit.getPlayer(item?.itemMeta?.displayName ?: return) ?: return)
+            WorldGuard().addMemberToRegion(name, Bukkit.getPlayer(item.itemMeta?.displayName ?: return) ?: return)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
         } else if (title.contains("@メンバー削除")) {
             e.isCancelled = true
             val name = gui.title.replace("${ChatColor.RED}", "").replace("@メンバー削除", "")
-            WorldGuard().removeMember(name, item?.itemMeta?.displayName ?: return, player.world)
+            WorldGuard().removeMember(name, item.itemMeta?.displayName ?: return, player.world)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
-        } else if (title.contains("${ChatColor.BLUE}保護設定") && item?.itemMeta?.displayName == "${ChatColor.GREEN}作成") {
+        } else if (title.contains("${ChatColor.BLUE}保護設定") && item.itemMeta?.displayName == "${ChatColor.GREEN}作成") {
             e.isCancelled = true
             Smartphone().protection(player, item ?: return, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
         } else if (title == "${ChatColor.RED}リンゴスクラッチ" && e.clickedInventory != player.inventory) {
@@ -528,7 +573,7 @@ class Events(private val plugin: Plugin) : Listener {
                 Material.BARRIER
             )
             val scratchItem = Scratch().click(itemList)
-            if (item?.itemMeta?.displayName == "${ChatColor.RED}削る") {
+            if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
             if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", null, 7, 1)) <= 6) {
@@ -542,64 +587,11 @@ class Events(private val plugin: Plugin) : Listener {
                 Material.BARRIER
             )
             val scratchItem = Scratch().click(itemList)
-            if (item?.itemMeta?.displayName == "${ChatColor.RED}削る") {
+            if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
             if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", null, 7, 1)) == 0) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 9, player, 1000000)
-            }
-        }
-        when (gui.title) {
-            "${ChatColor.BLUE}スマートフォン" -> {
-                e.isCancelled = true
-                Smartphone().clickItem(player, item ?: return, plugin, e.isShiftClick)
-            }
-
-            "${ChatColor.GREEN}資源テレポート" -> {
-                e.isCancelled = true
-                Resource().guiClick(player, item?.itemMeta?.displayName ?: return)
-            }
-
-            "${ChatColor.YELLOW}アイテム保護" -> {
-                player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                when (item?.type) {
-                    Material.RED_STAINED_GLASS_PANE -> e.isCancelled = true
-                    Material.ANVIL -> {
-                        e.isCancelled = true
-                        gui.setItem(3, ItemProtection().chekcProtection(gui.getItem(3) ?: return, player))
-                    }
-
-                    else -> return
-                }
-            }
-
-            "${ChatColor.YELLOW}OP用" -> {
-                e.isCancelled = true
-                Smartphone().opClick(item ?: return, plugin, e.isShiftClick, player)
-            }
-
-            "${ChatColor.BLUE}プレイヤー評価" -> {
-                e.isCancelled = true
-                player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                if (item?.type == Material.PLAYER_HEAD) {
-                    if (item.itemMeta?.displayName == player.name) {
-                        return
-                    }
-                    Evaluation().voidGUI(player, item)
-                } else if (item?.type == Material.STONE_BUTTON) {
-                    Evaluation().void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
-                }
-            }
-
-            "${ChatColor.YELLOW}WorldGuardGUI" -> {
-                e.isCancelled = true
-                Smartphone().wgClick(item ?: return, plugin, player, e.isShiftClick)
-            }
-
-            "${ChatColor.BLUE}スマートフォン(並び替え)" -> {
-                if ((item?.type != Material.GREEN_CONCRETE || !item.hasItemMeta()) && item != null) {
-                    e.isCancelled = true
-                }
             }
         }
     }
@@ -610,6 +602,9 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.block
         val worldName = player.world.name
         if (player.gameMode == GameMode.CREATIVE) { return }
+        if (worldName == "shop" || worldName == "world") {
+            return
+        }
         if (worldName == "dungeon") {
             when (block.type) {
                 Material.OBSIDIAN -> ArmorStand().summonMarker(block.location, " ").addScoreboardTag("breakObsidian")
@@ -619,40 +614,20 @@ class Events(private val plugin: Plugin) : Listener {
                     e.isCancelled = true
                 }
             }
-            return
-        }
-        if (worldName == "shop" || worldName == "world") {
-            return
-        }
-        if (block.type.toString().contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター") {
+        } else if (block.type.toString().contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター") {
             e.isCancelled = true
             AoringoEvents().onErrorEvent(player, "${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
-        } else if (block.type == Material.SMOKER) {
-            for (
-                entity in block.world.getNearbyEntities(
-                    block.location.clone().add(0.0, 1.0, 0.0),
-                    0.5,
-                    0.5,
-                    0.5
-                )
-            ) {
-                if (entity !is ItemFrame) {
-                    continue
-                }
-                entity.remove()
-            }
-        } else if ((block.type == Material.GRASS || block.type == Material.TALL_GRASS) && Job().get(player) == "${ChatColor.GOLD}ハンター") {
-            if (Random.nextInt(0, 3) != 0) {
-                return
-            }
-            Job().giveVegetables(block.location)
         }
         when (block.type) {
+            Material.GRASS,Material.TALL_GRASS -> {
+                if (Job().get(player) != "${ChatColor.GOLD}ハンター") { return }
+                if (Random.nextInt(0, 3) != 0) { return }
+                Job().giveVegetables(block.location)
+            }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
                 for (item in block.drops) {
                     val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
-                    player.sendMessage(item.type.toString())
                     if (vegetablesName == null) {
                         block.world.dropItem(block.location, item)
                     } else {
@@ -670,45 +645,28 @@ class Events(private val plugin: Plugin) : Listener {
                 }
                 block.type = Material.AIR
             }
-
-            Material.BARREL -> {
-                val barrel = block.state as Barrel
-                val ngName = mutableListOf("admingift", "クエスト")
-                if (player.gameMode == GameMode.CREATIVE) {
-                    return
-                }
-                if (!ngName.contains(barrel.customName)) {
-                    return
-                }
+            Material.OAK_SIGN -> {
+                val sign = block.state as Sign
+                if (sign.getLine(0) != "${ChatColor.YELLOW}[土地販売]") { return }
                 e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "破壊禁止です")
+            }
+            Material.SMOKER -> {
+                for (
+                entity in block.world.getNearbyEntities(
+                    block.location.clone().add(0.0, 1.0, 0.0),
+                    0.5,
+                    0.5,
+                    0.5
+                )
+                ) {
+                    if (entity !is ItemFrame) {
+                        continue
+                    }
+                    entity.remove()
+                }
             }
         }
-        val blockCount = Scoreboard().getValue("blockCount", player.name)
-        if (blockCount == 0) {
-            Bukkit.getScheduler().runTaskLater(
-                plugin,
-                Runnable {
-                    Scoreboard().set("blockCount", player.name, 0)
-                },
-                100L
-            )
-        }
-        Scoreboard().add("blockCount", player.name, 1)
-        val out = 110
-        if (blockCount >= out) {
-            val number = Random.nextInt(1, 9999)
-            val message = "${ChatColor.RED}[アンチチート]チートを感知したためBANされました。 誤BANの場合は運営まで連絡をしてください(ナンバー$number)"
-            Bukkit.getBanList(BanList.Type.NAME).addBan(player.name, message, null, "AntiNuker")
-            player.kickPlayer(message)
-            Discord().setJson(player, "AntiCheatプラグイン", "https://static.wikia.nocookie.net/minecraft_ja_gamepedia/images/2/27/Barrier.gif/revision/latest?cb=20201228114801", "25500", "BAN", "5秒以内に${out}ブロック以上破壊したためBANされました(ナンバー$number)", PluginData.DataManager.serverlog ?: return)
-        }
-        if (player.isOp) { return }
-        if (block.type == Material.OAK_SIGN) {
-            val sign = block.state as Sign
-            if (sign.getLine(0) != "${ChatColor.YELLOW}[土地販売]") { return }
-            e.isCancelled = true
-        }
+        AntiCheat().nuker(player,plugin,110)
     }
 
     @EventHandler
