@@ -646,69 +646,21 @@ class Events(private val plugin: Plugin) : Listener {
                 return
             }
             Job().giveVegetables(block.location)
-        } else if (block.type == Material.WATER_CAULDRON || block.type == Material.CAULDRON) {
-            val location = block.location.add(0.5, 0.0, 0.5)
-            val armorStandList = Cook().findArmorStandsInRadius(location, 0.5)
-            for (armorStand in armorStandList) {
-                val playerItem = armorStand.equipment?.helmet ?: continue
-                Item().drop(location, playerItem)
-                armorStand.remove()
-            }
         }
         when (block.type) {
-            Material.WHEAT -> {
+            Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
                 for (item in block.drops) {
-                    if (item.type != Material.WHEAT) {
+                    val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
+                    player.sendMessage(item.type.toString())
+                    if (vegetablesName == null) {
                         block.world.dropItem(block.location, item)
                     } else {
                         block.world.dropItem(
                             block.location,
                             Item().make(
-                                Material.WHEAT,
-                                "${ChatColor.GREEN}小麦",
-                                Food().giveExpirationDate(14),
-                                0,
-                                1
-                            )
-                        )
-                    }
-                }
-                block.type = Material.AIR
-            }
-
-            Material.CARROTS -> {
-                e.isCancelled = true
-                for (item in block.drops) {
-                    if (item.type != Material.CARROT) {
-                        block.world.dropItem(block.location, item)
-                    } else {
-                        block.world.dropItem(
-                            block.location,
-                            Item().make(
-                                Material.CARROT,
-                                "${ChatColor.GOLD}人参",
-                                Food().giveExpirationDate(14),
-                                0,
-                                1
-                            )
-                        )
-                    }
-                }
-                block.type = Material.AIR
-            }
-
-            Material.POTATOES -> {
-                e.isCancelled = true
-                for (item in block.drops) {
-                    if (item.type != Material.POTATO) {
-                        block.world.dropItem(block.location, item)
-                    } else {
-                        block.world.dropItem(
-                            block.location,
-                            Item().make(
-                                Material.POTATO,
-                                "${ChatColor.GOLD}じゃがいも",
+                                item.type,
+                                vegetablesName,
                                 Food().giveExpirationDate(14),
                                 0,
                                 1
@@ -765,11 +717,13 @@ class Events(private val plugin: Plugin) : Listener {
         if (player !is org.bukkit.entity.Player) { return }
         val item = e.currentItem
         val type = item?.type
-        val ngItem = mutableListOf(Material.HOPPER,Material.TNT)
+        val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目", null, null, 1)
         } else if (item?.itemMeta?.displayName?.contains("包丁") == true) {
             e.currentItem = Cook().knifeSharpness(item)
+        } else if (item?.itemMeta?.displayName?.contains("契約書") == true) {
+            e.currentItem = Item().copyBlock(item, player)
         }
         if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
             if (Job().tool().contains(item?.type)) {
