@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Job
 
+import com.github.Ringoame196.Event.AoringoEvents
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
@@ -181,16 +182,19 @@ class Cook {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
     fun fry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
+        val fryItem = CookData().fly(item) ?: return
+        if (!Cook().isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
+            return
+        }
+        Item().removeMainItem(player)
+        player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (Food().isExpirationDate(player, item)) { return }
-        val armorStand = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, -0.2, 0.5), " ")
         val timer = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, 1.0, 0.5), " ")
-        armorStand.equipment?.helmet = item
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 15 - (level * 2)
         object : BukkitRunnable() {
             override fun run() {
                 if (block.location.block.type != Material.LAVA_CAULDRON) {
-                    armorStand.remove()
                     timer.remove()
                     this.cancel()
                 }
@@ -199,7 +203,6 @@ class Cook {
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
                 if (c == 0) {
                     Item().drop(block.location.clone().add(0.5, 1.0, 0.5), CookData().fly(item) ?: return)
-                    armorStand.remove()
                     timer.remove()
                     block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
                     this.cancel()

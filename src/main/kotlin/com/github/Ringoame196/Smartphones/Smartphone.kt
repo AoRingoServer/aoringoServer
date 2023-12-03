@@ -17,17 +17,17 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    fun open(plugin: Plugin, player: org.bukkit.entity.Player) {
+    fun createGUI(plugin: Plugin, player: Player):Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         val smartphone = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
         val apks = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
-        player.openInventory(gui)
         if (apks.isNullOrEmpty()) {
-            return
+            return gui
         }
 
         val minSize = minOf(smartphone.size, apks.size)
@@ -35,6 +35,7 @@ class Smartphone {
             val apkName = apks[i]
             gui.setItem(smartphone[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", null, giveCustomModel(apkName), 1))
         }
+        return gui
     }
     fun giveCustomModel(itemName: String): Int {
         return when (itemName) {
@@ -55,7 +56,7 @@ class Smartphone {
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
             APK().remove(player, itemName, item.itemMeta?.customModelData ?: 0, plugin)
-            open(plugin, player)
+            player.openInventory(createGUI(plugin, player))
             return
         }
         if (shift) { return }
@@ -107,8 +108,9 @@ class Smartphone {
         }
     }
     fun wgClick(item: ItemStack, plugin: Plugin, player: org.bukkit.entity.Player, shift: Boolean) {
+        val playerClass = com.github.Ringoame196.Entity.Player(player, plugin)
         if (player.world.name != "Home" && !player.isOp) {
-            AoringoEvents().onErrorEvent(player, "保護は生活ワールドのみ使用可能です")
+            playerClass.sendErrorMessage("保護は生活ワールドのみ使用可能です")
             player.closeInventory()
             return
         }
@@ -140,21 +142,21 @@ class Smartphone {
             }
             "${ChatColor.AQUA}メンバー追加" -> {
                 if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    AoringoEvents().onErrorEvent(player, "自分の保護土地内で実行してください")
+                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
                     return
                 }
                 LandPurchase().addMemberGUI(player, WorldGuard().getName(player.location))
             }
             "${ChatColor.RED}メンバー削除" -> {
                 if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    AoringoEvents().onErrorEvent(player, "自分の保護土地内で実行してください")
+                    playerClass.sendErrorMessage( "自分の保護土地内で実行してください")
                     return
                 }
                 LandPurchase().removeMemberGUI(player, WorldGuard().getName(player.location) ?: return)
             }
             "${ChatColor.RED}削除" -> {
                 if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    AoringoEvents().onErrorEvent(player, "自分の保護土地内で実行してください")
+                    playerClass.sendErrorMessage( "自分の保護土地内で実行してください")
                     return
                 }
                 if (!shift) { return }
@@ -163,13 +165,14 @@ class Smartphone {
             }
         }
     }
-    fun protectionGUI(player: org.bukkit.entity.Player, name: String) {
+    fun protectionGUI(player:Player, name: String) {
+        val playerClass = com.github.Ringoame196.Entity.Player(player,null)
         if (LandPurchase().doesRegionContainProtection(player)) {
-            AoringoEvents().onErrorEvent(player, "保護範囲が含まれています")
+            playerClass.sendErrorMessage( "保護範囲が含まれています")
             return
         }
         if (WorldGuard().getProtection(player, name)) {
-            AoringoEvents().onErrorEvent(player, "同じ名前の保護を設定することは不可能です")
+            playerClass.sendErrorMessage("同じ名前の保護を設定することは不可能です")
             return
         }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
@@ -179,7 +182,7 @@ class Smartphone {
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
         if ((Money().get(player.uniqueId.toString())) < price) {
-            AoringoEvents().onErrorEvent(player, "お金が足りません")
+            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage( "お金が足りません")
             return
         }
         player.performCommand("/expand vert")
@@ -227,7 +230,7 @@ class Smartphone {
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
-            AoringoEvents().onErrorEvent(player, "お金が足りません")
+            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage( "お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1

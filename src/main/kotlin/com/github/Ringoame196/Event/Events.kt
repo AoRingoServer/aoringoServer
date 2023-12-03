@@ -83,127 +83,117 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val player = e.player
+        val playerClass = Player(player, plugin)
         if (!player.scoreboardTags.contains("member")) {
-            AoringoEvents().onFastJoinEvent(e)
+            playerClass.fastJoin(e)
         }
-        Player().setName(player)
-        Player().setProtectionPermission(player, plugin)
-        player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString()).toDouble()
-        ResourcePack(plugin).adaptation(e.player)
-        if (player.world.name == "Survival") {
-            player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
-        }
-        Scoreboard().set("blockCount", player.name, 0)
-        Player().setTab(player)
-        Player().permission(player, plugin, "enderchest.size.${Scoreboard().getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true)
-        Money().createBossbar(player)
+        playerClass.setPlayer()
     }
 
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
+        val playerClass = Player(player, plugin)
         val item = e.item
         val itemName = item?.itemMeta?.displayName
         val block = e.clickedBlock
         val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
+        val playerItem = player.inventory.itemInMainHand
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
         if (item != player.inventory.itemInMainHand && item != null) { return }
         if (block?.type == Material.OAK_SIGN && downBlock?.type == Material.BARREL) {
             val sign = block.state as Sign
             when (sign.getLine(0)) {
-                "Fshop" -> {
-                    e.isCancelled = true
-                    val itemFrame = block.world.spawn(block.location, org.bukkit.entity.ItemFrame::class.java)
-                    itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
-                    block.type = Material.AIR
-                }
+                "Fshop" -> Fshop().make(sign,player)
                 "[土地販売]" -> LandPurchase().make(player, sign)
                 "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
             }
         }
-        if (block?.type == Material.ANVIL || block?.type == Material.CHIPPED_ANVIL || block?.type == Material.DAMAGED_ANVIL) {
-            if (player.gameMode == GameMode.CREATIVE) {
-                return
-            }
-            e.isCancelled = true
-            Anvil().open(player)
-        } else if (block?.type == Material.SMITHING_TABLE) {
-            if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
-                AoringoEvents().onErrorEvent(player, "${ChatColor.RED}鍛冶屋以外は使用することができません")
+        when(block?.type){
+            Material.ANVIL,Material.DAMAGED_ANVIL -> {
+                if (player.gameMode == GameMode.CREATIVE) { return }
                 e.isCancelled = true
-            }
-        } else if (block?.type == Material.SMOKER) {
-            e.isCancelled = true
-        } else if (itemName == "職業スター") {
-            if (player.inventory.itemInMainHand != item) {
-                return
-            }
-            Job().selectGUI(player)
-        } else if (itemName == "まな板") {
-            e.isCancelled = true
-            if (block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block?.type != Material.AIR) {
-                return
-            }
-            Cook().cuttingBoard(block)
-            val playerItem = player.inventory.itemInMainHand
-            playerItem.amount = playerItem.amount - 1
-            player.inventory.setItemInMainHand(playerItem)
-        } else if (downBlock?.type == Material.CAMPFIRE && (block.type == Material.WATER_CAULDRON || block.type == Material.CAULDRON)) {
-            if (e.action != Action.RIGHT_CLICK_BLOCK) {
-                return
-            }
-            upBlock ?: return
-            if (upBlock.type == Material.IRON_TRAPDOOR) {
-                return
-            }
-            Cook().pot(block, player, plugin)
-        } else if (block?.type == Material.ENCHANTED_BOOK) {
-            e.isCancelled = true
-        } else if (block?.type == Material.LAVA_CAULDRON) {
-            item ?: return
-            val fryItem = CookData().fly(item) ?: return
-            if (!Cook().isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
-                return
-            }
-            player.world.playSound(player.location, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-            Item().remove(player)
-            Cook().fry(player, block, item, plugin)
-        } else if (block?.type == Material.BARREL && downBlock?.type == Material.CAMPFIRE && item?.itemMeta?.displayName == "${ChatColor.YELLOW}おたま") {
-            e.isCancelled = true
-            Cook().pot(block, player, plugin)
-            if (Random.nextInt(0, 100) != 0) {
-                return
-            }
-            player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-            AoringoEvents().onErrorEvent(player, "おたまがぶっ壊れた")
-        } else if (block?.type == Material.ENCHANTING_TABLE) {
-            e.isCancelled = true
-            if (player.foodLevel < 10) {
-                AoringoEvents().onErrorEvent(player, "満腹度が足りません")
-                return
-            }
-            Block().enchantGUI(player)
-        } else if (itemName == "${ChatColor.YELLOW}カゴ") {
-            if (player.inventory.itemInMainHand != item) {
-                return
-            }
-            e.isCancelled = true
-            Cage().open(player)
-        } else if (block?.type == Material.BARREL) {
-            if (player.gameMode == GameMode.CREATIVE) {
-                return
-            }
-            val barrel = block.state as Barrel
-            if (barrel.customName == "クエスト") {
-                e.isCancelled = true
-                if (Scoreboard().getValue("mission", player.name) == 0) {
-                    Mission().set(player, barrel)
+                if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
+                    player.openInventory(Anvil().makeGUI())
                 } else {
-                    Mission().check(player, barrel)
+                    playerClass.sendErrorMessage("金床は鍛冶屋以外使用できません")
                 }
             }
-        } else if ((block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) && item?.type == Material.GLASS_BOTTLE) {
+            Material.SMITHING_TABLE -> {
+                if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
+                    playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
+                    e.isCancelled = true
+                }
+            }
+            Material.SMOKER -> e.isCancelled = true
+            Material.LAVA_CAULDRON -> Cook().fry(player, block, item?:return, plugin)
+            Material.ENCHANTING_TABLE -> {
+                e.isCancelled = true
+                if (player.foodLevel < 10) {
+                    playerClass.sendErrorMessage("満腹度が足りません")
+                } else {
+                    Block().enchantGUI(player)
+                }
+            }
+            Material.BARREL -> {
+                val barrel = block.state as Barrel
+                if (player.gameMode == GameMode.CREATIVE) {
+                    return
+                }
+                when(barrel.customName) {
+                    "クエスト" -> {
+                        e.isCancelled = true
+                        if (Scoreboard().getValue("mission", player.name) == 0) {
+                            Mission().set(player, barrel)
+                        } else {
+                            Mission().check(player, barrel)
+                        }
+                    }
+                    "admingift" -> {
+                        e.isCancelled = true
+                        Item().giveBarrelGift(player,barrel,"admingift")
+                    }
+                }
+            }
+        }
+        when(itemName){
+            "職業スター" -> player.openInventory(Job().makeSelectGUI())
+            "まな板" -> {
+                e.isCancelled = true
+                if (block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block?.type == Material.AIR) {
+                    Cook().cuttingBoard(block)
+                    Item().removeMainItem(player)
+                }
+            }
+            "${ChatColor.YELLOW}おたま" -> {
+                if (block?.type != Material.BARREL || downBlock?.type != Material.CAMPFIRE) { return }
+                e.isCancelled = true
+                Cook().pot(block, player, plugin)
+                Item().breakLadle(player)
+            }
+            "${ChatColor.YELLOW}カゴ" -> {
+                e.isCancelled = true
+                Cage().open(player)
+            }
+            "${ChatColor.YELLOW}スマートフォン" -> player.openInventory(Smartphone().createGUI(plugin,player))
+            "${ChatColor.RED}リンゴスクラッチ","${ChatColor.YELLOW}金リンゴスクラッチ" -> {
+                Item().removeMainItem(player)
+                Scratch().open(player, "${ChatColor.YELLOW}金リンゴスクラッチ")
+            }
+            "${ChatColor.RED}会社情報本" -> {
+                if (!ItemProtection().isPlayerProtection(item, player)) {
+                    playerClass.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
+                } else {
+                    player.openInventory(Company().createGUI())
+                }
+            }
+            "${ChatColor.YELLOW}エンダーチェスト容量UP" -> {
+                e.isCancelled = true
+                EnderChest().update(player, plugin)
+            }
+        }
+        if ((block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) && item?.type == Material.GLASS_BOTTLE) {
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             if (beeNest.honeyLevel != 5 || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
@@ -220,25 +210,11 @@ class Events(private val plugin: Plugin) : Listener {
                     1
                 )
             )
-            val playerItem = player.inventory.itemInMainHand.clone()
-            playerItem.amount = playerItem.amount - 1
-            player.inventory.setItemInMainHand(playerItem)
+            Item().removeMainItem(player)
         }
-        if (player.world.name == "Survival") {
-            val ngItem = mutableListOf(Material.LAVA_BUCKET, Material.FLINT_AND_STEEL, Material.FIRE_CHARGE)
-            if (ngItem.contains(item?.type)) {
-                e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "${item?.type}は使用禁止です")
-                return
-            }
-        }
-        if (item == Item().smartphone()) {
-            Smartphone().open(plugin, player)
-        } else if (item?.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
+        if (item?.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             val money = itemName?.replace("${ChatColor.GREEN}", "")?.replace("円", "")?.toInt()
-            if (money == 0) {
-                return
-            }
+            if (money == 0) { return }
             Money().add(player.uniqueId.toString(), (money?.times(item.amount) ?: return), true)
             player.inventory.remove(item)
         } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}契約書[未記入]") {
@@ -249,50 +225,11 @@ class Events(private val plugin: Plugin) : Listener {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
             } else {
-                Player().sendActionBar(player, "お金を受け取るにはシフトをしてください")
+                playerClass.sendActionBar("お金を受け取るにはシフトをしてください")
             }
-        } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}エンダーチェスト容量UP") {
-            e.isCancelled = true
-            if (player.inventory.itemInMainHand != item) {
-                return
-            }
-            EnderChest().update(player, plugin)
-        } else if (block?.type == Material.BARREL && player.gameMode != GameMode.CREATIVE) {
-            val barrel = block.state as Barrel
-            if (barrel.customName != "admingift") {
-                return
-            }
-            e.isCancelled = true
-            if (Scoreboard().getValue("admingift", player.uniqueId.toString()) != 0) {
-                AoringoEvents().onErrorEvent(player, "既にギフトを受け取っています")
-                return
-            }
-            player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1f, 1f)
-            Scoreboard().set("admingift", player.uniqueId.toString(), 1)
-            for (barrelItem in barrel.inventory) {
-                barrelItem ?: continue
-                player.inventory.addItem(barrelItem)
-            }
-            player.sendMessage("${ChatColor.AQUA}Great gift for you!")
-        } else if (itemName == "${ChatColor.RED}リンゴスクラッチ") {
-            val clearItem = item.clone()
-            clearItem.amount = 1
-            player.inventory.removeItem(clearItem)
-            Scratch().open(player, "${ChatColor.RED}リンゴスクラッチ")
-        } else if (itemName == "${ChatColor.YELLOW}金リンゴスクラッチ") {
-            val clearItem = item.clone()
-            clearItem.amount = 1
-            player.inventory.removeItem(clearItem)
-            Scratch().open(player, "${ChatColor.YELLOW}金リンゴスクラッチ")
         } else if (itemName?.contains("[アプリケーション]") == true) {
             APK().add(player, itemName, plugin)
             e.isCancelled = true
-        } else if (itemName == "${ChatColor.RED}会社情報本") {
-            if (!ItemProtection().isPlayerProtection(item, player)) {
-                AoringoEvents().onErrorEvent(player, "会社情報本を使うには、アイテムを保護を設定する必要があります")
-            } else {
-                Company().openGUI(player)
-            }
         }
     }
 

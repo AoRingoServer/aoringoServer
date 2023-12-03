@@ -1,45 +1,70 @@
 package com.github.Ringoame196.Entity
 
+import com.github.Ringoame196.Data.Money
+import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
+import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
+import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
+import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
-class Player {
+class Player(val player: Player,val plugin: Plugin?) {
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var speedMeasurement: Boolean = false
     )
-    fun setName(player: Player) {
-        val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
-        val jobColor = mutableListOf("", "${ChatColor.DARK_PURPLE}", "${ChatColor.DARK_RED}", "${ChatColor.GRAY}")
-        player.setDisplayName("${jobColor[jobID]}${player.displayName}@${Job().get(player)}")
-        player.setPlayerListName("${jobColor[jobID]}${player.playerListName}")
+    fun setPlayer(){
+        val scoreboardClass = Scoreboard()
+        setJobName()
+        setProtectionPermission()
+        setTab()
+        player.maxHealth = 20.0 + scoreboardClass.getValue("status_HP", player.uniqueId.toString()).toDouble()
+        ResourcePack(plugin?:return).adaptation(player)
+        if (player.world.name == "Survival") {
+            player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
+        }
+        scoreboardClass.set("blockCount", player.name, 0)
+        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true)
+        Money().createBossbar(player)
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
             player.setPlayerListName("${ChatColor.YELLOW}[運営]" + player.playerListName)
         }
     }
+    fun setJobName() {
+        val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
+        val jobColor = mutableListOf("", "${ChatColor.DARK_PURPLE}", "${ChatColor.DARK_RED}", "${ChatColor.GRAY}")
+        val jobPrefix = jobColor[jobID]
+        player.setDisplayName("$jobPrefix${player.displayName}@${Job().get(player)}")
+        player.setPlayerListName("$jobPrefix${player.playerListName}")
+    }
     private fun levelupMessage(player: Player, message: String) {
         player.sendMessage(message)
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
-    fun addPower(player: Player) {
+    fun sendErrorMessage(message:String){
+        player.sendMessage("${ChatColor.RED}$message")
+        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
+    }
+    fun addPower() {
         Scoreboard().add("status_Power", player.uniqueId.toString(), 1)
         levelupMessage(player, "${ChatColor.YELLOW}パワーアップ！！")
     }
-    fun addMaxHP(player: Player) {
+    fun addMaxHP() {
         Scoreboard().add("status_HP", player.uniqueId.toString(), 1)
         levelupMessage(player, "${ChatColor.RED}最大HPアップ！！")
         player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString())
     }
-    fun sendActionBar(player: Player, message: String) {
+    fun sendActionBar(message: String) {
         val actionBarMessage = ChatColor.translateAlternateColorCodes('&', message)
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(actionBarMessage))
     }
@@ -58,12 +83,12 @@ class Player {
 
         return playersInRadius
     }
-    fun permission(player: Player, plugin: Plugin, permission: String, allow: Boolean) {
-        val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
+    fun permission(permission: String, allow: Boolean) {
+        val permissions = player.addAttachment(plugin?:return) // "plugin" はプラグインのインスタンスを指します
         permissions.setPermission(permission, allow)
         player.recalculatePermissions()
     }
-    fun setTab(player: Player) {
+    fun setTab() {
         player.playerListHeader = "${ChatColor.AQUA}青りんごサーバー"
         player.playerListFooter = "${ChatColor.YELLOW}" + when (player.world.name) {
             "world" -> "ロビーワールド"
@@ -75,9 +100,9 @@ class Player {
             else -> "${ChatColor.RED}未設定"
         }
     }
-    fun setProtectionPermission(player: Player, plugin: Plugin) {
+    fun setProtectionPermission() {
         permission(
-            player, plugin, "blocklocker.protect",
+            "blocklocker.protect",
             when (player.world.name) {
                 "Survival" -> true
                 "Home" -> true
@@ -90,5 +115,13 @@ class Player {
         val deltaZ = Math.abs(pos1.z.toInt() - pos2.z.toInt())
 
         return maxOf(deltaX, deltaZ)
+    }
+    fun fastJoin(e: PlayerJoinEvent) {
+        val player = e.player
+        e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
+        player.inventory.addItem(Item().make(Material.ENCHANTED_BOOK, "${ChatColor.YELLOW}スマートフォン", null, 1, 1))
+        player.inventory.addItem(Item().make(Material.NETHER_STAR, "職業スター", null, null, 1))
+        player.scoreboardTags.add("member")
+        Scoreboard().set("money", player.uniqueId.toString(), 30000)
     }
 }

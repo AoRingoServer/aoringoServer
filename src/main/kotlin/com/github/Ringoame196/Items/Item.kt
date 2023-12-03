@@ -2,10 +2,12 @@ package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Event.AoringoEvents
+import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Barrel
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Item
 import org.bukkit.entity.Player
@@ -13,8 +15,10 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.plugin.Plugin
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 class Item {
     fun make(material: Material, name: String, lore: String?, customModelData: Int?, amount: Int?): ItemStack {
@@ -30,6 +34,11 @@ class Item {
             item.amount = amount
         }
         return item
+    }
+    fun removeMainItem(player: Player){
+        val playerItem = player.inventory.itemInMainHand.clone()
+        playerItem.amount = playerItem.amount -1
+        player.inventory.setItemInMainHand(playerItem)
     }
 
     fun getInventoryItemCount(inventory: Inventory): Int {
@@ -54,12 +63,6 @@ class Item {
         item.itemStack = itemStack
     }
 
-    fun remove(player: Player) {
-        val item = player.inventory.itemInMainHand
-        item.amount = item.amount - 1
-        player.inventory.setItemInMainHand(item)
-    }
-
     fun request(player: Player, message: String) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
@@ -77,7 +80,8 @@ class Item {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
 
-    fun contract(player: Player, message: String) {
+    fun contract(player: Player, message: String,plugin:Plugin) {
+        val playerClass = com.github.Ringoame196.Entity.Player(player,plugin)
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val money = message.replace("!契約 ", "")
@@ -85,11 +89,11 @@ class Item {
         val priceIndex = bookMessage.indexOf("取引金額：")
         val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "")
         if (money != priceMessage) {
-            AoringoEvents().onErrorEvent(player, "金額が違います")
+            playerClass.sendErrorMessage("金額が違います")
             return
         }
         if (Money().get(player.name) < money.toInt()) {
-            AoringoEvents().onErrorEvent(player, "お金が足りません")
+            playerClass.sendErrorMessage("お金が足りません")
             return
         }
         Money().remove(player.name, money.toInt(), false)
@@ -144,5 +148,25 @@ class Item {
         meta?.setCustomModelData(1)
         item.setItemMeta(meta)
         return item
+    }
+    fun breakLadle(player: Player){
+        if (Random.nextInt(0, 100) != 0) {
+            return
+        }
+        Item().removeMainItem(player)
+        com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage("おたまがぶっ壊れた")
+    }
+    fun giveBarrelGift(player: Player,barrel:Barrel,management:String){
+        if (Scoreboard().getValue(management , player.uniqueId.toString()) != 0) {
+            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage("既にギフトを受け取っています")
+            return
+        }
+        player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1f, 1f)
+        Scoreboard().set(management, player.uniqueId.toString(), 1)
+        for (barrelItem in barrel.inventory) {
+            barrelItem ?: continue
+            player.inventory.addItem(barrelItem)
+        }
+        player.sendMessage("${ChatColor.AQUA}Great gift for you!")
     }
 }
