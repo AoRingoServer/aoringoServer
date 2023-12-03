@@ -1,7 +1,6 @@
 package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Data.Money
-import com.github.Ringoame196.Event.AoringoEvents
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -22,7 +21,7 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 class Item {
-    fun make(material: Material, name: String, lore: String = "", customModelData: Int = 0, amount: Int = 1): ItemStack {
+    fun make(material: Material, name: String = "", lore: String = "", customModelData: Int = 0, amount: Int = 1): ItemStack {
         val item = ItemStack(material)
         val meta = item.itemMeta
         meta?.setDisplayName(name)
@@ -36,9 +35,9 @@ class Item {
         item.amount = amount
         return item
     }
-    fun removeMainItem(player: Player){
+    fun removeMainItem(player: Player) {
         val playerItem = player.inventory.itemInMainHand.clone()
-        playerItem.amount = playerItem.amount -1
+        playerItem.amount = playerItem.amount - 1
         player.inventory.setItemInMainHand(playerItem)
     }
 
@@ -81,8 +80,8 @@ class Item {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
 
-    fun contract(player: Player, message: String,plugin:Plugin) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player,plugin)
+    fun contract(player: Player, message: String) {
+        val playerClass = com.github.Ringoame196.Entity.Player(player)
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val money = message.replace("!契約 ", "")
@@ -150,23 +149,23 @@ class Item {
         item.setItemMeta(meta)
         return item
     }
-    fun breakLadle(player: Player){
+    fun breakLadle(player: Player) {
         if (Random.nextInt(0, 100) != 0) {
             return
         }
         Item().removeMainItem(player)
-        com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage("おたまがぶっ壊れた")
+        com.github.Ringoame196.Entity.Player(player).sendErrorMessage("おたまがぶっ壊れた")
     }
-    fun breakHandle(itemFrame:ItemFrame,playerClass: com.github.Ringoame196.Entity.Player){
+    fun breakHandle(itemFrame: ItemFrame, playerClass: com.github.Ringoame196.Entity.Player) {
         if (Random.nextInt(0, 100) != 0) {
             return
         }
         itemFrame.setItem(ItemStack(Material.AIR))
         playerClass.sendErrorMessage("ハンドルがぶっ壊れた")
     }
-    fun giveBarrelGift(player: Player,barrel:Barrel,management:String){
-        if (Scoreboard().getValue(management , player.uniqueId.toString()) != 0) {
-            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage("既にギフトを受け取っています")
+    fun giveBarrelGift(player: Player, barrel: Barrel, management: String) {
+        if (Scoreboard().getValue(management, player.uniqueId.toString()) != 0) {
+            com.github.Ringoame196.Entity.Player(player).sendErrorMessage("既にギフトを受け取っています")
             return
         }
         player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1f, 1f)

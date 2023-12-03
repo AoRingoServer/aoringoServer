@@ -2,7 +2,6 @@ package com.github.Ringoame196.Shop
 
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.Event.AoringoEvents
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -10,7 +9,6 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
-import org.bukkit.block.Block
 import org.bukkit.block.Sign
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
@@ -18,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class Fshop {
-    fun make(sign:Sign,player: Player){
+    fun make(sign: Sign, player: Player) {
         val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
         itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
         sign.type = Material.AIR

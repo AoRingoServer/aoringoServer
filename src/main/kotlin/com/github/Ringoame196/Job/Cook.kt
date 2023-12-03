@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Job
 
-import com.github.Ringoame196.Event.AoringoEvents
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
@@ -284,7 +283,7 @@ class Cook {
                 in 1001..10000 -> 10000
                 else -> 0
             } - Scoreboard().getValue("cookCount", player.uniqueId.toString())
-            com.github.Ringoame196.Entity.Player().sendActionBar(player, "${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
+            com.github.Ringoame196.Entity.Player(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
         }
     }
 }

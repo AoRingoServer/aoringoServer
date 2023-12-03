@@ -75,7 +75,7 @@ class Job {
         }
         Money().add(player.uniqueId.toString(), giveMoney, true)
     }
-    fun makeSelectGUI():Inventory{
+    fun makeSelectGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}職業選択")
         gui.setItem(2, jobGUI(Material.IRON_SWORD, "${ChatColor.GOLD}ハンター"))
         gui.setItem(4, jobGUI(Material.MILK_BUCKET, "${ChatColor.YELLOW}料理人"))

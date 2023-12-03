@@ -5,7 +5,6 @@ import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Evaluation
-import com.github.Ringoame196.Event.AoringoEvents
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -22,7 +21,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    fun createGUI(plugin: Plugin, player: Player):Inventory {
+    fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         val smartphone = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
         val apks = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
@@ -149,14 +148,14 @@ class Smartphone {
             }
             "${ChatColor.RED}メンバー削除" -> {
                 if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    playerClass.sendErrorMessage( "自分の保護土地内で実行してください")
+                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
                     return
                 }
                 LandPurchase().removeMemberGUI(player, WorldGuard().getName(player.location) ?: return)
             }
             "${ChatColor.RED}削除" -> {
                 if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    playerClass.sendErrorMessage( "自分の保護土地内で実行してください")
+                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
                     return
                 }
                 if (!shift) { return }
@@ -165,10 +164,10 @@ class Smartphone {
             }
         }
     }
-    fun protectionGUI(player:Player, name: String) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player,null)
+    fun protectionGUI(player: Player, name: String) {
+        val playerClass = com.github.Ringoame196.Entity.Player(player, null)
         if (LandPurchase().doesRegionContainProtection(player)) {
-            playerClass.sendErrorMessage( "保護範囲が含まれています")
+            playerClass.sendErrorMessage("保護範囲が含まれています")
             return
         }
         if (WorldGuard().getProtection(player, name)) {
@@ -182,7 +181,7 @@ class Smartphone {
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
         if ((Money().get(player.uniqueId.toString())) < price) {
-            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage( "お金が足りません")
+            com.github.Ringoame196.Entity.Player(player, null).sendErrorMessage("お金が足りません")
             return
         }
         player.performCommand("/expand vert")
@@ -230,7 +229,7 @@ class Smartphone {
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
-            com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage( "お金が足りません")
+            com.github.Ringoame196.Entity.Player(player, null).sendErrorMessage("お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1

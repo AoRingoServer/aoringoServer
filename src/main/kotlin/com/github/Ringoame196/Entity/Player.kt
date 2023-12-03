@@ -18,25 +18,24 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
-import org.bukkit.util.Vector
 
-class Player(val player: Player,val plugin: Plugin?) {
+class Player(val player: Player) {
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var speedMeasurement: Boolean = false
     )
-    fun setPlayer(){
+    fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()
         setJobName()
-        setProtectionPermission()
+        setProtectionPermission(plugin)
         setTab()
         player.maxHealth = 20.0 + scoreboardClass.getValue("status_HP", player.uniqueId.toString()).toDouble()
-        ResourcePack(plugin?:return).adaptation(player)
+        ResourcePack(plugin ?: return).adaptation(player)
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
         scoreboardClass.set("blockCount", player.name, 0)
-        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true)
+        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true,plugin)
         Money().createBossbar(player)
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
@@ -54,7 +53,7 @@ class Player(val player: Player,val plugin: Plugin?) {
         player.sendMessage(message)
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
-    fun sendErrorMessage(message:String){
+    fun sendErrorMessage(message: String) {
         player.sendMessage("${ChatColor.RED}$message")
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
     }
@@ -86,8 +85,8 @@ class Player(val player: Player,val plugin: Plugin?) {
 
         return playersInRadius
     }
-    fun permission(permission: String, allow: Boolean) {
-        val permissions = player.addAttachment(plugin?:return) // "plugin" はプラグインのインスタンスを指します
+    fun permission(permission: String, allow: Boolean,plugin: Plugin) {
+        val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
         permissions.setPermission(permission, allow)
         player.recalculatePermissions()
     }
@@ -103,14 +102,14 @@ class Player(val player: Player,val plugin: Plugin?) {
             else -> "${ChatColor.RED}未設定"
         }
     }
-    fun setProtectionPermission() {
+    fun setProtectionPermission(plugin: Plugin) {
         permission(
             "blocklocker.protect",
             when (player.world.name) {
                 "Survival" -> true
                 "Home" -> true
                 else -> false
-            }
+            }, plugin
         )
     }
     fun calculateDistance(pos1: Location, pos2: Location): Int {
@@ -122,16 +121,24 @@ class Player(val player: Player,val plugin: Plugin?) {
     fun fastJoin(e: PlayerJoinEvent) {
         val player = e.player
         e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
-        player.inventory.addItem(Item().make(Material.ENCHANTED_BOOK, "${ChatColor.YELLOW}スマートフォン", null, 1, 1))
-        player.inventory.addItem(Item().make(Material.NETHER_STAR, "職業スター", null, null, 1))
+        player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
+        player.inventory.addItem(Item().make(material = Material.NETHER_STAR, name = "職業スター"))
         player.scoreboardTags.add("member")
         Scoreboard().set("money", player.uniqueId.toString(), 30000)
     }
-    fun putItemInPost(post: Barrel){
+    fun putItemInPost(post: Barrel) {
         val playerItem = player.inventory.itemInMainHand.clone()
         playerItem.amount = 1
         post.inventory.addItem(playerItem)
         player.inventory.removeItem(playerItem)
         player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
+    }
+    fun activationTeleporter(worldName: String) {
+        player.teleport(
+            Bukkit.getWorld(
+                if (player.world.name == "world") { worldName } else { "world" }
+            )?.spawnLocation ?: return
+        )
+        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }
 }
