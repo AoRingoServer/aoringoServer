@@ -1,0 +1,82 @@
+package com.github.Ringoame196.Smartphone.APKs
+
+import com.github.Ringoame196.GUI
+import com.github.Ringoame196.Items.Item
+import org.bukkit.ChatColor
+import org.bukkit.Material
+import org.bukkit.Sound
+import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
+
+class ItemProtection {
+    fun open(player: Player) {
+        val gui = GUI().make("${ChatColor.YELLOW}アイテム保護", 9)
+        for (i in 0 until gui.size) {
+            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " ", null, null, 1))
+        }
+        gui.setItem(3, Item().make(Material.AIR, "", null, null, 1))
+        gui.setItem(6, Item().make(Material.ANVIL, "${ChatColor.RED}ロック/解除", null, null, 1))
+        player.openInventory(gui)
+    }
+    fun isPlayerProtection(item: ItemStack, player: Player): Boolean {
+        if (item.itemMeta?.lore == null) {
+            return false
+        }
+        for (i in 0 until item.itemMeta?.lore!!.size) {
+            val lore = item.itemMeta?.lore!![i]
+            val playerName = item.itemMeta?.lore!![i + 1]
+            if (!lore.contains("所有者:")) { continue }
+            if (lore == "所有者:${player.uniqueId}") {
+                return true
+            }
+        }
+        return false
+    }
+    fun chekcProtection(item: ItemStack, player: Player): ItemStack {
+        if (item.itemMeta?.lore == null) {
+            protection(item, player)
+            return item
+        }
+        for (i in 0 until item.itemMeta?.lore!!.size) {
+            val lore = item.itemMeta?.lore!![i]
+            val playerName = item.itemMeta?.lore!![i + 1]
+            if (!lore.contains("所有者:")) { continue }
+            return if (lore == "所有者:${player.uniqueId}") {
+                unProtection(item, lore, playerName, player)
+            } else {
+                AoringoEvents().onErrorEvent(player, "所有者設定はできませんでした")
+                item
+            }
+        }
+        return protection(item, player)
+    }
+    private fun protection(item: ItemStack, player: Player): ItemStack {
+        val meta = item.itemMeta
+        val lore = meta?.lore ?: mutableListOf<String>()
+        lore.add("所有者:${player.uniqueId}")
+        lore.add("所有者:${player.name}")
+        meta?.lore = lore
+        item.setItemMeta(meta)
+        player.sendMessage("${ChatColor.GREEN}所有者登録しました")
+        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+        return item
+    }
+    private fun unProtection(item: ItemStack, lore: String, playerName: String, player: Player): ItemStack {
+        val meta = item.itemMeta
+        val itemLore = meta?.lore
+        itemLore?.remove(lore)
+        itemLore?.remove(playerName)
+        meta?.lore = itemLore
+        item.setItemMeta(meta)
+        player.sendMessage("${ChatColor.RED}所有者を削除しました")
+        return item
+    }
+    fun isProtection(item: ItemStack?): Boolean {
+        val meta = item?.itemMeta
+        for (lore in meta?.lore ?: return false) {
+            if (!lore.contains("所有者:")) { continue }
+            return true
+        }
+        return false
+    }
+}
