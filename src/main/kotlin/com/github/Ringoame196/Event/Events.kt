@@ -97,9 +97,7 @@ class Events(private val plugin: Plugin) : Listener {
         val item = e.item
         val itemName = item?.itemMeta?.displayName
         val block = e.clickedBlock
-        val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
-        val playerItem = player.inventory.itemInMainHand
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
         if (item != player.inventory.itemInMainHand && item != null) { return }
         if (block?.type == Material.OAK_SIGN && downBlock?.type == Material.BARREL) {
@@ -192,6 +190,12 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
                 EnderChest().update(player, plugin)
             }
+            "${ChatColor.YELLOW}契約書[未記入]" -> {
+                player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")
+            }
+            "${ChatColor.YELLOW}契約書[契約待ち]" -> {
+                player.sendMessage("${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]")
+            }
         }
         if ((block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) && item?.type == Material.GLASS_BOTTLE) {
             e.isCancelled = true
@@ -203,11 +207,9 @@ class Events(private val plugin: Plugin) : Listener {
             e.clickedBlock!!.blockData = beeNest
             player.inventory.addItem(
                 Item().make(
-                    Material.HONEY_BOTTLE,
-                    "${ChatColor.GOLD}ハチミツ",
-                    Food().giveExpirationDate(14),
-                    null,
-                    1
+                    material = Material.HONEY_BOTTLE,
+                    name = "${ChatColor.GOLD}ハチミツ",
+                    lore = Food().giveExpirationDate(14),
                 )
             )
             Item().removeMainItem(player)
@@ -217,10 +219,6 @@ class Events(private val plugin: Plugin) : Listener {
             if (money == 0) { return }
             Money().add(player.uniqueId.toString(), (money?.times(item.amount) ?: return), true)
             player.inventory.remove(item)
-        } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}契約書[未記入]") {
-            player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")
-        } else if (item?.itemMeta?.displayName == "${ChatColor.YELLOW}契約書[契約待ち]") {
-            player.sendMessage("${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]")
         } else if (item?.itemMeta?.displayName?.contains("${ChatColor.RED}契約本") == true) {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
@@ -240,9 +238,11 @@ class Events(private val plugin: Plugin) : Listener {
         if (entity.type != EntityType.ITEM_FRAME) {
             return
         }
-        entity as ItemFrame
+        val itemFrame = entity as ItemFrame
+        val playerClass = Player(player, plugin)
         val name = entity.customName
         val item = entity.item
+        val itemName = item.itemMeta?.displayName
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name?.contains("@Fshop") == true) {
             if (item.type == Material.AIR && Fshop().isOwner(player, entity.location)) {
@@ -250,15 +250,17 @@ class Events(private val plugin: Plugin) : Listener {
             } else {
                 e.isCancelled = true
                 if (item.type == Material.AIR) {
-                    AoringoEvents().onErrorEvent(player, "売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
+                    playerClass.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
                 Fshop().buyGUI(player, item, name, entity.uniqueId.toString())
             }
-        } else if (entity.customName == "まな板") {
-            if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
+            return
+        }
+        if (entity.customName == "まな板") {
+            if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "料理人のみ包丁を使用することができます")
+                playerClass.sendErrorMessage("料理人のみ包丁を使用することができます")
                 return
             }
             val mainItem = player.inventory.itemInMainHand
@@ -268,66 +270,62 @@ class Events(private val plugin: Plugin) : Listener {
             if (mainItem.type.toString().contains("SWORD")) {
                 e.isCancelled = true
             }
-            if (item.type == Material.AIR) {
-                return
-            }
             Cook().cut(item, player, entity)
             return
-        } else if (item.itemMeta?.displayName == "衣") {
-            e.isCancelled = true
-            if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
+        }
+        when(itemName){
+            "衣" -> {
                 e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "料理人のみ衣をつけることができます")
-                return
+                if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                    playerClass.sendErrorMessage("料理人のみ衣をつけることができます")
+                    return
+                }
+                itemFrame.setItem(ItemStack(Material.AIR))
+                Cook().dressing(player, itemFrame)
             }
-            entity.setItem(ItemStack(Material.AIR))
-            Cook().dressing(player, entity)
-        } else if (block.type == Material.SMOKER) {
-            if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
+            "${ChatColor.YELLOW}混ぜハンドル" -> {
+                if (block.type != Material.BARREL) { return }
+                if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                    e.isCancelled = true
+                    playerClass.sendErrorMessage("料理人のみ混ぜることができます")
+                    return
+                }
+                player.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
+                Cook().mix(player, block.state as Barrel)
+                Item().breakHandle(itemFrame,playerClass)
+            }
+            "${ChatColor.RED}ポスト" -> {
                 e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "料理人のみコンロを使用することができます")
+                if (!player.isSneaking) {
+                    playerClass.sendActionBar("${ChatColor.RED}スニークでアイテム投下")
+                    return
+                }
+                if (player.inventory.itemInMainHand.type == Material.AIR) { return }
+                val direction: Vector = itemFrame.location.direction.normalize()
+                val blockBehindLocation: Location = itemFrame.location.add(direction.multiply(-1))
+                val blockBehind: org.bukkit.block.Block = blockBehindLocation.block
+                if (blockBehind.type != Material.BARREL) { return }
+                val barrel = blockBehind.state as Barrel
+                playerClass.putItemInPost(barrel)
+            }
+        }
+        if (block.type == Material.SMOKER) {
+            if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                e.isCancelled = true
+                playerClass.sendErrorMessage("料理人のみコンロを使用することができます")
                 return
             }
             val smoker = block.state as Smoker
             if (entity.item.type != Material.AIR) {
                 return
             }
-            if (smoker.burnTime.toInt() != 0) {
+            val smokerTime = smoker.burnTime.toInt()
+            if (smokerTime != 0) {
                 e.isCancelled = true
                 player.sendMessage("${ChatColor.RED}クールタイム中")
                 return
             }
             Cook().bake(plugin, player, entity, smoker)
-        } else if (item.itemMeta?.displayName == "${ChatColor.YELLOW}混ぜハンドル" && block.type == Material.BARREL) {
-            if (player.world.name != "event" && Job().get(player) != "${ChatColor.YELLOW}料理人") {
-                e.isCancelled = true
-                AoringoEvents().onErrorEvent(player, "料理人のみ混ぜることができます")
-                return
-            }
-            player.world.playSound(player.location, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
-            Cook().mix(player, block.state as Barrel)
-            if (Random.nextInt(0, 100) != 0) {
-                return
-            }
-            entity.setItem(ItemStack(Material.AIR))
-            AoringoEvents().onErrorEvent(player, "ハンドルがぶっ壊れた")
-        } else if (item.itemMeta?.displayName == "${ChatColor.RED}ポスト") {
-            e.isCancelled = true
-            if (!player.isSneaking) {
-                Player().sendActionBar(player, "${ChatColor.RED}スニークでアイテム投下")
-                return
-            }
-            if (player.inventory.itemInMainHand.type == Material.AIR) { return }
-            val playerItem = player.inventory.itemInMainHand.clone()
-            playerItem.amount = 1
-            val direction: Vector = entity.location.direction.normalize()
-            val blockBehindLocation: Location = entity.location.add(direction.multiply(-1))
-            val blockBehind: org.bukkit.block.Block = blockBehindLocation.block
-            if (blockBehind.type != Material.BARREL) { return }
-            val barrel = blockBehind.state as Barrel
-            barrel.inventory.addItem(playerItem)
-            player.inventory.removeItem(playerItem)
-            player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
         }
     }
 
@@ -335,21 +333,22 @@ class Events(private val plugin: Plugin) : Listener {
     fun onHangingBreak(e: HangingBreakEvent) {
         val entity = e.entity
         val name = entity.customName
-        if (entity is ItemFrame) {
+        val location = entity.location
+        val downBlock = location.clone().add(0.0,-1.0,0.0).block
+        if (entity !is ItemFrame) { return }
             if (name?.contains("@Fshop") == true) {
                 e.isCancelled = true
                 entity.remove()
-                entity.world.dropItem(entity.location, ItemStack(Material.OAK_SIGN))
+                entity.world.dropItem(location, ItemStack(Material.OAK_SIGN))
             }
-        }
-        if (entity is ItemFrame && entity.location.clone().add(0.0, -1.0, 0.0).block.type == Material.SMOKER) {
+        if (downBlock.type == Material.SMOKER) {
             e.isCancelled = true
         } else if (entity.customName == "まな板") {
             e.isCancelled = true
             entity.remove()
             entity.world.dropItem(
                 entity.location,
-                Item().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板", null, null, 1)
+                Item().make(material = Material.HEAVY_WEIGHTED_PRESSURE_PLATE, name ="まな板")
             )
         }
     }
@@ -359,11 +358,14 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.whoClicked as? org.bukkit.entity.Player ?: return
         val gui = e.view
         val item = e.currentItem ?: return
+        val itemName = item.itemMeta?.displayName
         val title = gui.title
-        if (player.openInventory.topInventory != e.clickedInventory && player.openInventory.topInventory.type == InventoryType.WORKBENCH) {
-            if (item.hasItemMeta()) {
-                e.isCancelled = true
+        val playerOpenInventory = player.openInventory.topInventory
+        if (playerOpenInventory != e.clickedInventory && playerOpenInventory.type == InventoryType.WORKBENCH) {
+            if (!item.hasItemMeta()) {
+                return
             }
+            e.isCancelled = true
             return
         }
         when (gui.title) {
@@ -377,17 +379,20 @@ class Events(private val plugin: Plugin) : Listener {
                 player.closeInventory()
             }
             "${ChatColor.RED}エンチャント" -> {
-                val book = gui.getItem(4)
+                val book = gui.getItem(4)?:return
+                if (book.type != Material.BOOK) { return }
+                if (book.hasItemMeta()) { return }
+                if (book.amount != 1) { return }
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                if (item.type != Material.BOOK) {
-                    e.isCancelled = true
-                } else if (item.type == Material.ENCHANTING_TABLE && book?.type == Material.BOOK && !book.hasItemMeta() && book.amount == 1) {
-                    Block().enchant(player, gui, plugin)
+                when(item.type){
+                    Material.BOOK -> {}
+                    Material.ENCHANTING_TABLE -> Block().enchant(player, gui, plugin)
+                    else -> e.isCancelled = true
                 }
             }
 
             "${ChatColor.BLUE}カゴ" -> {
-                if (item.itemMeta?.displayName == "${ChatColor.YELLOW}カゴ") {
+                if (itemName == "${ChatColor.YELLOW}カゴ") {
                     e.isCancelled = true
                 }
                 val lore = item.itemMeta?.lore?.get(0)
@@ -398,13 +403,13 @@ class Events(private val plugin: Plugin) : Listener {
 
             "${ChatColor.GOLD}クエスト" -> {
                 e.isCancelled = true
-                if (item.itemMeta?.displayName == "${ChatColor.RED}辞退") {
+                if (itemName == "${ChatColor.RED}辞退") {
                     Mission().reset(player)
                 }
             }
             "${ChatColor.BLUE}Fショップ" -> {
                 e.isCancelled = true
-                if (item.itemMeta?.displayName == "${ChatColor.GREEN}購入") {
+                if (itemName == "${ChatColor.GREEN}購入") {
                     val meta = item.itemMeta ?: return
                     val price = meta.lore?.get(0)?.replace("円", "")?.toInt() ?: return
                     Fshop().buy(
@@ -439,14 +444,14 @@ class Events(private val plugin: Plugin) : Listener {
 
             "${ChatColor.YELLOW}OP用" -> {
                 e.isCancelled = true
-                Smartphone().opClick(item ?: return, plugin, e.isShiftClick, player)
+                Smartphone().opClick(item, plugin, e.isShiftClick, player)
             }
 
             "${ChatColor.BLUE}プレイヤー評価" -> {
                 e.isCancelled = true
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 if (item.type == Material.PLAYER_HEAD) {
-                    if (item.itemMeta?.displayName != player.name) {
+                    if (itemName != player.name) {
                         Evaluation().voidGUI(player, item)
                     }
                 } else if (item.type == Material.STONE_BUTTON) {
@@ -460,7 +465,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
 
             "${ChatColor.BLUE}スマートフォン(並び替え)" -> {
-                if ((item.type != Material.GREEN_CONCRETE || !item.hasItemMeta())) {
+                if (item.type != Material.GREEN_CONCRETE || !item.hasItemMeta()) {
                     e.isCancelled = true
                 }
             }
@@ -470,10 +475,10 @@ class Events(private val plugin: Plugin) : Listener {
             LandPurchase().buy(player, item ?: return, gui.title, plugin)
         } else if (title.contains("@土地設定")) {
             e.isCancelled = true
-            val name = gui.title.replace("${ChatColor.BLUE}", "").replace("@土地設定", "")
+            val name = title.replace("${ChatColor.BLUE}", "").replace("@土地設定", "")
             val money = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt()
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-            when (item.itemMeta?.displayName) {
+            when (itemName) {
                 "${ChatColor.GREEN}メンバー追加" -> LandPurchase().addMemberGUI(player, name)
                 "${ChatColor.RED}メンバー削除" -> LandPurchase().removeMemberGUI(player, name)
                 "${ChatColor.YELLOW}前払い" -> LandPurchase().advancePayment(player, name, money ?: return)
@@ -490,9 +495,9 @@ class Events(private val plugin: Plugin) : Listener {
             WorldGuard().removeMember(name, item.itemMeta?.displayName ?: return, player.world)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
-        } else if (title.contains("${ChatColor.BLUE}保護設定") && item.itemMeta?.displayName == "${ChatColor.GREEN}作成") {
+        } else if (title.contains("${ChatColor.BLUE}保護設定") && itemName == "${ChatColor.GREEN}作成") {
             e.isCancelled = true
-            Smartphone().protection(player, item ?: return, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
+            Smartphone().protection(player, item, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
         } else if (title == "${ChatColor.RED}リンゴスクラッチ" && e.clickedInventory != player.inventory) {
             e.isCancelled = true
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
@@ -507,7 +512,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
-            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", null, 7, 1)) <= 6) {
+            if (Scratch().check(gui, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData =  7)) <= 6) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 3, player, 10000)
             }
         } else if (title == "${ChatColor.YELLOW}金リンゴスクラッチ" && e.clickedInventory != player.inventory) {
@@ -521,7 +526,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
-            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", null, 7, 1)) == 0) {
+            if (Scratch().check(gui, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData =  7)) == 0) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 9, player, 1000000)
             }
         }
@@ -609,7 +614,7 @@ class Events(private val plugin: Plugin) : Listener {
         val type = item?.type
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
-            e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目", null, null, 1)
+            e.currentItem = Item().make(material = Material.FERMENTED_SPIDER_EYE, name = "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (item?.itemMeta?.displayName?.contains("包丁") == true) {
             e.currentItem = Cook().knifeSharpness(item)
         } else if (item?.itemMeta?.displayName?.contains("契約書") == true) {
@@ -723,7 +728,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                Item().make(Material.EGG, "卵", Food().giveExpirationDate(14), null, 1)
+                Item().make(material = Material.EGG, name = "卵", lore = Food().giveExpirationDate(14))
             )
         }
     }
@@ -772,8 +777,9 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
-        Player().setTab(player)
-        Player().setProtectionPermission(player, plugin)
+        val playerClass = Player(player,plugin)
+        playerClass.setTab()
+        playerClass.setProtectionPermission()
     }
 
     @EventHandler

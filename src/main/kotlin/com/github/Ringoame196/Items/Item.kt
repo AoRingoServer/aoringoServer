@@ -10,6 +10,7 @@ import org.bukkit.Sound
 import org.bukkit.block.Barrel
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Item
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -21,18 +22,18 @@ import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
 class Item {
-    fun make(material: Material, name: String, lore: String?, customModelData: Int?, amount: Int?): ItemStack {
+    fun make(material: Material, name: String, lore: String = "", customModelData: Int = 0, amount: Int = 1): ItemStack {
         val item = ItemStack(material)
         val meta = item.itemMeta
         meta?.setDisplayName(name)
-        meta?.setCustomModelData(customModelData)
-        if (lore != null) {
+        if (customModelData != 0) {
+            meta?.setCustomModelData(customModelData)
+        }
+        if (lore.isEmpty()) {
             meta?.lore = mutableListOf(lore)
         }
         item.setItemMeta(meta)
-        if (amount != null) {
-            item.amount = amount
-        }
+        item.amount = amount
         return item
     }
     fun removeMainItem(player: Player){
@@ -155,6 +156,13 @@ class Item {
         }
         Item().removeMainItem(player)
         com.github.Ringoame196.Entity.Player(player,null).sendErrorMessage("おたまがぶっ壊れた")
+    }
+    fun breakHandle(itemFrame:ItemFrame,playerClass: com.github.Ringoame196.Entity.Player){
+        if (Random.nextInt(0, 100) != 0) {
+            return
+        }
+        itemFrame.setItem(ItemStack(Material.AIR))
+        playerClass.sendErrorMessage("ハンドルがぶっ壊れた")
     }
     fun giveBarrelGift(player: Player,barrel:Barrel,management:String){
         if (Scoreboard().getValue(management , player.uniqueId.toString()) != 0) {

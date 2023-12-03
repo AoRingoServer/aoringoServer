@@ -12,10 +12,13 @@ import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Barrel
 import org.bukkit.boss.BossBar
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
+import org.bukkit.util.Vector
 
 class Player(val player: Player,val plugin: Plugin?) {
     data class PlayerData(
@@ -123,5 +126,12 @@ class Player(val player: Player,val plugin: Plugin?) {
         player.inventory.addItem(Item().make(Material.NETHER_STAR, "職業スター", null, null, 1))
         player.scoreboardTags.add("member")
         Scoreboard().set("money", player.uniqueId.toString(), 30000)
+    }
+    fun putItemInPost(post: Barrel){
+        val playerItem = player.inventory.itemInMainHand.clone()
+        playerItem.amount = 1
+        post.inventory.addItem(playerItem)
+        player.inventory.removeItem(playerItem)
+        player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
     }
 }
