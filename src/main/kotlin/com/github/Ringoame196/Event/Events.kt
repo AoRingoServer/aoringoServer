@@ -147,6 +147,7 @@ class Events(private val plugin: Plugin) : Listener {
                     }
                 }
             }
+            else -> {}
         }
         when (itemName) {
             "職業スター" -> player.openInventory(Job().makeSelectGUI())
