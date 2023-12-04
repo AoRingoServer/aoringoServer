@@ -78,7 +78,8 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val playerClass = Player(player)
         if (!player.scoreboardTags.contains("member")) {
-            playerClass.fastJoin(e)
+            e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
+            playerClass.fastJoin()
         }
         playerClass.setPlayer(plugin)
     }

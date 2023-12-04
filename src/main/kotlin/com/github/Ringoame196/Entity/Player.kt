@@ -118,9 +118,7 @@ class Player(val player: Player) {
 
         return maxOf(deltaX, deltaZ)
     }
-    fun fastJoin(e: PlayerJoinEvent) {
-        val player = e.player
-        e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
+    fun fastJoin() {
         player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
         player.inventory.addItem(Item().make(material = Material.NETHER_STAR, name = "職業スター"))
         player.scoreboardTags.add("member")
