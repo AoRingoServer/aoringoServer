@@ -16,4 +16,13 @@ set "commit_message=Click Push %year%-%month%-%day% at %hour%:%minute%"
 REM git add, commit, push を実行
 git add .
 git commit -m "%commit_message%"
-git push
+if errorlevel 1 (
+    echo プッシュ失敗
+) else (
+    git push
+    if errorlevel 1 (
+        echo プッシュ失敗
+    ) else (
+        echo プッシュ完了
+    )
+)
