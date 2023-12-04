@@ -107,7 +107,7 @@ class Smartphone {
         }
     }
     fun wgClick(item: ItemStack, plugin: Plugin, player: org.bukkit.entity.Player, shift: Boolean) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player, plugin)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player, plugin)
         if (player.world.name != "Home" && !player.isOp) {
             playerClass.sendErrorMessage("保護は生活ワールドのみ使用可能です")
             player.closeInventory()
@@ -165,7 +165,7 @@ class Smartphone {
         }
     }
     fun protectionGUI(player: Player, name: String) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player, null)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player, null)
         if (LandPurchase().doesRegionContainProtection(player)) {
             playerClass.sendErrorMessage("保護範囲が含まれています")
             return
@@ -181,7 +181,7 @@ class Smartphone {
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
         if ((Money().get(player.uniqueId.toString())) < price) {
-            com.github.Ringoame196.Entity.Player(player, null).sendErrorMessage("お金が足りません")
+            com.github.Ringoame196.Entity.AoringoPlayer(player, null).sendErrorMessage("お金が足りません")
             return
         }
         player.performCommand("/expand vert")
@@ -229,7 +229,7 @@ class Smartphone {
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
-            com.github.Ringoame196.Entity.Player(player, null).sendErrorMessage("お金が足りません")
+            com.github.Ringoame196.Entity.AoringoPlayer(player, null).sendErrorMessage("お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1

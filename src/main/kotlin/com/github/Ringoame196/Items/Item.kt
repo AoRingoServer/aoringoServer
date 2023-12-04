@@ -80,7 +80,7 @@ class Item {
     }
 
     fun contract(player: Player, message: String) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val money = message.replace("!契約 ", "")
@@ -153,9 +153,9 @@ class Item {
             return
         }
         Item().removeMainItem(player)
-        com.github.Ringoame196.Entity.Player(player).sendErrorMessage("おたまがぶっ壊れた")
+        com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("おたまがぶっ壊れた")
     }
-    fun breakHandle(itemFrame: ItemFrame, playerClass: com.github.Ringoame196.Entity.Player) {
+    fun breakHandle(itemFrame: ItemFrame, playerClass: com.github.Ringoame196.Entity.AoringoPlayer) {
         if (Random.nextInt(0, 100) != 0) {
             return
         }
@@ -164,7 +164,7 @@ class Item {
     }
     fun giveBarrelGift(player: Player, barrel: Barrel, management: String) {
         if (Scoreboard().getValue(management, player.uniqueId.toString()) != 0) {
-            com.github.Ringoame196.Entity.Player(player).sendErrorMessage("既にギフトを受け取っています")
+            com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("既にギフトを受け取っています")
             return
         }
         player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1f, 1f)

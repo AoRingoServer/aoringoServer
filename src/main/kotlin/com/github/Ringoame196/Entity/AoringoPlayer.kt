@@ -2,10 +2,13 @@ package com.github.Ringoame196.Entity
 
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
+import com.github.Ringoame196.MoneyManager
+import com.github.Ringoame196.Data.PluginData
+import com.github.Ringoame196.MessageSender
+import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import net.md_5.bungee.api.ChatMessageType
@@ -16,12 +19,14 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
+import org.bukkit.boss.BarColor
+import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
-import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-
-class Player(val player: Player) {
+class AoringoPlayer(val player: Player):MessageSender {
+    val moneyManager = MoneyManager(this)
+    val playerAccount = PlayerAccount(this)
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var speedMeasurement: Boolean = false
@@ -38,7 +43,7 @@ class Player(val player: Player) {
         }
         scoreboardClass.set("blockCount", player.name, 0)
         permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
-        Money().createBossbar(player)
+        createBossbar()
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
             player.setPlayerListName("${ChatColor.YELLOW}[運営]" + player.playerListName)
@@ -55,7 +60,7 @@ class Player(val player: Player) {
         player.sendMessage(message)
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
-    fun sendErrorMessage(message: String) {
+    override fun sendErrorMessage(message: String) {
         player.sendMessage("${ChatColor.RED}$message")
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
     }
@@ -68,8 +73,8 @@ class Player(val player: Player) {
         levelupMessage(player, "${ChatColor.RED}最大HPアップ！！")
         player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString())
     }
-    fun sendActionBar(message: String) {
-        val actionBarMessage = ChatColor.translateAlternateColorCodes('&', message)
+    override fun sendActionBar(title: String) {
+        val actionBarMessage = ChatColor.translateAlternateColorCodes('&', title)
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(actionBarMessage))
     }
     fun getPlayersInRadius(center: Location, radius: Double): List<Player>? {
@@ -163,5 +168,15 @@ class Player(val player: Player) {
                 Item().removeMainItem(player)
             }
         }
+    }
+
+    override fun createBossbar() {
+        val bossbar = Bukkit.createBossBar(moneyManager.bossbarTitle(playerAccount), BarColor.BLUE, BarStyle.SOLID)
+        bossbar.addPlayer(player)
+        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { com.github.Ringoame196.Entity.AoringoPlayer.PlayerData() }.titleMoneyBossbar = bossbar
+    }
+
+    override fun sendMessage(message: String) {
+        player.sendMessage(message)
     }
 }

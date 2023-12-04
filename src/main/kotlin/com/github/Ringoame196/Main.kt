@@ -2,7 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.Config
 import com.github.Ringoame196.Data.PluginData
-import com.github.Ringoame196.Entity.Player
+import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -35,7 +35,7 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         for (player in Bukkit.getOnlinePlayers()) {
-            PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { Player.PlayerData() }.titleMoneyBossbar?.removeAll()
+            PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.titleMoneyBossbar?.removeAll()
         }
         super.onDisable()
     }

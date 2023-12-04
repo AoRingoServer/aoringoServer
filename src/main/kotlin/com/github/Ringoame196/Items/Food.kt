@@ -24,8 +24,8 @@ class Food {
             else -> 2
         }
         when (itemName) {
-            "${ChatColor.YELLOW}力のプロテイン" -> com.github.Ringoame196.Entity.Player().addPower(player)
-            "${ChatColor.RED}ハートのハーブ" -> com.github.Ringoame196.Entity.Player().addMaxHP(player)
+            "${ChatColor.YELLOW}力のプロテイン" -> com.github.Ringoame196.Entity.AoringoPlayer().addPower(player)
+            "${ChatColor.RED}ハートのハーブ" -> com.github.Ringoame196.Entity.AoringoPlayer().addMaxHP(player)
         }
         player.foodLevel += addfood
     }

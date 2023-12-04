@@ -42,7 +42,7 @@ class Anvil {
         }
     }
     private fun synthesis(player: Player, gui: Inventory) {
-        val playerClass = com.github.Ringoame196.Entity.Player(player)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
         val syntheticItems1 = gui.getItem(2) ?: return
         val syntheticItems2 = gui.getItem(4) ?: return
         if (!enchantItemCheck(syntheticItems1.type) || (!enchantItemCheck(syntheticItems2.type) && syntheticItems2.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット")) {

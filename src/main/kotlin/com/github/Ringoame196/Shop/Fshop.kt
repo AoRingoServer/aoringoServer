@@ -38,7 +38,7 @@ class Fshop {
     }
     fun buy(player: Player, item: ItemStack, price: Int, uuid: String) {
         val itemFrame = Bukkit.getEntity(UUID.fromString(uuid)) ?: return
-        val playerClass = com.github.Ringoame196.Entity.Player(player)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
         if (itemFrame !is ItemFrame) {
             playerClass.sendErrorMessage("ショップが見つかりませんでした")
             return

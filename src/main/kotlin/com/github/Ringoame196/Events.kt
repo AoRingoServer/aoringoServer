@@ -6,7 +6,7 @@ import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Entity.Player
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Cook
@@ -67,7 +67,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val player = e.player
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         if (!player.scoreboardTags.contains("member")) {
             e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
             playerClass.fastJoin()
@@ -78,13 +78,14 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
-        val playerClass = Player(player)
-        val item = e.item
-        val itemName = item?.itemMeta?.displayName?:""
+        val playerClass = AoringoPlayer(player)
+        val item = e.item?:ItemStack(Material.AIR)
+        val playerItem = player.inventory.itemInMainHand
+        val itemName = item.itemMeta?.displayName?:""
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
-        if (item != player.inventory.itemInMainHand && item != null) { return }
+        if (item != playerItem) { return }
         when (block?.type) {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
@@ -107,7 +108,7 @@ class Events(private val plugin: Plugin) : Listener {
             Material.SMOKER -> e.isCancelled = true
             Material.LAVA_CAULDRON -> {
                 e.isCancelled = true
-                Cook().fry(player, block, item ?: return, plugin)
+                Cook().fry(player, block, item, plugin)
             }
             Material.ENCHANTING_TABLE -> {
                 e.isCancelled = true
@@ -153,7 +154,6 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}カゴ" -> {
                 e.isCancelled = true
-                val playerItem = player.inventory.itemInMainHand
                 player.openInventory(Cage().createGUi(playerItem))
                 player.playSound(player, Sound.BLOCK_CHEST_OPEN, 1f, 1f)
             }
@@ -181,7 +181,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
         }
         if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
-            if(item?.type != Material.GLASS_BOTTLE) { return }
+            if(item.type != Material.GLASS_BOTTLE) { return }
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             if (beeNest.honeyLevel != 5 || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
@@ -198,7 +198,7 @@ class Events(private val plugin: Plugin) : Listener {
             )
             Item().removeMainItem(player)
         }
-        if (item?.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
+        if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             if (money == 0) { return }
             Money().add(player.uniqueId.toString(), (money.times(item.amount)), true)
@@ -223,7 +223,7 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         val itemFrame = entity as ItemFrame
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         val name = entity.customName ?: ""
         val item = entity.item
         val itemName = item.itemMeta?.displayName
@@ -520,7 +520,7 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val block = e.block
         val worldName = player.world.name
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         if (player.gameMode == GameMode.CREATIVE) { return }
         if (worldName == "shop" || worldName == "world") {
             return
@@ -595,7 +595,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (player !is org.bukkit.entity.Player) { return }
         val item = e.currentItem
         val type = item?.type
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = Item().make(material = Material.FERMENTED_SPIDER_EYE, name = "${ChatColor.GOLD}発酵した蜘蛛の目")
@@ -652,7 +652,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onBlockPlace(e: BlockPlaceEvent) {
         val player = e.player
         val block = e.block
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         when (block.type) {
             Material.SMOKER -> {
                 if (Job().get(player) == "${ChatColor.YELLOW}料理人") {
@@ -754,7 +754,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (entity is Villager) {
             e.isCancelled = true
         }
-        Player(player).sendActionBar("${ChatColor.RED}${health}HP")
+        AoringoPlayer(player).sendActionBar("${ChatColor.RED}${health}HP")
         val power = Scoreboard().getValue("status_Power", player.uniqueId.toString())
         entity.damage(power * 0.1)
     }
@@ -762,7 +762,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         playerClass.setTab()
         playerClass.setProtectionPermission(plugin)
     }
@@ -786,7 +786,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerPortal(e: PlayerPortalEvent) {
         e.isCancelled = true
-        Player(e.player).sendErrorMessage("${ChatColor.RED}ポータルの使用は禁止されております")
+        AoringoPlayer(e.player).sendErrorMessage("${ChatColor.RED}ポータルの使用は禁止されております")
     }
 
     @EventHandler
@@ -795,7 +795,7 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         val player = e.player
-        val playerClass = Player(player)
+        val playerClass = AoringoPlayer(player)
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
         if (downBlock.type == Material.COMMAND_BLOCK) {
@@ -824,7 +824,7 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (chat.contains("!契約")) {
             e.isCancelled = true
             if (player.inventory.itemInMainHand.amount != 1) {
-                Player(player).sendErrorMessage("アイテムを1つのみ持ってください")
+                AoringoPlayer(player).sendErrorMessage("アイテムを1つのみ持ってください")
                 return
             }
             when (player.inventory.itemInMainHand.itemMeta?.displayName) {
@@ -861,7 +861,7 @@ class Events(private val plugin: Plugin) : Listener {
         val item = e.itemDrop
         if (ItemProtection().isProtection(item.itemStack)) {
             e.isCancelled = true
-            Player(player).sendErrorMessage("[アイテム保護]保護アイテムを捨てることはできません")
+            AoringoPlayer(player).sendErrorMessage("[アイテム保護]保護アイテムを捨てることはできません")
         }
     }
 }

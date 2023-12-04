@@ -283,7 +283,7 @@ class Cook {
                 in 1001..10000 -> 10000
                 else -> 0
             } - Scoreboard().getValue("cookCount", player.uniqueId.toString())
-            com.github.Ringoame196.Entity.Player(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
+            com.github.Ringoame196.Entity.AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
         }
     }
 }
