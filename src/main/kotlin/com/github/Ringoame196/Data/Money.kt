@@ -13,7 +13,7 @@ import java.util.UUID
 class Money {
     private val uneiAccount: String = "unei"
     private fun bossbarTitle(accountID: String): String {
-        return "${ChatColor.GOLD}所持金${formalCurrency(Money().get(accountID))}円"
+        return "${ChatColor.GOLD}所持金${formalCurrency(get(accountID))}円"
     }
     fun get(accountID: String): Int {
         return Scoreboard().getValue("money", accountID)
