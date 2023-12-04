@@ -15,7 +15,7 @@ class Anvil {
     fun makeGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}カスタム金床")
         for (i in 0..8) {
-            gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE," "))
+            gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
         gui.setItem(2, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
         gui.setItem(4, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))

@@ -9,7 +9,6 @@ import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.Player
 import com.github.Ringoame196.Evaluation
@@ -97,7 +96,7 @@ class Events(private val plugin: Plugin) : Listener {
         when (block?.type) {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
-                when(sign.getLine(0)) {
+                when (sign.getLine(0)) {
                     "Fshop" -> Fshop().make(sign, player)
                     "[土地販売]" -> LandPurchase().make(player, sign)
                     "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
@@ -130,7 +129,7 @@ class Events(private val plugin: Plugin) : Listener {
                 when (barrel.customName) {
                     "クエスト" -> {
                         e.isCancelled = true
-                        when(Scoreboard().getValue("mission",player.name)){
+                        when (Scoreboard().getValue("mission", player.name)) {
                             0 -> Mission().set(player, barrel)
                             else -> Mission().check(player, barrel)
                         }
@@ -147,7 +146,7 @@ class Events(private val plugin: Plugin) : Listener {
             "職業スター" -> player.openInventory(Job().makeSelectGUI())
             "まな板" -> {
                 e.isCancelled = true
-                val upBlock = block?.location?.clone()?.add(0.0,1.0,0.0)?.block
+                val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
                 if (upBlock?.type == Material.AIR) {
                     Cook().cuttingBoard(block)
                     Item().removeMainItem(player)
@@ -177,7 +176,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}エンダーチェスト容量UP" -> {
                 e.isCancelled = true
-                EnderChest().update(player, plugin)
+                playerClass.upDataEnderChestLevel(plugin)
             }
             "${ChatColor.YELLOW}契約書[未記入]" -> {
                 player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")

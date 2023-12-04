@@ -3,6 +3,7 @@ package com.github.Ringoame196.Entity
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.Money
+import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
 import com.github.Ringoame196.ResourcePack
@@ -18,7 +19,6 @@ import org.bukkit.block.Barrel
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
-import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.plugin.Plugin
 
 class Player(val player: Player) {
@@ -37,7 +37,7 @@ class Player(val player: Player) {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
         scoreboardClass.set("blockCount", player.name, 0)
-        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true,plugin)
+        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
         Money().createBossbar(player)
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
@@ -87,7 +87,7 @@ class Player(val player: Player) {
 
         return playersInRadius
     }
-    fun permission(permission: String, allow: Boolean,plugin: Plugin) {
+    fun permission(permission: String, allow: Boolean, plugin: Plugin) {
         val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
         permissions.setPermission(permission, allow)
         player.recalculatePermissions()
@@ -105,20 +105,16 @@ class Player(val player: Player) {
         }
     }
     fun setProtectionPermission(plugin: Plugin) {
+        if (player.isOp) { return }
         permission(
             "blocklocker.protect",
             when (player.world.name) {
                 "Survival" -> true
                 "Home" -> true
                 else -> false
-            }, plugin
+            },
+            plugin
         )
-    }
-    fun calculateDistance(pos1: Location, pos2: Location): Int {
-        val deltaX = Math.abs(pos1.x.toInt() - pos2.x.toInt())
-        val deltaZ = Math.abs(pos1.z.toInt() - pos2.z.toInt())
-
-        return maxOf(deltaX, deltaZ)
     }
     fun fastJoin() {
         player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
@@ -141,18 +137,31 @@ class Player(val player: Player) {
         )
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }
-    fun useEnchantingTable(){
+    fun useEnchantingTable() {
         if (player.foodLevel < 10) {
             sendErrorMessage("満腹度が足りません")
             return
         }
         player.openInventory(Block().enchantGUI())
     }
-    fun useAnvil(){
+    fun useAnvil() {
         if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
             sendErrorMessage("金床は鍛冶屋以外使用できません")
             return
         }
         player.openInventory(Anvil().makeGUI())
+    }
+    fun upDataEnderChestLevel(plugin: Plugin) {
+        val level = EnderChest().getLevel(player)
+        when (level) {
+            6 -> sendErrorMessage("これ以上拡張することはできません")
+            else -> {
+                Scoreboard().set("haveEnderChest", player.uniqueId.toString(), level + 1)
+                permission("enderchest.size.$level", true, plugin)
+                player.sendMessage("${ChatColor.AQUA}エンダーチェスト容量UP")
+                player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+                Item().removeMainItem(player)
+            }
+        }
     }
 }

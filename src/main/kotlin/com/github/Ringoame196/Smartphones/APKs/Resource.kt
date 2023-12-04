@@ -9,7 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 
 class Resource {
-    fun createSelectTpGUI():Inventory {
+    fun createSelectTpGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.GREEN}資源テレポート")
         gui.setItem(1, Item().make(material = Material.CHEST, name = "${ChatColor.GOLD}ロビー"))
         gui.setItem(4, Item().make(material = Material.GRASS_BLOCK, name = "${ChatColor.GREEN}オーバーワールド"))
