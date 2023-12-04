@@ -204,8 +204,8 @@ class Events(private val plugin: Plugin) : Listener {
                 if (money == 0) {
                     return
                 }
-                val amount = item.amount
-                MoneyManager().addMoney(Admin, (money * amount))
+                val totalAmount = item.amount * money
+                MoneyManager().addMoney(Admin, totalAmount)
                 player.inventory.remove(item)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
