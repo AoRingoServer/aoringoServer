@@ -6,20 +6,19 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
 class Cage {
-    fun open(player: Player) {
-        val item = player.inventory.itemInMainHand
+    fun createGUi(item:ItemStack):Inventory {
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}カゴ")
         if (item.itemMeta?.lore != null) {
-            for (lore in item.itemMeta?.lore ?: return) {
+            for (lore in item.itemMeta?.lore ?: return gui) {
                 gui.addItem(get(lore))
             }
         }
-        player.openInventory(gui)
-        player.playSound(player, Sound.BLOCK_CHEST_OPEN, 1f, 1f)
+        return gui
     }
     private fun get(lore: String): ItemStack? {
 

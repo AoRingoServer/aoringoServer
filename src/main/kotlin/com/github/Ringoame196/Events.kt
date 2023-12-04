@@ -145,19 +145,22 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
             "${ChatColor.YELLOW}おたま" -> {
-                if (block?.type != Material.BARREL || downBlock?.type != Material.CAMPFIRE) { return }
+                if (block?.type != Material.BARREL) { return }
+                if (downBlock?.type != Material.CAMPFIRE) { return }
                 e.isCancelled = true
                 Cook().pot(block, player, plugin)
                 Item().breakLadle(player)
             }
             "${ChatColor.YELLOW}カゴ" -> {
                 e.isCancelled = true
-                Cage().open(player)
+                val playerItem = player.inventory.itemInMainHand
+                player.openInventory(Cage().createGUi(playerItem))
+                player.playSound(player, Sound.BLOCK_CHEST_OPEN, 1f, 1f)
             }
             "${ChatColor.YELLOW}スマートフォン" -> player.openInventory(Smartphone().createGUI(plugin, player))
             "${ChatColor.RED}リンゴスクラッチ", "${ChatColor.YELLOW}金リンゴスクラッチ" -> {
                 Item().removeMainItem(player)
-                Scratch().open(player, "${ChatColor.YELLOW}金リンゴスクラッチ")
+                player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
                 if (!ItemProtection().isPlayerProtection(item, player)) {
