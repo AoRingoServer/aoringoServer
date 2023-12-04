@@ -198,11 +198,16 @@ class Events(private val plugin: Plugin) : Listener {
             )
             Item().removeMainItem(player)
         }
-        if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
-            val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
-            if (money == 0) { return }
-            Money().add(player.uniqueId.toString(), (money.times(item.amount)), true)
-            player.inventory.remove(item)
+        if (item.type == Material.EMERALD) {
+            item.itemMeta?.customModelData.let {
+                val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
+                if (money == 0) {
+                    return
+                }
+                val amount = item.amount
+                MoneyManager().addMoney(Admin, (money * amount))
+                player.inventory.remove(item)
+            }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
