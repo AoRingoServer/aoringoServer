@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Entity
 
+import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Items.Item
@@ -140,11 +141,18 @@ class Player(val player: Player) {
         )
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }
-    fun useEnchantingTable(player:Player){
+    fun useEnchantingTable(){
         if (player.foodLevel < 10) {
             sendErrorMessage("満腹度が足りません")
             return
         }
         player.openInventory(Block().enchantGUI())
+    }
+    fun useAnvil(){
+        if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
+            sendErrorMessage("金床は鍛冶屋以外使用できません")
+            return
+        }
+        player.openInventory(Anvil().makeGUI())
     }
 }

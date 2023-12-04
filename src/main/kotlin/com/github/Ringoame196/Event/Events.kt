@@ -106,17 +106,12 @@ class Events(private val plugin: Plugin) : Listener {
             Material.ANVIL, Material.DAMAGED_ANVIL -> {
                 if (player.gameMode == GameMode.CREATIVE) { return }
                 e.isCancelled = true
-                if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
-                    player.openInventory(Anvil().makeGUI())
-                } else {
-                    playerClass.sendErrorMessage("金床は鍛冶屋以外使用できません")
-                }
+                playerClass.useAnvil()
             }
             Material.SMITHING_TABLE -> {
-                if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
-                    playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
-                    e.isCancelled = true
-                }
+                if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") { return }
+                e.isCancelled = true
+                playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
             }
             Material.SMOKER -> e.isCancelled = true
             Material.LAVA_CAULDRON -> {
@@ -125,7 +120,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.ENCHANTING_TABLE -> {
                 e.isCancelled = true
-                playerClass.useEnchantingTable(player)
+                playerClass.useEnchantingTable()
             }
             Material.BARREL -> {
                 val barrel = block.state as Barrel
@@ -135,10 +130,9 @@ class Events(private val plugin: Plugin) : Listener {
                 when (barrel.customName) {
                     "クエスト" -> {
                         e.isCancelled = true
-                        if (Scoreboard().getValue("mission", player.name) == 0) {
-                            Mission().set(player, barrel)
-                        } else {
-                            Mission().check(player, barrel)
+                        when(Scoreboard().getValue("mission",player.name)){
+                            0 -> Mission().set(player, barrel)
+                            else -> Mission().check(player, barrel)
                         }
                     }
                     "admingift" -> {
@@ -153,7 +147,8 @@ class Events(private val plugin: Plugin) : Listener {
             "職業スター" -> player.openInventory(Job().makeSelectGUI())
             "まな板" -> {
                 e.isCancelled = true
-                if (block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block?.type == Material.AIR) {
+                val upBlock = block?.location?.clone()?.add(0.0,1.0,0.0)?.block
+                if (upBlock?.type == Material.AIR) {
                     Cook().cuttingBoard(block)
                     Item().removeMainItem(player)
                 }
