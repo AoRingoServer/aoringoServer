@@ -119,14 +119,13 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
             Material.SMOKER -> e.isCancelled = true
-            Material.LAVA_CAULDRON -> Cook().fry(player, block, item ?: return, plugin)
+            Material.LAVA_CAULDRON -> {
+                e.isCancelled = true
+                Cook().fry(player, block, item ?: return, plugin)
+            }
             Material.ENCHANTING_TABLE -> {
                 e.isCancelled = true
-                if (player.foodLevel < 10) {
-                    playerClass.sendErrorMessage("満腹度が足りません")
-                } else {
-                    Block().enchantGUI(player)
-                }
+                playerClass.useEnchantingTable(player)
             }
             Material.BARREL -> {
                 val barrel = block.state as Barrel
@@ -370,7 +369,6 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.BLUE}ヘルスケア" -> {
                 e.isCancelled = true
-                player.closeInventory()
             }
             "${ChatColor.RED}エンチャント" -> {
                 val book = gui.getItem(4) ?: return

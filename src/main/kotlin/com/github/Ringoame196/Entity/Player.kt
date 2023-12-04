@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Entity
 
+import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
@@ -138,5 +139,12 @@ class Player(val player: Player) {
             )?.spawnLocation ?: return
         )
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
+    }
+    fun useEnchantingTable(player:Player){
+        if (player.foodLevel < 10) {
+            sendErrorMessage("満腹度が足りません")
+            return
+        }
+        player.openInventory(Block().enchantGUI())
     }
 }

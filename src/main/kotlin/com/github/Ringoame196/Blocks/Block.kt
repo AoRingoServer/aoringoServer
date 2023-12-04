@@ -7,6 +7,7 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
@@ -14,14 +15,14 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
 class Block {
-    fun enchantGUI(player: Player) {
+    fun enchantGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.RED}エンチャント")
         for (i in 0..7) {
             gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " ", null, null, 1))
         }
         gui.setItem(8, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント", null, null, 1))
         gui.setItem(4, ItemStack(Material.AIR))
-        player.openInventory(gui)
+        return gui
     }
     fun enchant(player: Player, gui: InventoryView, plugin: Plugin) {
         val enchantBook = mutableListOf(
