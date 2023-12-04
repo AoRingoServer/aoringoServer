@@ -13,10 +13,10 @@ import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 class Scratch {
-    fun createGUI(title: String):Inventory {
+    fun createGUI(title: String): Inventory {
         val gui = Bukkit.createInventory(null, 27, title)
         for (i in 0..26) {
-            gui.setItem(i, Item().make(material = Material.PAPER, name = " ", customModelData =  6))
+            gui.setItem(i, Item().make(material = Material.PAPER, name = " ", customModelData = 6))
         }
         paper(gui, 3)
         paper(gui, 12)

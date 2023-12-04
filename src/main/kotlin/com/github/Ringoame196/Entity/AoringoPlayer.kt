@@ -2,12 +2,12 @@ package com.github.Ringoame196.Entity
 
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
+import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
-import com.github.Ringoame196.MoneyManager
-import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.MessageSender
+import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -24,7 +24,7 @@ import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-class AoringoPlayer(val player: Player):MessageSender {
+class AoringoPlayer(val player: Player) : MessageSender {
     val moneyManager = MoneyManager(this)
     val playerAccount = PlayerAccount(this)
     data class PlayerData(

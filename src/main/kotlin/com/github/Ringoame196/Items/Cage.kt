@@ -3,15 +3,13 @@ package com.github.Ringoame196
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.HumanEntity
-import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
 class Cage {
-    fun createGUi(item:ItemStack):Inventory {
+    fun createGUi(item: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}カゴ")
         if (item.itemMeta?.lore != null) {
             for (lore in item.itemMeta?.lore ?: return gui) {

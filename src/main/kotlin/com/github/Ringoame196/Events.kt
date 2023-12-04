@@ -5,8 +5,8 @@ import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Cook
@@ -79,9 +79,9 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
         val playerClass = AoringoPlayer(player)
-        val item = e.item?:ItemStack(Material.AIR)
+        val item = e.item ?: ItemStack(Material.AIR)
         val playerItem = player.inventory.itemInMainHand
-        val itemName = item.itemMeta?.displayName?:""
+        val itemName = item.itemMeta?.displayName ?: ""
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
@@ -181,7 +181,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
         }
         if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
-            if(item.type != Material.GLASS_BOTTLE) { return }
+            if (item.type != Material.GLASS_BOTTLE) { return }
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             if (beeNest.honeyLevel != 5 || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
