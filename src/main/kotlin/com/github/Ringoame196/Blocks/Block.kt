@@ -18,9 +18,9 @@ class Block {
     fun enchantGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.RED}エンチャント")
         for (i in 0..7) {
-            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " ", null, null, 1))
+            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(8, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント", null, null, 1))
+        gui.setItem(8, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
         gui.setItem(4, ItemStack(Material.AIR))
         return gui
     }

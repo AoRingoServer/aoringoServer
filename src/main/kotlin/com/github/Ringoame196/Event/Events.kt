@@ -94,15 +94,15 @@ class Events(private val plugin: Plugin) : Listener {
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
         if (item != player.inventory.itemInMainHand && item != null) { return }
-        if (block?.type == Material.OAK_SIGN && downBlock?.type == Material.BARREL) {
-            val sign = block.state as Sign
-            when (sign.getLine(0)) {
-                "Fshop" -> Fshop().make(sign, player)
-                "[土地販売]" -> LandPurchase().make(player, sign)
-                "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
-            }
-        }
         when (block?.type) {
+            Material.OAK_SIGN -> {
+                val sign = block.state as Sign
+                when(sign.getLine(0)) {
+                    "Fshop" -> Fshop().make(sign, player)
+                    "[土地販売]" -> LandPurchase().make(player, sign)
+                    "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
+                }
+            }
             Material.ANVIL, Material.DAMAGED_ANVIL -> {
                 if (player.gameMode == GameMode.CREATIVE) { return }
                 e.isCancelled = true
@@ -246,7 +246,7 @@ class Events(private val plugin: Plugin) : Listener {
                     playerClass.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
-                Fshop().buyGUI(player, item, name, entity.uniqueId.toString())
+                Fshop().buyGUI(item, name, entity.uniqueId.toString())
             }
             return
         }
