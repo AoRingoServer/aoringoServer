@@ -25,7 +25,7 @@ class Scratch {
     }
     private fun paper(gui: Inventory, c: Int) {
         for (i in 0..2) {
-            gui.setItem(i + c, Item().make(Material.PAPER, "${ChatColor.RED}削る", null, 7, 1))
+            gui.setItem(i + c, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData = 7))
         }
     }
     fun click(itemList: MutableList<Material>): ItemStack {

@@ -80,7 +80,7 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val playerClass = Player(player)
         val item = e.item
-        val itemName = item?.itemMeta?.displayName
+        val itemName = item?.itemMeta?.displayName?:""
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
@@ -163,7 +163,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
-                if (!ItemProtection().isPlayerProtection(item, player)) {
+                if (!ItemProtection().isPlayerProtection(item?:return, player)) {
                     playerClass.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
                 } else {
                     player.openInventory(Company().createGUI())
@@ -180,7 +180,8 @@ class Events(private val plugin: Plugin) : Listener {
                 player.sendMessage("${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]")
             }
         }
-        if ((block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) && item?.type == Material.GLASS_BOTTLE) {
+        if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
+            if(item?.type != Material.GLASS_BOTTLE) { return }
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             if (beeNest.honeyLevel != 5 || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
@@ -198,17 +199,17 @@ class Events(private val plugin: Plugin) : Listener {
             Item().removeMainItem(player)
         }
         if (item?.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
-            val money = itemName?.replace("${ChatColor.GREEN}", "")?.replace("円", "")?.toInt()
+            val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             if (money == 0) { return }
-            Money().add(player.uniqueId.toString(), (money?.times(item.amount) ?: return), true)
+            Money().add(player.uniqueId.toString(), (money.times(item.amount)), true)
             player.inventory.remove(item)
-        } else if (item?.itemMeta?.displayName?.contains("${ChatColor.RED}契約本") == true) {
+        } else if (itemName.contains("${ChatColor.RED}契約本")) {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
             } else {
                 playerClass.sendActionBar("お金を受け取るにはシフトをしてください")
             }
-        } else if (itemName?.contains("[アプリケーション]") == true) {
+        } else if (itemName.contains("[アプリケーション]")) {
             APK().add(player, itemName, plugin)
             e.isCancelled = true
         }
