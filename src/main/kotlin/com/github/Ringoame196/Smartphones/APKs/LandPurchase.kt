@@ -23,12 +23,6 @@ import org.bukkit.plugin.Plugin
 import java.util.UUID
 
 class LandPurchase {
-    fun make(player: Player, sign: Sign) {
-        if (!player.isOp) { return }
-        sign.setLine(0, "${ChatColor.YELLOW}[土地販売]")
-        sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
-        sign.update()
-    }
     private fun ownerGUI(player: Player, name: String, money: Int) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
         gui.setItem(3, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加", null, null, 1))

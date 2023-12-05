@@ -19,6 +19,7 @@ import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
+import org.bukkit.block.Sign
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
@@ -184,5 +185,17 @@ class AoringoPlayer(val player: Player) : MessageSender {
                 Bukkit.dispatchCommand(player, "enderchest")
             }
         )
+    }
+    fun makeShop(sign: Sign){
+        val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
+        if (downBlock.type != Material.BARREL) { return }
+        val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
+        itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
+        sign.type = Material.AIR
+    }
+    fun makeLandPurchase(sign: Sign){
+        sign.setLine(0, "${ChatColor.YELLOW}[土地販売]")
+        sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
+        sign.update()
     }
 }

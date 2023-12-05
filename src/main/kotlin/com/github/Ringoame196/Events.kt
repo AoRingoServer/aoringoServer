@@ -90,8 +90,11 @@ class Events(private val plugin: Plugin) : Listener {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
                 when (sign.getLine(0)) {
-                    "Fshop" -> Fshop().make(sign, player)
-                    "[土地販売]" -> LandPurchase().make(player, sign)
+                    "Fshop" -> playerClass.makeShop(sign)
+                    "[土地販売]" -> {
+                        if (!player.isOp) { return }
+                        playerClass.makeLandPurchase(sign)
+                    }
                     "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
                 }
             }
