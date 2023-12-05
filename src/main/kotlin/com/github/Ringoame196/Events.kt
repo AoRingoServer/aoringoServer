@@ -807,6 +807,7 @@ class Events(private val plugin: Plugin) : Listener {
 
     @EventHandler
     fun onBlockDispense(e: BlockDispenseEvent) {
+        //ディスペンサー無効
         e.isCancelled = true
     }
 
