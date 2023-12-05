@@ -816,6 +816,11 @@ class Events(private val plugin: Plugin) : Listener {
         val chat = e.message
         val playerClass = AoringoPlayer(player)
         val playerItem = player.inventory.itemInMainHand
+        if (player.scoreboardTags.contains("rg")) {
+            e.isCancelled = true
+            playerClass.namingConservationLand(plugin,chat)
+            return
+        }
         if (chat.contains("@")) {
             e.isCancelled = true
             playerClass.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
@@ -829,9 +834,6 @@ class Events(private val plugin: Plugin) : Listener {
                 "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, chat)
                 "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(player, chat)
             }
-        } else if (player.scoreboardTags.contains("rg")) {
-            e.isCancelled = true
-            playerClass.namingConservationLand(plugin,chat)
         }
     }
     @EventHandler
