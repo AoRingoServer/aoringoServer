@@ -814,6 +814,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onAsyncPlayerChat(e: AsyncPlayerChatEvent) {
         val player = e.player
         val chat = e.message
+        val playerClass = AoringoPlayer(player)
         if (chat.contains("@")) {
             e.isCancelled = true
             player.sendMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
@@ -834,7 +835,7 @@ class Events(private val plugin: Plugin) : Listener {
                 plugin,
                 Runnable
                 {
-                    Smartphone().protectionGUI(player, chat)
+                    playerClass.makeConservationLand(chat)
                 }
             )
         }

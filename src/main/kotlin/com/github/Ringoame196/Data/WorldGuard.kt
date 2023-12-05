@@ -16,8 +16,8 @@ class WorldGuard {
     private fun getRegionManager(world: World): RegionManager? {
         return regionContainer.get(BukkitAdapter.adapt(world))
     }
-    fun getProtection(player: Player, regionName: String): Boolean {
-        val region: ProtectedRegion? = getRegionManager(player.world)?.getRegion(regionName)
+    fun getProtection(world: World, regionName: String): Boolean {
+        val region: ProtectedRegion? = getRegionManager(world)?.getRegion(regionName)
         return region != null
     }
     private fun getRegion(world: World?, regionName: String?, location: Location?): ProtectedRegion? {

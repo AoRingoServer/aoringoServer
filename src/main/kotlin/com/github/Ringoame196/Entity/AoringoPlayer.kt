@@ -3,6 +3,7 @@ package com.github.Ringoame196.Entity
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.PluginData
+import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
@@ -11,6 +12,8 @@ import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
+import com.github.Ringoame196.Smartphone.APKs.LandPurchase
+import com.github.Ringoame196.Smartphones.Smartphone
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
@@ -197,5 +200,14 @@ class AoringoPlayer(val player: Player) : MessageSender {
         sign.setLine(0, "${ChatColor.YELLOW}[土地販売]")
         sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
         sign.update()
+    }
+    fun makeConservationLand(name:String){
+        if (LandPurchase().doesRegionContainProtection(player)) {
+            sendErrorMessage("保護範囲が含まれています")
+        } else if (WorldGuard().getProtection(player.world, name)) {
+            sendErrorMessage("同じ名前の保護を設定することは不可能です")
+            return
+        }
+        player.openInventory(Smartphone().createProtectionGUI(player,name))
     }
 }

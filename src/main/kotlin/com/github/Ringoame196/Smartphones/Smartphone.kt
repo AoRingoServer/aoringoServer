@@ -50,7 +50,7 @@ class Smartphone {
             else -> 0
         }
     }
-    fun clickItem(player: org.bukkit.entity.Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
+    fun clickItem(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
         val playerClass = AoringoPlayer(player)
         val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
@@ -165,19 +165,11 @@ class Smartphone {
             }
         }
     }
-    fun protectionGUI(player: Player, name: String) {
-        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player, null)
-        if (LandPurchase().doesRegionContainProtection(player)) {
-            playerClass.sendErrorMessage("保護範囲が含まれています")
-            return
-        }
-        if (WorldGuard().getProtection(player, name)) {
-            playerClass.sendErrorMessage("同じ名前の保護を設定することは不可能です")
-            return
-        }
+    fun createProtectionGUI(player:Player,name: String):Inventory {
+        val price = LandPurchase().price(player)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
-        gui.setItem(4, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${LandPurchase().price(player)}円", null, 1))
-        player.openInventory(gui)
+        gui.setItem(4, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
+        return gui
     }
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
