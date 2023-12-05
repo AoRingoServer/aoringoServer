@@ -4,6 +4,7 @@ import com.github.Ringoame196.APK
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
@@ -51,6 +52,7 @@ class Smartphone {
         }
     }
     fun clickItem(player: org.bukkit.entity.Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
+        val playerClass = AoringoPlayer(player)
         val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
@@ -60,7 +62,7 @@ class Smartphone {
         }
         if (shift) { return }
         when (itemName) {
-            "${ChatColor.YELLOW}エンダーチェスト" -> EnderChest().open(player, plugin)
+            "${ChatColor.YELLOW}エンダーチェスト" -> playerClass.useEnderChest(plugin)
             "${ChatColor.GREEN}所持金変換" -> conversion(player)
             "${ChatColor.RED}アイテム保護" -> ItemProtection().open(player)
             "${ChatColor.GREEN}テレポート" -> tpGUI(player)
