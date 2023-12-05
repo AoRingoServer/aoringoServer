@@ -238,9 +238,7 @@ class Events(private val plugin: Plugin) : Listener {
                 }
                 Fshop().buyGUI(item, name, entity.uniqueId.toString())
             }
-            return
-        }
-        if (name == "まな板") {
+        } else if (name == "まな板") {
             if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
                 playerClass.sendErrorMessage("料理人のみ包丁を使用することができます")
