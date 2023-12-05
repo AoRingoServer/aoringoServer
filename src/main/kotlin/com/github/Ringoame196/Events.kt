@@ -590,35 +590,36 @@ class Events(private val plugin: Plugin) : Listener {
     fun onCraftItem(e: CraftItemEvent) {
         val player = e.whoClicked
         if (player !is org.bukkit.entity.Player) { return }
-        val item = e.currentItem
-        val type = item?.type
+        val item = e.currentItem?:return
+        val type = item.type
+        val displayName = item.itemMeta?.displayName?:""
         val playerClass = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
-        } else if (item?.itemMeta?.displayName?.contains("包丁") == true) {
+        } else if (displayName.contains("包丁")) {
             e.currentItem = Cook().knifeSharpness(item)
-        } else if (item?.itemMeta?.displayName?.contains("契約書") == true) {
+        } else if (displayName.contains("契約書")) {
             e.currentItem = Item().copyBlock(item, player)
         }
         if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
-            if (Job().tool().contains(item?.type)) {
+            if (Job().tool().contains(type)) {
                 if (e.isShiftClick) {
                     playerClass.sendErrorMessage("ツールを一括作成はできません")
                     e.isCancelled = true
                 } else {
-                    e.currentItem?.durability = Job().craftRandomDurable(item?.type ?: return).toShort()
+                    e.currentItem?.durability = Job().craftRandomDurable(type).toShort()
                 }
             }
             return
         }
-        if (!Job().tool().contains(item?.type) && item?.hasItemMeta() == true) {
+        if (!Job().tool().contains(type) && item.hasItemMeta()) {
             e.isCancelled = true
             playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         } else if (ngItem.contains(item?.type)) {
             e.isCancelled = true
             playerClass.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
-        } else if (item?.type == Material.WRITTEN_BOOK && item.itemMeta?.displayName?.contains("${ChatColor.RED}契約本@") == true) {
+        } else if (type == Material.WRITTEN_BOOK && displayName.contains("${ChatColor.RED}契約本@")) {
             e.currentItem = Contract().copyBlock(item, player)
         }
     }
