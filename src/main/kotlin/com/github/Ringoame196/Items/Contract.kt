@@ -12,40 +12,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class Contract {
-    fun request(player: Player, money: Int) {
-        val item = player.inventory.itemInMainHand
-        val meta = item.itemMeta as BookMeta
-        meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
-        val bookMessage = meta.getPage(1)
-            .replace("甲方：[プレイヤー名]\nUUID：[UUID]", "甲方：${player.name}\nUUID：${player.uniqueId}")
-            .replace("取引金額：[値段]", "取引金額：${money}円")
-        meta.setPage(1, bookMessage)
-        item.setItemMeta(meta)
-        player.inventory.setItemInMainHand(item)
-        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-    }
-    fun contract(player: AoringoPlayer, money: Int) {
-        val sender = player.player
-        val item = sender.inventory.itemInMainHand
-        val meta = item.itemMeta as BookMeta
-        val bookMessage = meta.getPage(1)
-        val priceIndex = bookMessage.indexOf("取引金額：")
-        val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "").toInt()
-        if (money != priceMessage) {
-            player.sendErrorMessage("金額が違います")
-            return
-        }
-        if (Money().get(player.uniqueId.toString()) < money.toInt()) {
-            player.sendErrorMessage("お金が足りません")
-            return
-        }
-        Money().remove(player.uniqueId.toString(), money, false)
-        val setBookMessage = writeContractDate(meta, sender, money)
-        meta.setPage(1, setBookMessage)
-        item.setItemMeta(meta)
-        sender.inventory.setItemInMainHand(item)
-        sender.playSound(player.player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-    }
     fun writeContractDate(meta: BookMeta, player: Player, money: Int): String {
         val currentDate = LocalDate.now()
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")

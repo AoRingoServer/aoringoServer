@@ -833,8 +833,8 @@ class Events(private val plugin: Plugin) : Listener {
             val contractMoney = chat.replace("!契約 ", "").toInt()
             if (contractMoney == 0) { return }
             when (playerItem.itemMeta?.displayName) {
-                "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, contractMoney)
-                "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(playerClass, contractMoney)
+                "${ChatColor.YELLOW}契約書[未記入]" -> playerClass.writeContractRequest(contractMoney)
+                "${ChatColor.YELLOW}契約書[契約待ち]" -> playerClass.createContractBook(contractMoney)
             }
         }
     }
