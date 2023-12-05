@@ -141,10 +141,9 @@ class Events(private val plugin: Plugin) : Listener {
             "まな板" -> {
                 e.isCancelled = true
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
-                if (upBlock?.type == Material.AIR) {
-                    Cook().cuttingBoard(block)
-                    Item().removeMainItem(player)
-                }
+                if (upBlock?.type != Material.AIR) { return }
+                Cook().cuttingBoard(block)
+                Item().removeMainItem(player)
             }
             "${ChatColor.YELLOW}おたま" -> {
                 if (block?.type != Material.BARREL) { return }
