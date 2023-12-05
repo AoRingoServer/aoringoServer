@@ -25,10 +25,10 @@ import java.util.UUID
 class LandPurchase {
     private fun ownerGUI(player: Player, name: String, money: Int) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
-        gui.setItem(3, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加", null, null, 1))
-        gui.setItem(5, Item().make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除", null, null, 1))
+        gui.setItem(3, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
+        gui.setItem(5, Item().make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
         if (player.world.name == "shop" && Scoreboard().getValue("protectionContract", name) == 1) {
-            gui.setItem(8, Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${(money * 1.5).toInt()}円", null, 1))
+            gui.setItem(8, Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${(money * 1.5).toInt()}円"))
         }
         player.openInventory(gui)
     }
@@ -47,7 +47,7 @@ class LandPurchase {
         var i = 0
         val members = WorldGuard().getMember(player.world, name)?.playerDomain?.uniqueIds
         for (worldPlayer in members?.toList() ?: return) {
-            gui.addItem(Item().make(Material.PLAYER_HEAD, worldPlayer.toString(), Bukkit.getPlayer(worldPlayer as UUID)?.name ?: worldPlayer.toString(), null, 1))
+            gui.addItem(Item().make(Material.PLAYER_HEAD, worldPlayer.toString(), Bukkit.getPlayer(worldPlayer as UUID)?.name ?: worldPlayer.toString()))
             i++
             if (i >= gui.size) { continue }
         }
@@ -83,7 +83,7 @@ class LandPurchase {
             return
         }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地購入")
-        gui.setItem(4, Item().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${money}円", null, 1))
+        gui.setItem(4, Item().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${money}円"))
         player.openInventory(gui)
     }
     fun buy(player: Player, item: ItemStack, guiName: String, plugin: Plugin) {
