@@ -17,13 +17,6 @@ import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class Fshop {
-    fun make(sign: Sign, player: Player) {
-        val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
-        if (downBlock.type != Material.BARREL) { return }
-        val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
-        itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
-        sign.type = Material.AIR
-    }
     fun isOwner(player: Player, location: Location): Boolean {
         return WorldGuard().getOwnerOfRegion(location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(location)?.contains(player.uniqueId) == true
     }

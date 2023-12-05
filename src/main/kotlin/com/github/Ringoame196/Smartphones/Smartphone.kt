@@ -32,7 +32,7 @@ class Smartphone {
         val minSize = minOf(smartphone.size, apks.size)
         for (i in 0 until minSize) {
             val apkName = apks[i]
-            gui.setItem(smartphone[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", null, giveCustomModel(apkName), 1))
+            gui.setItem(smartphone[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = giveCustomModel(apkName)))
         }
         return gui
     }
@@ -64,7 +64,7 @@ class Smartphone {
             "${ChatColor.YELLOW}エンダーチェスト" -> playerClass.useEnderChest(plugin)
             "${ChatColor.GREEN}所持金変換" -> conversion(player)
             "${ChatColor.RED}アイテム保護" -> ItemProtection().open(player)
-            "${ChatColor.GREEN}テレポート" -> tpGUI(player)
+            "${ChatColor.GREEN}テレポート" -> player.openInventory(createTpGUI())
             "${ChatColor.GOLD}ロビー" -> player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
             "${ChatColor.GREEN}生活ワールド" -> player.teleport(Bukkit.getWorld("Home")?.spawnLocation ?: return)
             "${ChatColor.AQUA}資源ワールド" -> player.teleport(Bukkit.getWorld("Survival")?.spawnLocation ?: return)
@@ -108,7 +108,7 @@ class Smartphone {
         }
     }
     fun wgClick(item: ItemStack, plugin: Plugin, player: org.bukkit.entity.Player, shift: Boolean) {
-        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player, plugin)
+        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
         if (player.world.name != "Home" && !player.isOp) {
             playerClass.sendErrorMessage("保護は生活ワールドのみ使用可能です")
             player.closeInventory()
@@ -128,10 +128,10 @@ class Smartphone {
             }
             "${ChatColor.GREEN}情報" -> {
                 val gui = player.openInventory.topInventory
-                gui.setItem(2, Item().make(Material.MAP, "${ChatColor.YELLOW}保護情報", null, null, 1))
-                gui.setItem(4, Item().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加", null, null, 1))
-                gui.setItem(6, Item().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除", null, null, 1))
-                gui.setItem(8, Item().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行", null, 1))
+                gui.setItem(2, Item().make(Material.MAP, "${ChatColor.YELLOW}保護情報", ))
+                gui.setItem(4, Item().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
+                gui.setItem(6, Item().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除"))
+                gui.setItem(8, Item().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行"))
             }
             "${ChatColor.YELLOW}保護情報" -> {
                 player.closeInventory()
@@ -173,56 +173,57 @@ class Smartphone {
     }
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
+        val world = player.world
         if ((Money().get(player.uniqueId.toString())) < price) {
-            com.github.Ringoame196.Entity.AoringoPlayer(player, null).sendErrorMessage("お金が足りません")
+            com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
             return
         }
         player.performCommand("/expand vert")
         player.performCommand("rg claim $name")
-        if (WorldGuard().getProtection(player, name)) {
+        if (WorldGuard().getProtection(world, name)) {
             player.sendMessage("${ChatColor.GREEN}[WG]正常に保護をかけました")
             Money().remove(player.uniqueId.toString(), price, true)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         }
         player.closeInventory()
     }
-    private fun tpGUI(player: org.bukkit.entity.Player) {
+    private fun createTpGUI():Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
-        gui.setItem(1, Item().make(Material.CHEST, "${ChatColor.GOLD}ロビー", null, null, 1))
-        gui.setItem(3, Item().make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド", null, null, 1))
-        gui.setItem(5, Item().make(Material.DIAMOND_PICKAXE, "${ChatColor.AQUA}資源ワールド", null, null, 1))
-        gui.setItem(7, Item().make(Material.QUARTZ_BLOCK, "${ChatColor.YELLOW}ショップ", null, null, 1))
-        gui.setItem(19, Item().make(Material.BEDROCK, "${ChatColor.RED}イベント", null, null, 1))
-        player.openInventory(gui)
+        gui.setItem(1, Item().make(Material.CHEST, "${ChatColor.GOLD}ロビー"))
+        gui.setItem(3, Item().make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド"))
+        gui.setItem(5, Item().make(Material.DIAMOND_PICKAXE, "${ChatColor.AQUA}資源ワールド"))
+        gui.setItem(7, Item().make(Material.QUARTZ_BLOCK, "${ChatColor.YELLOW}ショップ"))
+        gui.setItem(19, Item().make(Material.BEDROCK, "${ChatColor.RED}イベント"))
+        return gui
     }
     private fun op(player: org.bukkit.entity.Player) {
         if (!player.isOp) { return }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}OP用")
-        gui.setItem(0, Item().make(Material.COMMAND_BLOCK, "${ChatColor.YELLOW}リソパ更新", null, null, 1))
-        gui.setItem(2, Item().make(Material.WOODEN_AXE, "${ChatColor.RED}ショップ保護リセット", null, null, 1))
-        gui.setItem(4, Item().make(Material.DIAMOND, "${ChatColor.GREEN}運営ギフトリセット", null, null, 1))
-        gui.setItem(6, Item().make(Material.CRAFTING_TABLE, "${ChatColor.GREEN}テストワールド", null, null, 1))
+        gui.setItem(0, Item().make(Material.COMMAND_BLOCK, "${ChatColor.YELLOW}リソパ更新"))
+        gui.setItem(2, Item().make(Material.WOODEN_AXE, "${ChatColor.RED}ショップ保護リセット"))
+        gui.setItem(4, Item().make(Material.DIAMOND, "${ChatColor.GREEN}運営ギフトリセット"))
+        gui.setItem(6, Item().make(Material.CRAFTING_TABLE, "${ChatColor.GREEN}テストワールド"))
         player.openInventory(gui)
     }
     private fun wgGUI(player: org.bukkit.entity.Player) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}WorldGuardGUI")
-        gui.setItem(2, Item().make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${LandPurchase().price(player)}円", null, 1))
-        gui.setItem(4, Item().make(Material.MAP, "${ChatColor.GREEN}情報", null, null, 1))
-        gui.setItem(6, Item().make(Material.CHEST, "${ChatColor.AQUA}保護一覧", null, null, 1))
-        gui.setItem(8, Item().make(Material.WOODEN_AXE, "${ChatColor.GOLD}木の斧ゲット", null, null, 1))
+        gui.setItem(2, Item().make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${LandPurchase().price(player)}円"))
+        gui.setItem(4, Item().make(Material.MAP, "${ChatColor.GREEN}情報"))
+        gui.setItem(6, Item().make(Material.CHEST, "${ChatColor.AQUA}保護一覧"))
+        gui.setItem(8, Item().make(Material.WOODEN_AXE, "${ChatColor.GOLD}木の斧ゲット"))
         player.openInventory(gui)
     }
     private fun conversion(player: org.bukkit.entity.Player) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}スマートフォン")
-        gui.setItem(1, Item().make(Material.EMERALD, "${ChatColor.GREEN}100円", null, 1, 1))
-        gui.setItem(3, Item().make(Material.EMERALD, "${ChatColor.GREEN}1000円", null, 2, 1))
-        gui.setItem(5, Item().make(Material.EMERALD, "${ChatColor.GREEN}10000円", null, 3, 1))
-        gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", null, 4, 1))
+        gui.setItem(1, Item().make(Material.EMERALD, "${ChatColor.GREEN}100円", customModelData = 1))
+        gui.setItem(3, Item().make(Material.EMERALD, "${ChatColor.GREEN}1000円", customModelData = 2))
+        gui.setItem(5, Item().make(Material.EMERALD, "${ChatColor.GREEN}10000円", customModelData = 3))
+        gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", customModelData =  4))
         player.openInventory(gui)
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
-            com.github.Ringoame196.Entity.AoringoPlayer(player, null).sendErrorMessage("お金が足りません")
+            com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1
