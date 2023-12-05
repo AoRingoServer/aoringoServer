@@ -3,10 +3,12 @@ package com.github.Ringoame196.Entity
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Contract
+import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
+import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
 import com.github.Ringoame196.MessageSender
@@ -256,5 +258,23 @@ class AoringoPlayer(val player: Player) : MessageSender {
         item.setItemMeta(meta)
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+    }
+    fun breakVegetables(block: org.bukkit.block.Block){
+        for (item in block.drops) {
+            val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
+            if (vegetablesName == null) {
+                block.world.dropItem(block.location, item)
+            } else {
+                block.world.dropItem(
+                    block.location,
+                    Item().make(
+                        item.type,
+                        vegetablesName,
+                        Food().giveExpirationDate(14)
+                    )
+                )
+            }
+        }
+        block.type = Material.AIR
     }
 }

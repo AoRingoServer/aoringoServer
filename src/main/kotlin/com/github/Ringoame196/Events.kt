@@ -525,13 +525,14 @@ class Events(private val plugin: Plugin) : Listener {
         if (worldName == "dungeon") {
             when (block.type) {
                 Material.OBSIDIAN -> ArmorStand().summonMarker(block.location, " ").addScoreboardTag("breakObsidian")
-                Material.FIRE -> return
+                Material.FIRE -> {}
                 else -> {
                     playerClass.sendErrorMessage("黒曜石以外破壊禁止されています")
                     e.isCancelled = true
                 }
             }
-        } else if (block.type.toString().contains("ORE") && Job().get(player) != "${ChatColor.GOLD}ハンター") {
+        } else if (block.type.toString().contains("ORE")) {
+            if (Job().get(player) == "${ChatColor.GOLD}ハンター") { return }
             e.isCancelled = true
             playerClass.sendErrorMessage("${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         }
@@ -544,24 +545,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
-                for (item in block.drops) {
-                    val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
-                    if (vegetablesName == null) {
-                        block.world.dropItem(block.location, item)
-                    } else {
-                        block.world.dropItem(
-                            block.location,
-                            Item().make(
-                                item.type,
-                                vegetablesName,
-                                Food().giveExpirationDate(14),
-                                0,
-                                1
-                            )
-                        )
-                    }
-                }
-                block.type = Material.AIR
+                playerClass.breakVegetables(block)
             }
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
@@ -583,6 +567,7 @@ class Events(private val plugin: Plugin) : Listener {
                     entity.remove()
                 }
             }
+            else -> {}
         }
     }
 
@@ -616,7 +601,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (!Job().tool().contains(type) && item.hasItemMeta()) {
             e.isCancelled = true
             playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
-        } else if (ngItem.contains(item?.type)) {
+        } else if (ngItem.contains(type)) {
             e.isCancelled = true
             playerClass.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
         } else if (type == Material.WRITTEN_BOOK && displayName.contains("${ChatColor.RED}契約本@")) {
