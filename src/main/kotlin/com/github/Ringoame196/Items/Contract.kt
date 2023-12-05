@@ -1,6 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.Money
+import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -25,35 +26,38 @@ class Contract {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun contract(player: Player, message: String) {
-        val item = player.inventory.itemInMainHand
+    fun contract(player: AoringoPlayer, message: String) {
+        val sender = player.player
+        val item = sender.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val money = message.replace("!契約 ", "")
         val bookMessage = meta.getPage(1)
         val priceIndex = bookMessage.indexOf("取引金額：")
         val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "")
         if (money != priceMessage) {
-            AoringoEvents().onErrorEvent(player, "金額が違います")
+            player.sendErrorMessage("金額が違います")
             return
         }
         if (Money().get(player.uniqueId.toString()) < money.toInt()) {
-            AoringoEvents().onErrorEvent(player, "お金が足りません")
+            player.sendErrorMessage("お金が足りません")
             return
         }
         Money().remove(player.uniqueId.toString(), money.toInt(), false)
+        val setBookMessage = writeContractDate(meta,sender,money.toInt())
+        meta.setPage(1, setBookMessage)
+        item.setItemMeta(meta)
+        sender.inventory.setItemInMainHand(item)
+        sender.playSound(player.player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+    }
+    fun writeContractDate(meta:BookMeta,player: Player,money:Int): String {
         val currentDate = LocalDate.now()
-
-        // 日付を指定したフォーマットで文字列として取得
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val formattedDate = currentDate.format(dateFormatter)
         meta.setDisplayName("${ChatColor.RED}契約本@${money}円契約")
         val setBookMessage = meta.getPage(1)
             .replace("乙方：[プレイヤー名]\nUUID：[UUID]", "乙方：${player.name}\nUUID：${player.uniqueId}")
             .replace("契約日：[日付]", "契約日：$formattedDate")
-        meta.setPage(1, setBookMessage)
-        item.setItemMeta(meta)
-        player.inventory.setItemInMainHand(item)
-        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+        return setBookMessage
     }
     fun returnMoney(player: Player) {
         val item = player.inventory.itemInMainHand

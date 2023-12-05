@@ -830,6 +830,8 @@ class Events(private val plugin: Plugin) : Listener {
                 playerClass.sendErrorMessage("アイテムを1つのみ持ってください")
                 return
             }
+            val contractMoney = chat.replace("!契約 ", "").toInt()
+            if (contractMoney == 0) { return }
             when (playerItem.itemMeta?.displayName) {
                 "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, chat)
                 "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(player, chat)
