@@ -847,14 +847,6 @@ class Events(private val plugin: Plugin) : Listener {
         e.isCancelled = true
     }
     @EventHandler
-    fun onPlayerCommandPreprocess(e: PlayerCommandPreprocessEvent) {
-        val command = e.message
-        val player = e.player
-        if (command.contains("/rg") && !player.isOp) {
-            e.isCancelled = true
-        }
-    }
-    @EventHandler
     fun onPlayerDropItem(e: PlayerDropItemEvent) {
         val player = e.player
         val item = e.itemDrop

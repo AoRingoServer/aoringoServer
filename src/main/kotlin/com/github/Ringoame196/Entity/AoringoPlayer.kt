@@ -111,15 +111,13 @@ class AoringoPlayer(val player: Player) : MessageSender {
     }
     fun setProtectionPermission(plugin: Plugin) {
         if (player.isOp) { return }
-        permission(
-            "blocklocker.protect",
-            when (player.world.name) {
-                "Survival" -> true
-                "Home" -> true
-                else -> false
-            },
-            plugin
-        )
+        val judgement = when (player.world.name) {
+            "Survival" -> true
+            "Home" -> true
+            else -> false
+        }
+        permission("blocklocker.protect", judgement, plugin)
+        permission("worldguard.region.claim",judgement,plugin)
     }
     fun fastJoin() {
         player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
@@ -134,7 +132,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         player.inventory.removeItem(playerItem)
         player.sendMessage("${ChatColor.GOLD}[ポスト]アイテムをポストに入れました")
     }
-    fun activationTeleporter(worldName: String) {
+    fun teleporterWorld(worldName: String) {
         player.teleport(
             Bukkit.getWorld(
                 if (player.world.name == "world") { worldName } else { "world" }
