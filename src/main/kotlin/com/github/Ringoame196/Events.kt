@@ -813,24 +813,24 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onAsyncPlayerChat(e: AsyncPlayerChatEvent) {
         val player = e.player
-        val chat = e.message
+        val message = e.message
         val playerClass = AoringoPlayer(player)
         val playerItem = player.inventory.itemInMainHand
         if (player.scoreboardTags.contains("rg")) {
             e.isCancelled = true
-            playerClass.namingConservationLand(plugin, chat)
+            playerClass.namingConservationLand(plugin, message)
             return
         }
-        if (chat.contains("@")) {
+        if (message.contains("@")) {
             e.isCancelled = true
             playerClass.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
-        } else if (chat.contains("!契約")) {
+        } else if (message.contains("!契約")) {
             e.isCancelled = true
             if (playerItem.amount != 1) {
                 playerClass.sendErrorMessage("アイテムを1つのみ持ってください")
                 return
             }
-            val contractMoney = chat.replace("!契約 ", "").toInt()
+            val contractMoney = message.replace("!契約 ", "").toInt()
             if (contractMoney == 0) { return }
             when (playerItem.itemMeta?.displayName) {
                 "${ChatColor.YELLOW}契約書[未記入]" -> playerClass.writeContractRequest(contractMoney)
