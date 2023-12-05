@@ -492,7 +492,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
-            if (Scratch().check(gui, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
+            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 3, player, 10000)
             }
         } else if (title == "${ChatColor.YELLOW}金リンゴスクラッチ" && e.clickedInventory != player.inventory) {
@@ -506,7 +506,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
                 e.currentItem = scratchItem
             }
-            if (Scratch().check(gui, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData = 7)) == 0) {
+            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 9, player, 1000000)
             }
         }
@@ -575,9 +575,9 @@ class Events(private val plugin: Plugin) : Listener {
     fun onCraftItem(e: CraftItemEvent) {
         val player = e.whoClicked
         if (player !is org.bukkit.entity.Player) { return }
-        val item = e.currentItem?:return
+        val item = e.currentItem ?: return
         val type = item.type
-        val displayName = item.itemMeta?.displayName?:""
+        val displayName = item.itemMeta?.displayName ?: ""
         val playerClass = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
@@ -793,7 +793,7 @@ class Events(private val plugin: Plugin) : Listener {
 
     @EventHandler
     fun onBlockDispense(e: BlockDispenseEvent) {
-        //ディスペンサー無効
+        // ディスペンサー無効
         e.isCancelled = true
     }
 

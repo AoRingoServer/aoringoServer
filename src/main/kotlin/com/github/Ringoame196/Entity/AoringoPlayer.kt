@@ -33,7 +33,6 @@ import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
-import kotlin.coroutines.Continuation
 
 class AoringoPlayer(val player: Player) : MessageSender {
     val moneyManager = MoneyManager(this)
@@ -226,7 +225,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
             }
         )
     }
-    fun writeContractRequest(money:Int){
+    fun writeContractRequest(money: Int) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
@@ -238,7 +237,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun createContractBook(money: Int){
+    fun createContractBook(money: Int) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
         val bookMessage = meta.getPage(1)
@@ -259,7 +258,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun breakVegetables(block: org.bukkit.block.Block){
+    fun breakVegetables(block: org.bukkit.block.Block) {
         for (item in block.drops) {
             val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
             if (vegetablesName == null) {
