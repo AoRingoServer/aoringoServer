@@ -12,10 +12,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class Contract {
-    fun request(player: Player, message: String) {
+    fun request(player: Player, money:Int) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
-        val money = message.replace("!契約 ", "").toInt()
         if (money == 0) { return }
         meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
         val bookMessage = meta.getPage(1)
@@ -26,14 +25,13 @@ class Contract {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun contract(player: AoringoPlayer, message: String) {
+    fun contract(player: AoringoPlayer, money: Int) {
         val sender = player.player
         val item = sender.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
-        val money = message.replace("!契約 ", "")
         val bookMessage = meta.getPage(1)
         val priceIndex = bookMessage.indexOf("取引金額：")
-        val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "")
+        val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "").toInt()
         if (money != priceMessage) {
             player.sendErrorMessage("金額が違います")
             return
