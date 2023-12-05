@@ -595,7 +595,7 @@ class Events(private val plugin: Plugin) : Listener {
         val playerClass = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
-            e.currentItem = Item().make(material = Material.FERMENTED_SPIDER_EYE, name = "${ChatColor.GOLD}発酵した蜘蛛の目")
+            e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (item?.itemMeta?.displayName?.contains("包丁") == true) {
             e.currentItem = Cook().knifeSharpness(item)
         } else if (item?.itemMeta?.displayName?.contains("契約書") == true) {
@@ -800,7 +800,7 @@ class Events(private val plugin: Plugin) : Listener {
                 Material.IRON_BLOCK -> player.openInventory(Resource().createSelectTpGUI())
                 Material.QUARTZ_BLOCK -> playerClass.teleporterWorld("shop")
                 Material.GOLD_BLOCK -> playerClass.teleporterWorld("Home")
-                else -> return
+                else -> {}
             }
         }
     }
