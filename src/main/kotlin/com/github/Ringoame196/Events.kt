@@ -836,6 +836,7 @@ class Events(private val plugin: Plugin) : Listener {
     }
     @EventHandler
     fun onBlockPistonEvent(e: BlockPistonExtendEvent) {
+        //ピストン使用禁止に
         e.isCancelled = true
     }
     @EventHandler
