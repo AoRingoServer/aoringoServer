@@ -1,8 +1,6 @@
 package com.github.Ringoame196
 
-import org.bukkit.Bukkit
 import org.bukkit.entity.Player
-import org.bukkit.plugin.Plugin
 
 class EnderChest {
     fun getLevel(player: Player): Int {

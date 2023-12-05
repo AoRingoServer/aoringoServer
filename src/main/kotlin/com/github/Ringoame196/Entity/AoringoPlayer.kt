@@ -118,7 +118,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
             else -> false
         }
         permission("blocklocker.protect", judgement, plugin)
-        permission("worldguard.region.claim",judgement,plugin)
+        permission("worldguard.region.claim", judgement, plugin)
     }
     fun fastJoin() {
         player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
@@ -178,7 +178,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
     override fun sendMessage(message: String) {
         player.sendMessage(message)
     }
-    fun useEnderChest(plugin: Plugin){
+    fun useEnderChest(plugin: Plugin) {
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable {
@@ -186,14 +186,14 @@ class AoringoPlayer(val player: Player) : MessageSender {
             }
         )
     }
-    fun makeShop(sign: Sign){
+    fun makeShop(sign: Sign) {
         val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
         if (downBlock.type != Material.BARREL) { return }
         val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
         itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
         sign.type = Material.AIR
     }
-    fun makeLandPurchase(sign: Sign){
+    fun makeLandPurchase(sign: Sign) {
         sign.setLine(0, "${ChatColor.YELLOW}[土地販売]")
         sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
         sign.update()
