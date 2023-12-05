@@ -189,13 +189,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             beeNest.honeyLevel = 0
             e.clickedBlock!!.blockData = beeNest
-            player.inventory.addItem(
-                Item().make(
-                    material = Material.HONEY_BOTTLE,
-                    name = "${ChatColor.GOLD}ハチミツ",
-                    lore = Food().giveExpirationDate(14),
-                )
-            )
+            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", Food().giveExpirationDate(14),))
             Item().removeMainItem(player)
         }
         if (item.type == Material.EMERALD) {
@@ -205,7 +199,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 val totalAmount = item.amount * money
-                MoneyManager().addMoney(Admin, totalAmount)
+                MoneyManager().addMoney(PlayerAccount, totalAmount)
                 player.inventory.remove(item)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {

@@ -179,4 +179,12 @@ class AoringoPlayer(val player: Player) : MessageSender {
     override fun sendMessage(message: String) {
         player.sendMessage(message)
     }
+    fun useEnderChest(plugin: Plugin){
+        Bukkit.getScheduler().runTask(
+            plugin,
+            Runnable {
+                Bukkit.dispatchCommand(player, "enderchest")
+            }
+        )
+    }
 }

@@ -5,14 +5,6 @@ import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class EnderChest {
-    fun open(player: Player, plugin: Plugin) {
-        Bukkit.getScheduler().runTask(
-            plugin,
-            Runnable {
-                Bukkit.dispatchCommand(player, "enderchest")
-            }
-        )
-    }
     fun getLevel(player: Player): Int {
         val level = mutableListOf(6, 5, 4, 3, 2, 1)
         for (i in level) {
