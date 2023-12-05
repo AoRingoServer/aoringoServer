@@ -375,10 +375,11 @@ class Events(private val plugin: Plugin) : Listener {
                 if (itemName == "${ChatColor.YELLOW}カゴ") {
                     e.isCancelled = true
                 }
-                val lore = item.itemMeta?.lore?.get(0)
-                if (lore?.contains("消費期限:") == false) {
-                    e.isCancelled = true
+                val lore = item.itemMeta?.lore?.get(0)?:""
+                if (lore.contains("消費期限:")) {
+                    return
                 }
+                e.isCancelled = true
             }
 
             "${ChatColor.GOLD}クエスト" -> {
