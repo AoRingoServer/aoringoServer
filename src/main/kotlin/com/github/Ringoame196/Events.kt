@@ -800,9 +800,8 @@ class Events(private val plugin: Plugin) : Listener {
         if (downBlock.type == Material.COMMAND_BLOCK) {
             when (block.type) {
                 Material.IRON_BLOCK -> player.openInventory(Resource().createSelectTpGUI())
-                Material.QUARTZ_BLOCK -> playerClass.activationTeleporter("shop")
-                Material.GOLD_BLOCK -> playerClass.activationTeleporter("Home")
-
+                Material.QUARTZ_BLOCK -> playerClass.teleporterWorld("shop")
+                Material.GOLD_BLOCK -> playerClass.teleporterWorld("Home")
                 else -> return
             }
         }
