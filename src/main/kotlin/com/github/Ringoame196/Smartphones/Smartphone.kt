@@ -128,7 +128,7 @@ class Smartphone {
             }
             "${ChatColor.GREEN}情報" -> {
                 val gui = player.openInventory.topInventory
-                gui.setItem(2, Item().make(Material.MAP, "${ChatColor.YELLOW}保護情報", ))
+                gui.setItem(2, Item().make(Material.MAP, "${ChatColor.YELLOW}保護情報",))
                 gui.setItem(4, Item().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
                 gui.setItem(6, Item().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除"))
                 gui.setItem(8, Item().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行"))
@@ -165,7 +165,7 @@ class Smartphone {
             }
         }
     }
-    fun createProtectionGUI(player:Player,name: String):Inventory {
+    fun createProtectionGUI(player: Player, name: String): Inventory {
         val price = LandPurchase().price(player)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
         gui.setItem(4, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
@@ -187,7 +187,7 @@ class Smartphone {
         }
         player.closeInventory()
     }
-    private fun createTpGUI():Inventory {
+    private fun createTpGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         gui.setItem(1, Item().make(Material.CHEST, "${ChatColor.GOLD}ロビー"))
         gui.setItem(3, Item().make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド"))
@@ -218,7 +218,7 @@ class Smartphone {
         gui.setItem(1, Item().make(Material.EMERALD, "${ChatColor.GREEN}100円", customModelData = 1))
         gui.setItem(3, Item().make(Material.EMERALD, "${ChatColor.GREEN}1000円", customModelData = 2))
         gui.setItem(5, Item().make(Material.EMERALD, "${ChatColor.GREEN}10000円", customModelData = 3))
-        gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", customModelData =  4))
+        gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", customModelData = 4))
         player.openInventory(gui)
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {

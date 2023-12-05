@@ -12,10 +12,9 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class Contract {
-    fun request(player: Player, money:Int) {
+    fun request(player: Player, money: Int) {
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
-        if (money == 0) { return }
         meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
         val bookMessage = meta.getPage(1)
             .replace("甲方：[プレイヤー名]\nUUID：[UUID]", "甲方：${player.name}\nUUID：${player.uniqueId}")
@@ -40,14 +39,14 @@ class Contract {
             player.sendErrorMessage("お金が足りません")
             return
         }
-        Money().remove(player.uniqueId.toString(), money.toInt(), false)
-        val setBookMessage = writeContractDate(meta,sender,money.toInt())
+        Money().remove(player.uniqueId.toString(), money, false)
+        val setBookMessage = writeContractDate(meta, sender, money)
         meta.setPage(1, setBookMessage)
         item.setItemMeta(meta)
         sender.inventory.setItemInMainHand(item)
         sender.playSound(player.player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun writeContractDate(meta:BookMeta,player: Player,money:Int): String {
+    fun writeContractDate(meta: BookMeta, player: Player, money: Int): String {
         val currentDate = LocalDate.now()
         val dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
         val formattedDate = currentDate.format(dateFormatter)

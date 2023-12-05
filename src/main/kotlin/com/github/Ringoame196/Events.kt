@@ -818,7 +818,7 @@ class Events(private val plugin: Plugin) : Listener {
         val playerItem = player.inventory.itemInMainHand
         if (player.scoreboardTags.contains("rg")) {
             e.isCancelled = true
-            playerClass.namingConservationLand(plugin,chat)
+            playerClass.namingConservationLand(plugin, chat)
             return
         }
         if (chat.contains("@")) {
@@ -833,14 +833,14 @@ class Events(private val plugin: Plugin) : Listener {
             val contractMoney = chat.replace("!契約 ", "").toInt()
             if (contractMoney == 0) { return }
             when (playerItem.itemMeta?.displayName) {
-                "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, chat)
-                "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(player, chat)
+                "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, contractMoney)
+                "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(playerClass, contractMoney)
             }
         }
     }
     @EventHandler
     fun onBlockPistonEvent(e: BlockPistonExtendEvent) {
-        //ピストン使用禁止に
+        // ピストン使用禁止に
         e.isCancelled = true
     }
     @EventHandler

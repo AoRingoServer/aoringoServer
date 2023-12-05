@@ -159,8 +159,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         player.openInventory(Anvil().makeGUI())
     }
     fun upDataEnderChestLevel(plugin: Plugin) {
-        val level = EnderChest().getLevel(player)
-        when (level) {
+        when (val level = EnderChest().getLevel(player)) {
             6 -> sendErrorMessage("これ以上拡張することはできません")
             else -> {
                 Scoreboard().set("haveEnderChest", player.uniqueId.toString(), level + 1)
@@ -175,7 +174,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
     override fun createBossbar() {
         val bossbar = Bukkit.createBossBar(moneyManager.bossbarTitle(playerAccount), BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
-        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { com.github.Ringoame196.Entity.AoringoPlayer.PlayerData() }.titleMoneyBossbar = bossbar
+        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
     }
 
     override fun sendMessage(message: String) {
@@ -201,16 +200,16 @@ class AoringoPlayer(val player: Player) : MessageSender {
         sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
         sign.update()
     }
-    fun makeConservationLand(name:String){
+    fun makeConservationLand(name: String) {
         if (LandPurchase().doesRegionContainProtection(player)) {
             sendErrorMessage("保護範囲が含まれています")
         } else if (WorldGuard().getProtection(player.world, name)) {
             sendErrorMessage("同じ名前の保護を設定することは不可能です")
             return
         }
-        player.openInventory(Smartphone().createProtectionGUI(player,name))
+        player.openInventory(Smartphone().createProtectionGUI(player, name))
     }
-    fun namingConservationLand(plugin: Plugin,name:String){
+    fun namingConservationLand(plugin: Plugin, name: String) {
         player.removeScoreboardTag("rg")
         Bukkit.getScheduler().runTask(
             plugin,
