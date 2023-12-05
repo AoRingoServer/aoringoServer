@@ -815,29 +815,23 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val chat = e.message
         val playerClass = AoringoPlayer(player)
+        val playerItem = player.inventory.itemInMainHand
         if (chat.contains("@")) {
             e.isCancelled = true
-            player.sendMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
+            playerClass.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
         } else if (chat.contains("!契約")) {
             e.isCancelled = true
-            if (player.inventory.itemInMainHand.amount != 1) {
-                AoringoPlayer(player).sendErrorMessage("アイテムを1つのみ持ってください")
+            if (playerItem.amount != 1) {
+                playerClass.sendErrorMessage("アイテムを1つのみ持ってください")
                 return
             }
-            when (player.inventory.itemInMainHand.itemMeta?.displayName) {
+            when (playerItem.itemMeta?.displayName) {
                 "${ChatColor.YELLOW}契約書[未記入]" -> Contract().request(player, chat)
                 "${ChatColor.YELLOW}契約書[契約待ち]" -> Contract().contract(player, chat)
             }
         } else if (player.scoreboardTags.contains("rg")) {
             e.isCancelled = true
-            player.removeScoreboardTag("rg")
-            Bukkit.getScheduler().runTask(
-                plugin,
-                Runnable
-                {
-                    playerClass.makeConservationLand(chat)
-                }
-            )
+            playerClass.namingConservationLand(plugin,chat)
         }
     }
     @EventHandler

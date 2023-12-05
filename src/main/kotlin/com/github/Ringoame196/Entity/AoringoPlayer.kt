@@ -210,4 +210,14 @@ class AoringoPlayer(val player: Player) : MessageSender {
         }
         player.openInventory(Smartphone().createProtectionGUI(player,name))
     }
+    fun namingConservationLand(plugin: Plugin,name:String){
+        player.removeScoreboardTag("rg")
+        Bukkit.getScheduler().runTask(
+            plugin,
+            Runnable
+            {
+                makeConservationLand(name)
+            }
+        )
+    }
 }
