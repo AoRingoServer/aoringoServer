@@ -62,6 +62,7 @@ import org.bukkit.util.Vector
 import kotlin.random.Random
 
 class Events(private val plugin: Plugin) : Listener {
+    private val moneyUseCase = MoneyUseCase()
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val player = e.player
@@ -199,7 +200,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 val totalAmount = item.amount * money
-                MoneyManager().addMoney(PlayerAccount, totalAmount)
+                moneyUseCase.addMoney(playerClass,totalAmount)
                 player.inventory.remove(item)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
@@ -337,12 +338,16 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
         val player = e.whoClicked as? org.bukkit.entity.Player ?: return
+        val playerClass = AoringoPlayer(player)
         val gui = e.view
         val item = e.currentItem ?: return
         val itemName = item.itemMeta?.displayName
         val title = gui.title
         val playerOpenInventory = player.openInventory.topInventory
-        if (playerOpenInventory != e.clickedInventory && playerOpenInventory.type == InventoryType.WORKBENCH) {
+        if (playerOpenInventory != e.clickedInventory) {
+            if (playerOpenInventory.type != InventoryType.WORKBENCH) {
+                return
+            }
             if (!item.hasItemMeta()) {
                 return
             }
@@ -481,7 +486,7 @@ class Events(private val plugin: Plugin) : Listener {
             Smartphone().protection(player, item, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
         } else if (title == "${ChatColor.RED}リンゴスクラッチ" && e.clickedInventory != player.inventory) {
             e.isCancelled = true
-            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+            if (item.itemMeta?.displayName != "${ChatColor.RED}削る") { return }
             val itemList = mutableListOf(
                 Material.APPLE,
                 Material.BARRIER,
@@ -489,24 +494,22 @@ class Events(private val plugin: Plugin) : Listener {
                 Material.BARRIER,
                 Material.BARRIER
             )
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
             val scratchItem = Scratch().click(itemList)
-            if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
-                e.currentItem = scratchItem
-            }
+            e.currentItem = scratchItem
             if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 3, player, 10000)
             }
         } else if (title == "${ChatColor.YELLOW}金リンゴスクラッチ" && e.clickedInventory != player.inventory) {
             e.isCancelled = true
+            if (item.itemMeta?.displayName != "${ChatColor.RED}削る") { return }
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
             val itemList = mutableListOf(
                 Material.GOLDEN_APPLE,
                 Material.BARRIER
             )
             val scratchItem = Scratch().click(itemList)
-            if (item.itemMeta?.displayName == "${ChatColor.RED}削る") {
-                e.currentItem = scratchItem
-            }
+            e.currentItem = scratchItem
             if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
                 Scratch().result(Scratch().check(gui, scratchItem) == 9, player, 1000000)
             }

@@ -16,6 +16,7 @@ import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
+import com.github.Ringoame196.Scratch
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Smartphone
 import net.md_5.bungee.api.ChatMessageType
@@ -31,11 +32,11 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 
-class AoringoPlayer(val player: Player) : MessageSender {
-    val moneyManager = MoneyManager(this)
+class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(this)
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
@@ -70,7 +71,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         player.sendMessage(message)
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
     }
-    override fun sendErrorMessage(message: String) {
+    fun sendErrorMessage(message: String) {
         player.sendMessage("${ChatColor.RED}$message")
         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
     }
@@ -83,7 +84,7 @@ class AoringoPlayer(val player: Player) : MessageSender {
         levelupMessage(player, "${ChatColor.RED}最大HPアップ！！")
         player.maxHealth = 20.0 + Scoreboard().getValue("status_HP", player.uniqueId.toString())
     }
-    override fun sendActionBar(title: String) {
+    fun sendActionBar(title: String) {
         val actionBarMessage = ChatColor.translateAlternateColorCodes('&', title)
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(actionBarMessage))
     }
@@ -183,9 +184,6 @@ class AoringoPlayer(val player: Player) : MessageSender {
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
     }
 
-    override fun sendMessage(message: String) {
-        player.sendMessage(message)
-    }
     fun useEnderChest(plugin: Plugin) {
         Bukkit.getScheduler().runTask(
             plugin,
