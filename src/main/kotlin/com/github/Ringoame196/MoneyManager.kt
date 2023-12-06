@@ -23,10 +23,12 @@ class MoneyManager {
         return true
     }
 
-    fun setMoney(targetAccount: Account, money: Int):Boolean {
+    fun setMoney(targetAccount: Account, money: Int) {
         val accountID = targetAccount.getAccountID()
         Scoreboard().set("money", accountID, money)
-        return targetAccount !is PlayerAccount
+    }
+    fun isTargetPlayer(targetAccount: Account):Boolean{
+        return targetAccount is PlayerAccount
     }
 
     fun addMoney(targetAccount: Account, amount: Int) {

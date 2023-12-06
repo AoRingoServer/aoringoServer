@@ -31,20 +31,25 @@ class MoneyUseCase {
             playerClass.sendActionBar("${ChatColor.RED}-$amount")
         }
     }
-    fun displayMoney(playerClass: AoringoPlayer,amount: Int){
-        if (!moneyManager.setMoney(playerClass.playerAccount,amount)) { return }
+    fun displayMoney(playerClass: AoringoPlayer){
         val playerUUID = UUID.fromString(playerClass.playerAccount.getAccountID())
         val bossbar = PluginData.DataManager.playerDataMap.getOrPut(playerUUID) { AoringoPlayer.PlayerData() }.titleMoneyBossbar
         if (bossbar == null) {
-            playerClass.createBossbar()
+            playerClass.createBossbar(bossbarTitle(playerClass.playerAccount))
         } else {
             bossbar.setTitle(bossbarTitle(playerClass.playerAccount))
         }
+    }
+    fun setMoney(account: Account,amount: Int){
+        moneyManager.setMoney(account,amount)
     }
     private fun bossbarTitle(targetAccount: PlayerAccount): String {
         return "${ChatColor.GOLD}所持金${formalCurrency(moneyManager.getMoney(targetAccount))}円"
     }
     private fun formalCurrency(money: Int): String {
         return money.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
+    }
+    fun getMoney(account: Account):Int{
+        return moneyManager.getMoney(account)
     }
 }

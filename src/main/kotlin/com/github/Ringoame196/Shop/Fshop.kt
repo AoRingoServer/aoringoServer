@@ -3,6 +3,7 @@ package com.github.Ringoame196.Shop
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.MoneyUseCase
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -16,6 +17,7 @@ import org.bukkit.inventory.ItemStack
 import java.util.UUID
 
 class Fshop {
+    val moneyUseCase = MoneyUseCase()
     fun isOwner(player: Player, location: Location): Boolean {
         return WorldGuard().getOwnerOfRegion(location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(location)?.contains(player.uniqueId) == true
     }
@@ -39,14 +41,21 @@ class Fshop {
             playerClass.sendErrorMessage("売り物が更新されました")
             return
         }
-        if (Money().get(player.uniqueId.toString()) < price) {
+        if (moneyUseCase.getMoney(playerClass.playerAccount) < price) {
             playerClass.sendErrorMessage("お金が足りません")
             return
         }
         val name = itemFrame.customName
-        val owner = name?.substring(name.indexOf("userID:") + 7)
+        var owner = name?.substring(name.indexOf("userID:") + 7)
         player.inventory.addItem(item)
-        Money().remove(player.uniqueId.toString(), price, false)
+        moneyUseCase.reduceMoney(playerClass,price,playerClass.playerAccount)
+        owner = owner?.substring(0, owner.indexOf(","))
+        val ownerUUID = UUID.fromString(owner)
+        val ownerPlayer = if(Bukkit.getPlayer(ownerUUID) != null){
+            Bukkit.getPlayer(ownerUUID)
+        } else {
+            Bukkit.getOfflinePlayer(ownerUUID)
+        }
         Money().add(owner?.substring(0, owner.indexOf(",")) ?: return, price, false)
         player.sendMessage("${ChatColor.GREEN}購入しました")
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)

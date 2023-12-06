@@ -13,6 +13,7 @@ import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Job
 import com.github.Ringoame196.MessageSender
 import com.github.Ringoame196.MoneyManager
+import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -38,6 +39,7 @@ import org.bukkit.plugin.Plugin
 
 class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(this)
+    val moneyUseCase = MoneyUseCase()
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var speedMeasurement: Boolean = false
@@ -54,7 +56,7 @@ class AoringoPlayer(val player: Player) {
         }
         scoreboardClass.set("blockCount", player.name, 0)
         permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
-        createBossbar()
+        moneyUseCase.displayMoney(this)
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
             player.setPlayerListName("${ChatColor.YELLOW}[運営]" + player.playerListName)
@@ -178,8 +180,8 @@ class AoringoPlayer(val player: Player) {
         }
     }
 
-    override fun createBossbar() {
-        val bossbar = Bukkit.createBossBar(moneyManager.bossbarTitle(playerAccount), BarColor.BLUE, BarStyle.SOLID)
+    fun createBossbar(title: String) {
+        val bossbar = Bukkit.createBossBar(title, BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
     }
@@ -245,11 +247,11 @@ class AoringoPlayer(val player: Player) {
             sendErrorMessage("金額が違います")
             return
         }
-        if (Money().get(player.uniqueId.toString()) < money) {
+        if (moneyUseCase.getMoney(playerAccount) < money) {
             sendErrorMessage("お金が足りません")
             return
         }
-        Money().remove(player.uniqueId.toString(), money, false)
+        moneyUseCase.reduceMoney(this,money,playerAccount)
         val setBookMessage = Contract().writeContractDate(meta, player, money)
         meta.setPage(1, setBookMessage)
         item.setItemMeta(meta)
