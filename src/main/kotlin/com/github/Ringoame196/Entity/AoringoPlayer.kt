@@ -41,8 +41,7 @@ class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(this)
     val moneyUseCase = MoneyUseCase()
     data class PlayerData(
-        var titleMoneyBossbar: BossBar? = null,
-        var speedMeasurement: Boolean = false
+        var titleMoneyBossbar: BossBar? = null
     )
     fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()
