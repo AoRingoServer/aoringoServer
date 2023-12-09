@@ -89,7 +89,7 @@ class Smartphone {
                 val list = Yml().getList(plugin, "conservationLand", "", "protectedName") ?: return
                 for (name in list) {
                     if (Scoreboard().getValue("protectionContract", name) == 2) {
-                        Scoreboard().remove("protectionContract", name, 1)
+                        Scoreboard().reduce("protectionContract", name, 1)
                         continue
                     }
                     WorldGuard().reset(name, Bukkit.getWorld("shop") ?: return)

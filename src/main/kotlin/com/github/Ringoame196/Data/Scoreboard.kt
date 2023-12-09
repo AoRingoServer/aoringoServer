@@ -20,7 +20,7 @@ class Scoreboard {
         val value = getValue(scoreName, name) + add
         set(scoreName, name, value)
     }
-    fun remove(scoreName: String, name: String, remove: Int) {
+    fun reduce(scoreName: String, name: String, remove: Int) {
         val value = getValue(scoreName, name) - remove
         set(scoreName, name, value)
     }

@@ -48,7 +48,7 @@ class Job {
         item.amount = item.amount - 1
         for (i in 0 until jobList.size) {
             if (jobList[i] != jobName) { continue }
-            Scoreboard().remove("job", get(player), 1)
+            Scoreboard().reduce("job", get(player), 1)
             setJob(player, i)
             Scoreboard().add("job", get(player), 1)
             prefix(player)
