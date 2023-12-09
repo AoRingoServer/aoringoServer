@@ -14,16 +14,25 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta
 class Anvil {
     fun makeGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}カスタム金床")
-        for (i in 0..8) {
-            gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
-        }
+        fillGUI(gui)
         val itemSlotNumber = 2
         val materialSlotNumber = 4
         val compositeButtonSlotNumber = 7
-        gui.setItem(itemSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(materialSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(compositeButtonSlotNumber, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
+        InstallationAir(gui,itemSlotNumber)
+        InstallationAir(gui,materialSlotNumber)
+        InstallationAir(gui,compositeButtonSlotNumber)
         return gui
+    }
+    private fun fillGUI(gui: Inventory){
+        for (i in 0..8) {
+            gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
+        }
+    }
+    private fun InstallationAir(gui: Inventory,slot:Int){
+        gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+    }
+    private fun InstallationCompositeButton(gui: Inventory,slot: Int){
+        gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
     }
     fun click(player: Player, item: ItemStack, e: InventoryClickEvent) {
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
