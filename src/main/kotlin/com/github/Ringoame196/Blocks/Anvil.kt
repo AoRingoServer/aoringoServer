@@ -85,19 +85,19 @@ class Anvil {
         } else if (material.itemMeta!!.displayName == "${ChatColor.YELLOW}修理キット") {
             completedItem.durability = (completedItem.durability - material.amount).toShort()
         }
-        if (overEnchant(completedItem)) {
+        if (isOverEnchant(completedItem)) {
             playerClass.sendErrorMessage("オーバーエンチャント")
             return
         }
         complete(player, completedItem, gui)
     }
-    private fun overEnchant(item: ItemStack): Boolean {
+    private fun isOverEnchant(item: ItemStack): Boolean {
         var allLevel = 0
+        val overLevel = 10
         for ((enchant, level) in item.itemMeta?.enchants ?: return false) {
             allLevel += level
-            if (allLevel > 10) { return true }
         }
-        return false
+        return allLevel > overLevel
     }
     private fun complete(player: Player, completedItem: ItemStack, gui: Inventory) {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
