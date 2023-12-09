@@ -5,7 +5,6 @@ import org.bukkit.entity.ArmorStand
 
 class ArmorStand {
     fun cookSummon(location: Location, name: String): ArmorStand {
-        val world = location.world
 
         // アーマースタンドの設定
         val armorStand = summonMarker(location, name)

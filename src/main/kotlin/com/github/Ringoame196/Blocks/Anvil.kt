@@ -17,9 +17,12 @@ class Anvil {
         for (i in 0..8) {
             gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(2, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(4, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(7, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
+        val itemSlotNumber = 2
+        val materialSlotNumber = 4
+        val compositeButtonSlotNumber = 7
+        gui.setItem(itemSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        gui.setItem(materialSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        gui.setItem(compositeButtonSlotNumber, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
         return gui
     }
     fun click(player: Player, item: ItemStack, e: InventoryClickEvent) {
@@ -34,26 +37,28 @@ class Anvil {
         }
     }
     fun close(gui: InventoryView, player: Player) {
-        if (gui.getItem(2) != null) {
-            player.inventory.addItem(gui.getItem(2))
+        val item = gui.getItem(2)
+        val material = gui.getItem(4)
+        if (item != null) {
+            player.inventory.addItem(item)
         }
-        if (gui.getItem(4) != null) {
-            player.inventory.addItem(gui.getItem(4))
+        if (material != null) {
+            player.inventory.addItem(material)
         }
     }
     private fun synthesis(player: Player, gui: Inventory) {
         val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
-        val syntheticItems1 = gui.getItem(2) ?: return
-        val syntheticItems2 = gui.getItem(4) ?: return
-        if (!enchantItemCheck(syntheticItems1.type) || (!enchantItemCheck(syntheticItems2.type) && syntheticItems2.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット")) {
+        val item = gui.getItem(2) ?: return
+        val material = gui.getItem(4) ?: return
+        if (!checkEnchantItem(item.type) || (!checkEnchantItem(material.type) && material.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット")) {
             return
         }
-        if (syntheticItems2.itemMeta?.displayName != "" && syntheticItems2.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット") {
+        if (material.itemMeta?.displayName != "" && material.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット") {
             playerClass.sendErrorMessage("右側に名前付きのアイテムを設置することはできません")
             return
         }
-        if ((syntheticItems2.itemMeta?.lore?.size ?: 0) >= 1) {
-            for (lore in syntheticItems2.itemMeta!!.lore!!) {
+        if ((material.itemMeta?.lore?.size ?: 0) >= 1) {
+            for (lore in material.itemMeta!!.lore!!) {
                 if (!lore.contains("所有者:")) {
                     continue
                 }
@@ -62,14 +67,14 @@ class Anvil {
             }
         }
 
-        var completedItem = syntheticItems1.clone()
-        if (syntheticItems1.type == syntheticItems2.type) {
-            completedItem = enchant(syntheticItems2, completedItem)
-            completedItem = durability(syntheticItems2, completedItem)
-        } else if (syntheticItems2.type == Material.ENCHANTED_BOOK) {
-            completedItem = enchantBook(completedItem, syntheticItems2.itemMeta as EnchantmentStorageMeta)
-        } else if (syntheticItems2.itemMeta!!.displayName == "${ChatColor.YELLOW}修理キット") {
-            completedItem.durability = (completedItem.durability - syntheticItems2.amount).toShort()
+        var completedItem = item.clone()
+        if (item.type == material.type) {
+            completedItem = enchant(material, completedItem)
+            completedItem = durability(material, completedItem)
+        } else if (material.type == Material.ENCHANTED_BOOK) {
+            completedItem = enchantBook(completedItem, material.itemMeta as EnchantmentStorageMeta)
+        } else if (material.itemMeta!!.displayName == "${ChatColor.YELLOW}修理キット") {
+            completedItem.durability = (completedItem.durability - material.amount).toShort()
         }
         if (overEnchant(completedItem)) {
             playerClass.sendErrorMessage("オーバーエンチャント")
@@ -88,8 +93,10 @@ class Anvil {
     private fun complete(player: Player, completedItem: ItemStack, gui: Inventory) {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         player.inventory.addItem(completedItem)
-        gui.setItem(2, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(4, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        val itemSlotNumber = 2
+        val materialSlotNumber = 4
+        gui.setItem(itemSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        gui.setItem(materialSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
     }
     private fun enchant(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
         for ((enchant, level) in beforeItem.itemMeta?.enchants ?: return afterItem) {
@@ -102,10 +109,11 @@ class Anvil {
         return afterItem
     }
     private fun enchantBook(afterItem: ItemStack, meta: EnchantmentStorageMeta): ItemStack {
+        val maxLevel = 5
         for ((enchant, level) in meta.storedEnchants) {
             if (afterItem.getEnchantmentLevel(enchant) > level) { continue }
             if (afterItem.getEnchantmentLevel(enchant) == level) {
-                if (level >= 5) {
+                if (level >= maxLevel) {
                     afterItem.addUnsafeEnchantment(enchant, level)
                 } else {
                     afterItem.addUnsafeEnchantment(enchant, level + 1)
@@ -122,7 +130,7 @@ class Anvil {
         afterItem.durability = if (durability >= 0) { durability } else { 0 }
         return afterItem
     }
-    private fun enchantItemCheck(material: Material): Boolean {
+    private fun checkEnchantItem(material: Material): Boolean {
         val allowedItems = mutableListOf(
             "_SWORD",
             "_AXE",

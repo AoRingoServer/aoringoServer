@@ -15,7 +15,7 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
 class Block {
-    fun enchantGUI(): Inventory {
+    fun makeEnchantGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.RED}エンチャント")
         for (i in 0..7) {
             gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))

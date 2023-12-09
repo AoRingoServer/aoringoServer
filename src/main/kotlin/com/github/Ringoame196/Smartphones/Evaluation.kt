@@ -12,7 +12,7 @@ class Evaluation {
     fun display(player: Player) {
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}プレイヤー評価")
         var i = 0
-        for (target in com.github.Ringoame196.Entity.AoringoPlayer().getPlayersInRadius(player.location, 10.0) ?: return) {
+        for (target in com.github.Ringoame196.Entity.AoringoPlayer(player).getPlayersInRadius(player.location, 10.0) ?: return) {
             gui.addItem(playerHead(target))
             if (i == 18) { continue }
             i ++
