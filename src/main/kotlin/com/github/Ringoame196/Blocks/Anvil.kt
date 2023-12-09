@@ -89,7 +89,7 @@ class Anvil {
             playerClass.sendErrorMessage("オーバーエンチャント")
             return
         }
-        complete(player, completedItem, gui)
+        givePlayerItem(player, completedItem, gui)
     }
     private fun isOverEnchant(item: ItemStack): Boolean {
         var allLevel = 0
@@ -99,13 +99,13 @@ class Anvil {
         }
         return allLevel > overLevel
     }
-    private fun complete(player: Player, completedItem: ItemStack, gui: Inventory) {
+    private fun givePlayerItem(player: Player, completedItem: ItemStack, gui: Inventory) {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         player.inventory.addItem(completedItem)
         val itemSlotNumber = 2
         val materialSlotNumber = 4
-        gui.setItem(itemSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
-        gui.setItem(materialSlotNumber, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        InstallationAir(gui,itemSlotNumber)
+        InstallationAir(gui,materialSlotNumber)
     }
     private fun enchant(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
         for ((enchant, level) in beforeItem.itemMeta?.enchants ?: return afterItem) {
