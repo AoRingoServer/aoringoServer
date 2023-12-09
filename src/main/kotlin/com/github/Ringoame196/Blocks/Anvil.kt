@@ -20,7 +20,7 @@ class Anvil {
         val compositeButtonSlotNumber = 7
         InstallationAir(gui,itemSlotNumber)
         InstallationAir(gui,materialSlotNumber)
-        InstallationAir(gui,compositeButtonSlotNumber)
+        InstallationCompositeButton(gui,compositeButtonSlotNumber)
         return gui
     }
     private fun fillGUI(gui: Inventory){
