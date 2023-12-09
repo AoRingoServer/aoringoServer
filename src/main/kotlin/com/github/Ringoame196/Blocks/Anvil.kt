@@ -59,7 +59,7 @@ class Anvil {
         val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
         val item = gui.getItem(2) ?: return
         val material = gui.getItem(4) ?: return
-        if (!checkEnchantItem(item.type) || (!checkEnchantItem(material.type) && material.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット")) {
+        if (!isCanEnchantItem(item.type) || (!isCanEnchantItem(material.type) && material.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット")) {
             return
         }
         if (material.itemMeta?.displayName != "" && material.itemMeta?.displayName != "${ChatColor.YELLOW}修理キット") {
@@ -78,7 +78,7 @@ class Anvil {
 
         var completedItem = item.clone()
         if (item.type == material.type) {
-            completedItem = enchant(material, completedItem)
+            completedItem = enchantItem(material, completedItem)
             completedItem = durability(material, completedItem)
         } else if (material.type == Material.ENCHANTED_BOOK) {
             completedItem = enchantBook(completedItem, material.itemMeta as EnchantmentStorageMeta)
@@ -107,7 +107,7 @@ class Anvil {
         InstallationAir(gui,itemSlotNumber)
         InstallationAir(gui,materialSlotNumber)
     }
-    private fun enchant(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
+    private fun enchantItem(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
         for ((enchant, level) in beforeItem.itemMeta?.enchants ?: return afterItem) {
             if (afterItem.getEnchantmentLevel(enchant) == level) {
                 afterItem.addUnsafeEnchantment(enchant, level + 1)
@@ -139,7 +139,7 @@ class Anvil {
         afterItem.durability = if (durability >= 0) { durability } else { 0 }
         return afterItem
     }
-    private fun checkEnchantItem(material: Material): Boolean {
+    private fun isCanEnchantItem(material: Material): Boolean {
         val allowedItems = mutableListOf(
             "_SWORD",
             "_AXE",
