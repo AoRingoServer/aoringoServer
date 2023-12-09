@@ -13,33 +13,39 @@ class Cage {
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}カゴ")
         if (item.itemMeta?.lore != null) {
             for (lore in item.itemMeta?.lore ?: return gui) {
-                gui.addItem(get(lore))
+                gui.addItem(restorationItem(lore))
             }
         }
         return gui
     }
-    private fun get(lore: String): ItemStack? {
-
+    private fun restorationItem(lore: String): ItemStack {
+        val requiredData = 5
         val parts = lore.split(",")
-        val item = ItemStack(
-            when (parts[4]) {
-                "0" -> Material.MELON_SLICE
-                "1" -> Material.WHEAT
-                "2" -> Material.CARROT
-                "3" -> Material.POTATO
-                else -> return null
-            }
-        )
+        val materialNumber = parts[4]
+        val itemName = parts[0]
+        val expirationDate = parts[1]
+        val customModelData = parts[2].toInt()
+        val amount = parts[3].toInt()
+        val item = ItemStack(acquisitionMaterial(materialNumber))
         val meta = item.itemMeta ?: return item // metaがnullの場合は元のアイテムを返す
-        if (parts.size < 5) return item // 部分の数が足りない場合は元のアイテムを返す
+        if (parts.size < requiredData) return item // 部分の数が足りない場合は元のアイテムを返す
 
-        meta.setDisplayName(parts[0])
-        meta.lore = mutableListOf(parts[1])
-        meta.setCustomModelData(parts[2].toInt())
-        item.amount = parts[3].toInt()
+        meta.setDisplayName(itemName)
+        meta.lore = mutableListOf(expirationDate)
+        meta.setCustomModelData(customModelData)
+        item.amount = amount
 
         item.itemMeta = meta // 更新したメタデータをアイテムに設定
         return item
+    }
+    private fun acquisitionMaterial(number:String):Material{
+        return when(number) {
+            "0" -> Material.MELON_SLICE
+            "1" -> Material.WHEAT
+            "2" -> Material.CARROT
+            "3" -> Material.POTATO
+            else -> throw RuntimeException("Materialが見つかりませんでした")
+        }
     }
     fun clone(player: HumanEntity, gui: InventoryView) {
         val lore = mutableListOf<String>()

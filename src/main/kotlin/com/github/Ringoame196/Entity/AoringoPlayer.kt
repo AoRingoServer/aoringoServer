@@ -152,7 +152,7 @@ class AoringoPlayer(val player: Player) {
             sendErrorMessage("満腹度が足りません")
             return
         }
-        player.openInventory(Block().enchantGUI())
+        player.openInventory(Block().makeEnchantGUI())
     }
     fun useAnvil() {
         if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
