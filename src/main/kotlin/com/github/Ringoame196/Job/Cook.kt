@@ -21,7 +21,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class Cook(val food: Food = Food()) {
+class Cook(val food: Food = Food(),val cookData: CookData = CookData()) {
     fun furnace(block: Block) {
         val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
         itemFrame.isVisible = false
@@ -51,7 +51,7 @@ class Cook(val food: Food = Food()) {
                 armorStand.customName = "${ChatColor.YELLOW}${c}秒"
                 smoker.update()
                 if (c == completeTime) {
-                    val bakeItem = CookData().bake(item) ?: return
+                    val bakeItem = cookData.bake(item) ?: return
                     if (!isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
                         return
                     }
@@ -82,7 +82,7 @@ class Cook(val food: Food = Food()) {
             return
         }
         if (food.isExpirationDateHasExpired(player, entity.item)) { return }
-        val cutItem = CookData().cut(item) ?: return
+        val cutItem = cookData.cut(item) ?: return
         if (!isCookLevel(cutItem.itemMeta?.displayName?:return, player)) {
             return
         }
@@ -130,7 +130,7 @@ class Cook(val food: Food = Food()) {
         val playerItem = player.inventory.itemInMainHand
         if (food.isExpirationDateHasExpired(player, entity.item)) { return }
         playerItem.amount = playerItem.amount - 1
-        val dressingItem = CookData().dressing(item) ?: return
+        val dressingItem = cookData.dressing(item) ?: return
         if (!isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
             return
         }
@@ -148,7 +148,7 @@ class Cook(val food: Food = Food()) {
             ingredients.add(item.itemMeta?.displayName ?: continue)
             if (food.isExpirationDateHasExpired(player, item)) { return }
         }
-        val finishFood = CookData().pot(ingredients) ?: return
+        val finishFood = cookData.pot(ingredients) ?: return
         if (!isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
             return
         }
@@ -169,7 +169,7 @@ class Cook(val food: Food = Food()) {
                 expiration = true
             }
         }
-        val finishFood = if (expiration) { CookData().fermentationMix(recipe) } else { CookData().mix(recipe) } ?: return
+        val finishFood = if (expiration) { cookData.fermentationMix(recipe) } else { cookData.mix(recipe) } ?: return
         if (!isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
             return
         }
@@ -181,7 +181,7 @@ class Cook(val food: Food = Food()) {
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
     fun fry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
-        val fryItem = CookData().fly(item) ?: return
+        val fryItem = cookData.fly(item) ?: return
         if (!Cook().isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
             return
         }
@@ -201,7 +201,7 @@ class Cook(val food: Food = Food()) {
                 timer.customName = "${ChatColor.YELLOW}${c}秒"
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
                 if (c == 0) {
-                    Item().drop(block.location.clone().add(0.5, 1.0, 0.5), CookData().fly(item) ?: return)
+                    Item().drop(block.location.clone().add(0.5, 1.0, 0.5), cookData.fly(item) ?: return)
                     timer.remove()
                     block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
                     this.cancel()
