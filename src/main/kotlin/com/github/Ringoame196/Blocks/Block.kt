@@ -64,20 +64,27 @@ class Block {
             Item().enchant(Enchantment.SWEEPING_EDGE, 1),
         )
         player.foodLevel -= 10
-        val max = enchantBook.size - 1
-        var c = Random.nextInt(10, 20)
+        val pieces = enchantBookList.size - 1
+        val minimumPerformance = 10
+        val maxPerformance = 20
+        var performances = Random.nextInt(minimumPerformance, maxPerformance)
+        val enchantBookSlot = 4
         object : BukkitRunnable() {
             override fun run() {
-                c--
+                performances--
                 player.playSound(player, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, 1f, 1f)
-                gui.setItem(4, enchantBook[Random.nextInt(0, max)])
-                if (c == 0) {
-                    player.inventory.addItem(gui.getItem(4))
-                    player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+                gui.setItem(enchantBookSlot, enchantBookList[Random.nextInt(0, pieces)])
+                if (performances == 0) {
+                    val enchantBook = gui.getItem(enchantBookSlot)
+                    giveEnchantBook(player,enchantBook?:return)
                     player.closeInventory()
                     this.cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, 5L) // 1秒間隔 (20 ticks) でタスクを実行
+    }
+    private fun giveEnchantBook(player: Player, enchantBook:ItemStack){
+        player.inventory.addItem(enchantBook)
+        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
 }
