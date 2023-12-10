@@ -65,7 +65,6 @@ class Food{
         val expiration = itemLore?.get(0) ?: return false
         val date = takeOutDate(expiration)
 
-        // 日付の差を計算
         val diff = compareDateFromCurreantDate(date)
         if (diff > 0) {
             playerClass.sendErrorMessage("消費期限が切れています")
@@ -73,10 +72,13 @@ class Food{
         }
         return false
     }
-    fun compareDateFromCurreantDate(date:Date): Long {
+    private fun compareDateFromCurreantDate(date:Date): Long {
         val currentDate = Date()
         val diff = currentDate.time - date.time
-        return diff / 1000 * 60 * 60 * 24
+        return convertMillisecondsToDay(diff)
+    }
+    private fun convertMillisecondsToDay(diff:Long):Long{
+        return diff / (1000 * 60 * 60 * 24)
     }
     private fun takeOutDate(lore:String): Date {
         val expiration = lore
