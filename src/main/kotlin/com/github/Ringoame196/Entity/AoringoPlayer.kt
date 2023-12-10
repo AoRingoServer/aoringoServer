@@ -169,7 +169,7 @@ class AoringoPlayer(val player: Player) {
                 permission("enderchest.size.$level", true, plugin)
                 player.sendMessage("${ChatColor.AQUA}エンダーチェスト容量UP")
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-                Item().removeMainItem(player)
+                Item().reduceMainItem(player)
             }
         }
     }

@@ -34,10 +34,9 @@ class Item {
         item.amount = amount
         return item
     }
-    fun removeMainItem(player: Player) {
+    fun reduceMainItem(player: Player) {
         val playerItem = player.inventory.itemInMainHand.clone()
-        playerItem.amount = playerItem.amount - 1
-        player.inventory.setItemInMainHand(playerItem)
+        reduceItem(player,playerItem)
     }
 
     fun getInventoryItemCount(inventory: Inventory): Int {
@@ -152,7 +151,7 @@ class Item {
         if (Random.nextInt(0, 100) != 0) {
             return
         }
-        Item().removeMainItem(player)
+        Item().reduceMainItem(player)
         com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("おたまがぶっ壊れた")
     }
     fun breakHandle(itemFrame: ItemFrame, playerClass: com.github.Ringoame196.Entity.AoringoPlayer) {
@@ -174,5 +173,10 @@ class Item {
             player.inventory.addItem(barrelItem)
         }
         player.sendMessage("${ChatColor.AQUA}Great gift for you!")
+    }
+    fun reduceItem(player: Player,item:ItemStack){
+        val reduceItem = item.clone()
+        reduceItem.amount = 1
+        player.inventory.remove(reduceItem)
     }
 }

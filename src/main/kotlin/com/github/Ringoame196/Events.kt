@@ -144,7 +144,7 @@ class Events(private val plugin: Plugin) : Listener {
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
                 if (upBlock?.type != Material.AIR) { return }
                 Cook().cuttingBoard(block)
-                Item().removeMainItem(player)
+                Item().reduceMainItem(player)
             }
             "${ChatColor.YELLOW}おたま" -> {
                 if (block?.type != Material.BARREL) { return }
@@ -160,7 +160,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}スマートフォン" -> player.openInventory(Smartphone().createGUI(plugin, player))
             "${ChatColor.RED}リンゴスクラッチ", "${ChatColor.YELLOW}金リンゴスクラッチ" -> {
-                Item().removeMainItem(player)
+                Item().reduceMainItem(player)
                 player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
@@ -191,7 +191,7 @@ class Events(private val plugin: Plugin) : Listener {
             beeNest.honeyLevel = 0
             e.clickedBlock!!.blockData = beeNest
             player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", Food().giveExpirationDate(14),))
-            Item().removeMainItem(player)
+            Item().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
             item.itemMeta?.customModelData.let {
@@ -676,6 +676,7 @@ class Events(private val plugin: Plugin) : Listener {
         val item = e.item
         val itemType = item.type
         val food = Food()
+        val hiddenFoodLevel = 20.0f
 
         if (food.isExpirationDate(player, item)) {
             food.lowered(player, item)
@@ -684,11 +685,10 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         e.isCancelled = true
-        player.foodLevel += food.calculateFoodLevel(player,item)
-        player.saturation = 20.0F
-        if (player.foodLevel > 20) { player.foodLevel = 20 }
+        player.foodLevel = food.calculateFoodLevel(player,item)
+        player.saturation = hiddenFoodLevel //隠し満腹度
         food.increaseStatus(player,item)
-        Item().removeMainItem(player)
+        Item().reduceItem(player,item)
     }
 
     @EventHandler

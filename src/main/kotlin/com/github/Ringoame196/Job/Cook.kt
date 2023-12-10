@@ -185,7 +185,7 @@ class Cook {
         if (!Cook().isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
             return
         }
-        Item().removeMainItem(player)
+        Item().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (Food().isExpirationDate(player, item)) { return }
         val timer = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, 1.0, 0.5), " ")
