@@ -679,7 +679,7 @@ class Events(private val plugin: Plugin) : Listener {
         val hiddenFoodLevel = 20.0f
 
         if (food.isExpirationDateHasExpired(player, item)) {
-            food.lowered(player, item)
+            food.giveDiarrheaEffect(player, item)
         }
         if ((itemType == Material.POTION || itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
             return

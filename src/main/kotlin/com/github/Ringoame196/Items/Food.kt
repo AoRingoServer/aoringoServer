@@ -86,11 +86,14 @@ class Food{
         val dateFormat = SimpleDateFormat("yyyy/MM/dd") // フォーマットに合わせて変更
         return dateFormat.parse(dateStr)
     }
-    fun lowered(player: Player, item: ItemStack) {
-        AoringoEvents().onErrorEvent(player, "お腹を下した")
-        val poisonEffect = PotionEffect(PotionEffectType.POISON, 5 * 20, 100) // 持続時間をticksに変換
+    fun giveDiarrheaEffect(player: Player) {
+        val playerClass = AoringoPlayer(player)
+        val potionTime = 5 * 20
+        val potionLevel = 100
+        playerClass.sendErrorMessage("お腹を下した")
+        val poisonEffect = PotionEffect(PotionEffectType.POISON, potionTime, potionLevel) // 持続時間をticksに変換
+        val hungerEffect = PotionEffect(PotionEffectType.HUNGER, potionTime, potionLevel) // 持続時間をticksに変換
         player.addPotionEffect(poisonEffect)
-        val hungerEffect = PotionEffect(PotionEffectType.HUNGER, 5 * 20, 100) // 持続時間をticksに変換
         player.addPotionEffect(hungerEffect)
     }
     fun dropReplacement(e: EntityDeathEvent, beforeItem: Material, afterItem: ItemStack) {
