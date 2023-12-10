@@ -1,5 +1,6 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -8,34 +9,40 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 
-class Evaluation {
+class Evaluation(private val voidScoreboardName:String = "playerRating", private val voidJudgmentScoreboardName:String = "evaluationVote") {
     fun display(player: Player) {
-        val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}プレイヤー評価")
+        val guiSize = 18
+        val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.BLUE}プレイヤー評価")
         var i = 0
-        for (target in com.github.Ringoame196.Entity.AoringoPlayer(player).getPlayersInRadius(player.location, 10.0) ?: return) {
+        for (target in AoringoPlayer(player).getPlayersInRadius(player.location, 10.0) ?: return) {
             gui.addItem(playerHead(target))
-            if (i == 18) { continue }
+            if (i == guiSize) { continue }
             i ++
         }
         player.openInventory(gui)
     }
     fun voidGUI(player: Player, target: ItemStack) {
-        if (Scoreboard().getValue("evaluationVote", player.name) != 0) {
-            AoringoEvents().onErrorEvent(player, "評価は1日1回です")
+        val guiSize = 9
+        val aoringoPlayer = AoringoPlayer(player)
+        if (Scoreboard().getValue(voidJudgmentScoreboardName, player.name) != 0) {
+            aoringoPlayer.sendErrorMessage("評価は1日1回です")
             return
         }
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}プレイヤー評価")
-        gui.setItem(2, target)
-        gui.setItem(4, Item().make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価", null, null, 1))
-        gui.setItem(6, Item().make(Material.STONE_BUTTON, "${ChatColor.RED}低評価", null, null, 1))
+        val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.BLUE}プレイヤー評価")
+        val targetPlayerHeadSlot = 2
+        val highRatingSlot = 4
+        val lowRatingSlot = 6
+        gui.setItem(targetPlayerHeadSlot, target)
+        gui.setItem(highRatingSlot, Item().make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価"))
+        gui.setItem(lowRatingSlot, Item().make(Material.STONE_BUTTON, "${ChatColor.RED}低評価"))
         player.openInventory(gui)
     }
     fun void(target: ItemStack, button: String, player: Player) {
         val targetUUID = target.itemMeta?.lore?.get(1) ?: return
         val evaluation = getRating(targetUUID)
-        Scoreboard().set("evaluationVote", player.name, 1)
+        Scoreboard().set(voidJudgmentScoreboardName, player.name, 1)
         Scoreboard().set(
-            "playerRating", targetUUID,
+            voidScoreboardName, targetUUID,
             when (button) {
                 "${ChatColor.GREEN}高評価" -> evaluation + 1
                 "${ChatColor.RED}低評価" -> evaluation - 1
@@ -46,7 +53,7 @@ class Evaluation {
         player.sendMessage("${ChatColor.YELLOW}プレイヤー評価しました")
     }
     private fun getRating(targetUUID: String): Int {
-        return Scoreboard().getValue("playerRating", targetUUID)
+        return Scoreboard().getValue(voidScoreboardName, targetUUID)
     }
     private fun playerHead(target: Player): ItemStack {
         val item = ItemStack(Material.PLAYER_HEAD)
