@@ -49,10 +49,10 @@ class Food{
         return item
     }
     fun makeExpirationDate(add: Int): String {
-        val data = increaseDay(add)
-        val year = data.get(Calendar.YEAR)
-        val month = data.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
-        val day = data.get(Calendar.DAY_OF_MONTH)
+        val date = increaseDay(add)
+        val year = date.get(Calendar.YEAR)
+        val month = date.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
+        val day = date.get(Calendar.DAY_OF_MONTH)
         return "消費期限: $year/$month/$day"
     }
     private fun increaseDay(add: Int): Calendar {
@@ -78,6 +78,7 @@ class Food{
         }
         return false
     }
+    fun takeOutDate
     fun lowered(player: Player, item: ItemStack) {
         AoringoEvents().onErrorEvent(player, "お腹を下した")
         val poisonEffect = PotionEffect(PotionEffectType.POISON, 5 * 20, 100) // 持続時間をticksに変換
