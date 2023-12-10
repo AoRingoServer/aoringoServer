@@ -371,7 +371,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 when (item.type) {
                     Material.BOOK -> {}
-                    Material.ENCHANTING_TABLE -> Block().enchant(player, gui, plugin)
+                    Material.ENCHANTING_TABLE -> Block().lotteryEnchantBook(player, gui, plugin)
                     else -> e.isCancelled = true
                 }
             }

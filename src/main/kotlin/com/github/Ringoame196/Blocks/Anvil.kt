@@ -24,7 +24,7 @@ class Anvil {
         return gui
     }
     private fun fillGUI(gui: Inventory){
-        for (i in 0..8) {
+        for (i in 0 until gui.size) {
             gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
     }

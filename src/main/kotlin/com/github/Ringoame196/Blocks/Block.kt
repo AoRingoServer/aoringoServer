@@ -16,16 +16,19 @@ import kotlin.random.Random
 
 class Block {
     fun makeEnchantGUI(): Inventory {
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.RED}エンチャント")
-        for (i in 0..7) {
+        val guiSize = 9
+        val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.RED}エンチャント")
+        val putInSlot = 4
+        val enchantButtonSlot = 8
+        for (i in 0 until guiSize) {
             gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(8, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
-        gui.setItem(4, ItemStack(Material.AIR))
+        gui.setItem(enchantButtonSlot, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
+        gui.setItem(putInSlot, ItemStack(Material.AIR))
         return gui
     }
-    fun enchant(player: Player, gui: InventoryView, plugin: Plugin) {
-        val enchantBook = mutableListOf(
+    fun lotteryEnchantBook(player: Player, gui: InventoryView, plugin: Plugin) {
+        val enchantBookList = mutableListOf(
             Item().enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1),
             Item().enchant(Enchantment.PROTECTION_FIRE, 1),
             Item().enchant(Enchantment.PROTECTION_FALL, 1),
