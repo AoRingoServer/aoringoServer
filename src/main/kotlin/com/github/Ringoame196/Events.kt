@@ -675,15 +675,20 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val item = e.item
         val itemType = item.type
+        val food = Food()
 
-        if (Food().isExpirationDate(player, item)) {
-            Food().lowered(player, item)
+        if (food.isExpirationDate(player, item)) {
+            food.lowered(player, item)
         }
         if ((itemType == Material.POTION || itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
             return
         }
         e.isCancelled = true
-        Food().eat(player, item)
+        player.foodLevel += food.calculateFoodLevel(player,item)
+        player.saturation = 20.0F
+        if (player.foodLevel > 20) { player.foodLevel = 20 }
+        food.increaseStatus(player,item)
+        Item().removeMainItem(player)
     }
 
     @EventHandler

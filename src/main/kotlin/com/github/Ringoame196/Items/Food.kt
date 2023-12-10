@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Items
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
 import org.bukkit.Material
@@ -12,10 +13,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class Food {
-    fun recovery(player: Player, item: ItemStack) {
+class Food{
+    private fun returnFoodHasLevel(item: ItemStack):Int {
         val itemName = item.itemMeta?.displayName
-        val addfood = when (itemName) {
+        return when (itemName) {
             "おにぎり" -> 6
             "ステーキ" -> 5
             "からあげ" -> 2
@@ -23,11 +24,20 @@ class Food {
             "ハンバーグ" -> 4
             else -> 2
         }
-        when (itemName) {
-            "${ChatColor.YELLOW}力のプロテイン" -> com.github.Ringoame196.Entity.AoringoPlayer().addPower(player)
-            "${ChatColor.RED}ハートのハーブ" -> com.github.Ringoame196.Entity.AoringoPlayer().addMaxHP(player)
+    }
+    fun calculateFoodLevel(player: Player,food: ItemStack):Int {
+        val playerFoodLevel = player.foodLevel
+        val foodHasLevel = returnFoodHasLevel(food)
+        val totalFoodLevel = playerFoodLevel + foodHasLevel
+        return if(totalFoodLevel > 20) { 20 } else { totalFoodLevel }
+    }
+    fun increaseStatus(player: Player, food: ItemStack){
+        val playerClass = AoringoPlayer(player)
+        val foodName = food.itemMeta?.displayName
+        when(foodName){
+            "${ChatColor.YELLOW}力のプロテイン" -> playerClass.addPower()
+            "${ChatColor.RED}ハートのハーブ" -> playerClass.addMaxHP()
         }
-        player.foodLevel += addfood
     }
     fun makeItem(name: String, customModelData: Int): ItemStack {
         val item = ItemStack(Material.MELON_SLICE)
@@ -70,22 +80,6 @@ class Food {
         player.addPotionEffect(poisonEffect)
         val hungerEffect = PotionEffect(PotionEffectType.HUNGER, 5 * 20, 100) // 持続時間をticksに変換
         player.addPotionEffect(hungerEffect)
-    }
-    fun eat(player: Player, item: ItemStack) {
-        val itemType = item.type
-        if ((itemType == Material.MILK_BUCKET || itemType == Material.MELON_SLICE) && item.itemMeta?.displayName != null) {
-            recovery(player, item)
-        } else {
-            player.foodLevel = player.foodLevel + 2
-        }
-        player.saturation = 20.0F
-        if (player.foodLevel > 20) {
-            player.foodLevel = 20
-        }
-        if (player.gameMode == GameMode.CREATIVE) { return }
-        val food = item.clone()
-        food.amount = 1
-        player.inventory.removeItem(food)
     }
     fun dropReplacement(e: EntityDeathEvent, beforeItem: Material, afterItem: ItemStack) {
         for (item in e.drops) {

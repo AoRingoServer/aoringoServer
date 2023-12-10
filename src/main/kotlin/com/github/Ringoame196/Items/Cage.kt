@@ -21,11 +21,11 @@ class Cage {
     private fun restorationItem(lore: String): ItemStack {
         val requiredData = 5
         val parts = lore.split(",")
-        val materialNumber = parts[4]
         val itemName = parts[0]
         val expirationDate = parts[1]
         val customModelData = parts[2].toInt()
         val amount = parts[3].toInt()
+        val materialNumber = parts[4]
         val item = ItemStack(acquisitionMaterial(materialNumber))
         val meta = item.itemMeta ?: return item // metaがnullの場合は元のアイテムを返す
         if (parts.size < requiredData) return item // 部分の数が足りない場合は元のアイテムを返す
@@ -53,13 +53,7 @@ class Cage {
         for (item in gui.topInventory) {
             item ?: continue
             val meta = item.itemMeta
-            val material = when (item.type) {
-                Material.MELON_SLICE -> 0
-                Material.WHEAT -> 1
-                Material.CARROT -> 2
-                Material.POTATO -> 3
-                else -> return
-            }
+            val material = compressionMaterial(item.type)
             val itemLore = listOf(
                 meta?.displayName ?: "",
                 meta?.lore?.get(0) ?: "",
@@ -70,15 +64,24 @@ class Cage {
             lore.add(itemLore.joinToString(","))
         }
 
-        val playerItem = player.inventory.itemInMainHand
-        val meta = playerItem.itemMeta
+        val cage = player.inventory.itemInMainHand
+        val meta = cage.itemMeta
         meta?.lore = lore
         if (lore.size == 0) {
             meta?.setCustomModelData(1)
         } else {
             meta?.setCustomModelData(2)
         }
-        playerItem.itemMeta = meta
-        player.inventory.setItemInMainHand(playerItem)
+        cage.itemMeta = meta
+        player.inventory.setItemInMainHand(cage)
+    }
+    private fun compressionMaterial(material: Material):Int{
+        return when(material) {
+            Material.MELON_SLICE -> 0
+            Material.WHEAT -> 1
+            Material.CARROT -> 2
+            Material.POTATO -> 3
+            else -> throw RuntimeException("未登録のアイテムを追加しようとしました")
+        }
     }
 }
