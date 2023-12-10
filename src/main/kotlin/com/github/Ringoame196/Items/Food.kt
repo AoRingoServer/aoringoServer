@@ -49,11 +49,10 @@ class Food{
         return item
     }
     fun makeExpirationDate(add: Int): String {
-        val now = increaseDay(add)
-
-        val year = now.get(Calendar.YEAR)
-        val month = now.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
-        val day = now.get(Calendar.DAY_OF_MONTH)
+        val data = increaseDay(add)
+        val year = data.get(Calendar.YEAR)
+        val month = data.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
+        val day = data.get(Calendar.DAY_OF_MONTH)
         return "消費期限: $year/$month/$day"
     }
     private fun increaseDay(add: Int): Calendar {
