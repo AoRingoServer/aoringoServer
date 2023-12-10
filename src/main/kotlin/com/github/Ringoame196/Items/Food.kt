@@ -54,9 +54,9 @@ class Food{
         val day = date.get(Calendar.DAY_OF_MONTH)
         return "消費期限: $year/$month/$day"
     }
-    private fun increaseDay(add: Int): Calendar {
+    private fun increaseDay(amount: Int): Calendar {
         val now = Calendar.getInstance()
-        now.add(Calendar.DAY_OF_WEEK, add)
+        now.add(Calendar.DAY_OF_WEEK, amount)
         return now
     }
     fun isExpirationDateHasExpired(player: Player, item: ItemStack): Boolean {
