@@ -47,8 +47,8 @@ class Food{
         item.setItemMeta(meta)
         return item
     }
-    fun makeExpirationDate(add: Int): String {
-        val date = increaseDay(add)
+    fun makeExpirationDate(period: Int): String {
+        val date = increaseDay(period)
         val year = date.get(Calendar.YEAR)
         val month = date.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
         val day = date.get(Calendar.DAY_OF_MONTH)
