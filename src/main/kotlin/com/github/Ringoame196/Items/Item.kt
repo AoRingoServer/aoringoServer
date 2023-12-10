@@ -39,15 +39,6 @@ class Item {
         reduceItem(player,playerItem)
     }
 
-    fun getInventoryItemCount(inventory: Inventory): Int {
-        var c = 0
-        for (i in 0 until inventory.size) {
-            val item = inventory.getItem(i) ?: continue
-            c += item.amount
-        }
-        return c
-    }
-
     fun enchant(enchant: Enchantment, level: Int): ItemStack {
         val item = ItemStack(Material.ENCHANTED_BOOK)
         val meta = item.itemMeta as EnchantmentStorageMeta
