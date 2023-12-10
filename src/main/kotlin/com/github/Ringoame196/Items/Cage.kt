@@ -25,7 +25,7 @@ class Cage {
         val expirationDate = parts[1]
         val customModelData = parts[2].toInt()
         val amount = parts[3].toInt()
-        val materialNumber = parts[4]
+        val materialNumber = parts[4].toInt()
         val item = ItemStack(acquisitionMaterial(materialNumber))
         val meta = item.itemMeta ?: return item // metaがnullの場合は元のアイテムを返す
         if (parts.size < requiredData) return item // 部分の数が足りない場合は元のアイテムを返す
