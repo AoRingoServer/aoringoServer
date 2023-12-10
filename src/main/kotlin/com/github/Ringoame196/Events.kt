@@ -678,7 +678,7 @@ class Events(private val plugin: Plugin) : Listener {
         val food = Food()
         val hiddenFoodLevel = 20.0f
 
-        if (food.isExpirationDate(player, item)) {
+        if (food.isExpirationDateHasExpired(player, item)) {
             food.lowered(player, item)
         }
         if ((itemType == Material.POTION || itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {

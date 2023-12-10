@@ -11,7 +11,6 @@ import org.bukkit.potion.PotionEffectType
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import javax.xml.crypto.Data
 
 class Food{
     private fun returnFoodHasLevel(item: ItemStack):Int {
@@ -60,25 +59,31 @@ class Food{
         now.add(Calendar.DAY_OF_WEEK, add)
         return now
     }
-    fun isExpirationDate(player: Player, item: ItemStack): Boolean {
+    fun isExpirationDateHasExpired(player: Player, item: ItemStack): Boolean {
         val playerClass = AoringoPlayer(player)
-        val expiration = item.itemMeta?.lore?.get(0) ?: return false
-        val dateStr = expiration.replace("消費期限:", "")
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd") // フォーマットに合わせて変更
-        val date = dateFormat.parse(dateStr) ?: return false
-
-        // 現在の日付を取得
-        val currentDate = Date()
+        val itemLore = item.itemMeta?.lore
+        val expiration = itemLore?.get(0) ?: return false
+        val date = takeOutDate(expiration)
 
         // 日付の差を計算
-        val diff = (currentDate.time - date.time) / (1000 * 60 * 60 * 24) // ミリ秒から日数に変換
+        val diff = compareDateFromCurreantDate(date)
         if (diff > 0) {
             playerClass.sendErrorMessage("消費期限が切れています")
             return true
         }
         return false
     }
-    fun takeOutDate
+    fun compareDateFromCurreantDate(date:Date): Long {
+        val currentDate = Date()
+        val diff = currentDate.time - date.time
+        return diff / 1000 * 60 * 60 * 24
+    }
+    private fun takeOutDate(lore:String): Date {
+        val expiration = lore
+        val dateStr = expiration.replace("消費期限:", "")
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd") // フォーマットに合わせて変更
+        return dateFormat.parse(dateStr)
+    }
     fun lowered(player: Player, item: ItemStack) {
         AoringoEvents().onErrorEvent(player, "お腹を下した")
         val poisonEffect = PotionEffect(PotionEffectType.POISON, 5 * 20, 100) // 持続時間をticksに変換

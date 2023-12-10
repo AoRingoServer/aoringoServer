@@ -40,7 +40,7 @@ class Cook {
         object : BukkitRunnable() {
             override fun run() {
                 val item = entity.item
-                if (Food().isExpirationDate(player, entity.item)) {
+                if (Food().isExpirationDateHasExpired(player, entity.item)) {
                     this.cancel()
                     armorStand.remove()
                     return
@@ -81,7 +81,7 @@ class Cook {
             }
             return
         }
-        if (Food().isExpirationDate(player, entity.item)) { return }
+        if (Food().isExpirationDateHasExpired(player, entity.item)) { return }
         val cutItem = CookData().cut(item) ?: return
         if (!isCookLevel(cutItem.itemMeta?.displayName?:return, player)) {
             return
@@ -128,7 +128,7 @@ class Cook {
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand
         val playerItem = player.inventory.itemInMainHand
-        if (Food().isExpirationDate(player, entity.item)) { return }
+        if (Food().isExpirationDateHasExpired(player, entity.item)) { return }
         playerItem.amount = playerItem.amount - 1
         val dressingItem = CookData().dressing(item) ?: return
         if (!isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
@@ -146,7 +146,7 @@ class Cook {
         for (item in barrel.inventory) {
             item ?: continue
             ingredients.add(item.itemMeta?.displayName ?: continue)
-            if (Food().isExpirationDate(player, item)) { return }
+            if (Food().isExpirationDateHasExpired(player, item)) { return }
         }
         val food = CookData().pot(ingredients) ?: return
         if (!isCookLevel(food.itemMeta?.displayName?:return, player)) {
@@ -165,7 +165,7 @@ class Cook {
         for (i in 0 until barrel.inventory.size) {
             val item = barrel.inventory.getItem(i) ?: continue
             recipe.add(item.itemMeta?.displayName ?: continue)
-            if (Food().isExpirationDate(player, item)) {
+            if (Food().isExpirationDateHasExpired(player, item)) {
                 expiration = true
             }
         }
@@ -187,7 +187,7 @@ class Cook {
         }
         Item().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-        if (Food().isExpirationDate(player, item)) { return }
+        if (Food().isExpirationDateHasExpired(player, item)) { return }
         val timer = com.github.Ringoame196.Entity.ArmorStand().cookSummon(block.location.clone().add(0.5, 1.0, 0.5), " ")
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 15 - (level * 2)
