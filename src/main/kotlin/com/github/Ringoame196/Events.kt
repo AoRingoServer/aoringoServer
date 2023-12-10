@@ -190,7 +190,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             beeNest.honeyLevel = 0
             e.clickedBlock!!.blockData = beeNest
-            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", Food().giveExpirationDate(14),))
+            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", Food().makeExpirationDate(14),))
             Item().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
@@ -705,7 +705,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                Item().make(material = Material.EGG, name = "卵", lore = Food().giveExpirationDate(14))
+                Item().make(material = Material.EGG, name = "卵", lore = Food().makeExpirationDate(14))
             )
         }
     }

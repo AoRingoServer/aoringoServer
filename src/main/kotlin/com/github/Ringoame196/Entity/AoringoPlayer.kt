@@ -263,7 +263,7 @@ class AoringoPlayer(val player: Player) {
                     Item().make(
                         item.type,
                         vegetablesName,
-                        Food().giveExpirationDate(14)
+                        Food().makeExpirationDate(14)
                     )
                 )
             }

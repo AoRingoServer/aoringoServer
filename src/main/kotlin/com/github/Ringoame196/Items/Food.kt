@@ -2,7 +2,6 @@ package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
-import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
@@ -12,6 +11,7 @@ import org.bukkit.potion.PotionEffectType
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import javax.xml.crypto.Data
 
 class Food{
     private fun returnFoodHasLevel(item: ItemStack):Int {
@@ -44,18 +44,22 @@ class Food{
         val meta = item.itemMeta
         meta?.setDisplayName(name)
         meta?.setCustomModelData(customModelData)
-        meta?.lore = mutableListOf(giveExpirationDate(14))
+        meta?.lore = mutableListOf(makeExpirationDate(14))
         item.setItemMeta(meta)
         return item
     }
-    fun giveExpirationDate(add: Int): String {
-        val now = Calendar.getInstance()
-        now.add(Calendar.DAY_OF_WEEK, add)
+    fun makeExpirationDate(add: Int): String {
+        val now = increaseDay(add)
 
         val year = now.get(Calendar.YEAR)
         val month = now.get(Calendar.MONTH) + 1 // 月は0から始まるため+1
         val day = now.get(Calendar.DAY_OF_MONTH)
         return "消費期限: $year/$month/$day"
+    }
+    private fun increaseDay(add: Int): Calendar {
+        val now = Calendar.getInstance()
+        now.add(Calendar.DAY_OF_WEEK, add)
+        return now
     }
     fun isExpirationDate(player: Player, item: ItemStack): Boolean {
         val expiration = item.itemMeta?.lore?.get(0) ?: return false
