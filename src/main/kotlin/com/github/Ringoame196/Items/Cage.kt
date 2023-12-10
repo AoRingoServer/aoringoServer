@@ -38,13 +38,17 @@ class Cage {
         item.itemMeta = meta // 更新したメタデータをアイテムに設定
         return item
     }
-    private fun acquisitionMaterial(number:String):Material{
-        return when(number) {
-            "0" -> Material.MELON_SLICE
-            "1" -> Material.WHEAT
-            "2" -> Material.CARROT
-            "3" -> Material.POTATO
-            else -> throw RuntimeException("Materialが見つかりませんでした")
+    private fun acquisitionMaterial(number:Int):Material{
+        val materials = listOf(
+            Material.MELON_SLICE,
+            Material.WHEAT,
+            Material.CARROT,
+            Material.POTATO
+        )
+        try {
+            return materials[number]
+        } catch(e: IndexOutOfBoundsException) {
+            throw RuntimeException("Materialが見つかりませんでした")
         }
     }
     fun clone(player: HumanEntity, gui: InventoryView) {
