@@ -61,6 +61,7 @@ class Food{
         return now
     }
     fun isExpirationDate(player: Player, item: ItemStack): Boolean {
+        val playerClass = AoringoPlayer(player)
         val expiration = item.itemMeta?.lore?.get(0) ?: return false
         val dateStr = expiration.replace("消費期限:", "")
         val dateFormat = SimpleDateFormat("yyyy/MM/dd") // フォーマットに合わせて変更
@@ -72,7 +73,7 @@ class Food{
         // 日付の差を計算
         val diff = (currentDate.time - date.time) / (1000 * 60 * 60 * 24) // ミリ秒から日数に変換
         if (diff > 0) {
-            AoringoEvents().onErrorEvent(player, "消費期限が切れています")
+            playerClass.sendErrorMessage("消費期限が切れています")
             return true
         }
         return false
