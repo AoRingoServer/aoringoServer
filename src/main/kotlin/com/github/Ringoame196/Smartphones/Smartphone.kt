@@ -42,14 +42,14 @@ class Smartphone {
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         val smartphoneSlots = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
-        val apks = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
-        if (apks.isNullOrEmpty()) {
+        val playerHaveAPKList = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
+        if (playerHaveAPKList.isNullOrEmpty()) {
             return gui
         }
 
-        val minSize = minOf(smartphoneSlots.size, apks.size)
+        val minSize = minOf(smartphoneSlots.size, playerHaveAPKList.size)
         for (i in 0 until minSize) {
-            val apkName = apks[i]
+            val apkName = playerHaveAPKList[i]
             val customModelData = apkList[apkName]?.customModelData?:0
             gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
         }
