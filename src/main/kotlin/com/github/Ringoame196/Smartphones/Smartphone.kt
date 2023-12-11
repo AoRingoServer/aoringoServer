@@ -74,8 +74,8 @@ class Smartphone {
         }
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
-            val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "")
-            moneyItem(player, money ?: return, item)
+            val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
+            moneyItem(player, money, item)
         }
     }
     fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
