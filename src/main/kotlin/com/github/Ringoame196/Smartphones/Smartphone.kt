@@ -12,6 +12,7 @@ import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.APKs.ConversionMoneyAPK
 import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
+import com.github.Ringoame196.Smartphones.APKs.LandProtectionAPK
 import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
 import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
 import com.github.Ringoame196.Yml
@@ -31,6 +32,7 @@ class Smartphone {
         "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
         "${ChatColor.GREEN}テレポート" to TeleportAPK(),
         "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingAPK(),
+        "${ChatColor.GREEN}土地保護" to LandProtectionAPK()
 
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
@@ -50,12 +52,6 @@ class Smartphone {
     }
     fun giveCustomModel(itemName: String): Int {
         return when (itemName) {
-            "${ChatColor.YELLOW}エンダーチェスト" -> 1
-            "${ChatColor.GREEN}所持金変換" -> 2
-            "${ChatColor.RED}アイテム保護" -> 3
-            "${ChatColor.GREEN}テレポート" -> 4
-            "${ChatColor.GREEN}プレイヤー評価" -> 5
-            "${ChatColor.GREEN}土地保護" -> 6
             "${ChatColor.YELLOW}OP用" -> 7
             "${ChatColor.YELLOW}アプリ並べ替え" -> 8
             "${ChatColor.AQUA}ヘルスケア" -> 9
@@ -74,18 +70,12 @@ class Smartphone {
         if (shift) { return }
         apkList[itemName]?.openGUI(player,plugin)
         when (itemName) {
-            "${ChatColor.YELLOW}エンダーチェスト" -> playerClass.useEnderChest(plugin)
-            "${ChatColor.GREEN}所持金変換" -> conversion(player)
-            "${ChatColor.RED}アイテム保護" -> ItemProtectionAPK().open(player)
-            "${ChatColor.GREEN}テレポート" -> player.openInventory(createTpGUI())
             "${ChatColor.GOLD}ロビー" -> player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
             "${ChatColor.GREEN}生活ワールド" -> player.teleport(Bukkit.getWorld("Home")?.spawnLocation ?: return)
             "${ChatColor.AQUA}資源ワールド" -> player.teleport(Bukkit.getWorld("Survival")?.spawnLocation ?: return)
             "${ChatColor.YELLOW}ショップ" -> player.teleport(Bukkit.getWorld("shop")?.spawnLocation ?: return)
             "${ChatColor.RED}イベント" -> player.teleport(Bukkit.getWorld("event")?.spawnLocation ?: return)
             "${ChatColor.YELLOW}OP用" -> op(player)
-            "${ChatColor.GREEN}プレイヤー評価" -> Evaluation().display(player)
-            "${ChatColor.GREEN}土地保護" -> wgGUI(player)
             "${ChatColor.YELLOW}アプリ並べ替え" -> APK().sortGUIOpen(player, plugin)
             "${ChatColor.AQUA}ヘルスケア" -> healthcare(player)
         }
@@ -207,14 +197,6 @@ class Smartphone {
         gui.setItem(2, Item().make(Material.WOODEN_AXE, "${ChatColor.RED}ショップ保護リセット"))
         gui.setItem(4, Item().make(Material.DIAMOND, "${ChatColor.GREEN}運営ギフトリセット"))
         gui.setItem(6, Item().make(Material.CRAFTING_TABLE, "${ChatColor.GREEN}テストワールド"))
-        player.openInventory(gui)
-    }
-    private fun wgGUI(player: org.bukkit.entity.Player) {
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}WorldGuardGUI")
-        gui.setItem(2, Item().make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${LandPurchase().price(player)}円"))
-        gui.setItem(4, Item().make(Material.MAP, "${ChatColor.GREEN}情報"))
-        gui.setItem(6, Item().make(Material.CHEST, "${ChatColor.AQUA}保護一覧"))
-        gui.setItem(8, Item().make(Material.WOODEN_AXE, "${ChatColor.GOLD}木の斧ゲット"))
         player.openInventory(gui)
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
