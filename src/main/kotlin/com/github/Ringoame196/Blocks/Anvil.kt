@@ -45,7 +45,7 @@ class Anvil {
             else -> return
         }
     }
-    fun close(gui: InventoryView, player: Player) {
+    fun returnItemFromPlayer(gui: InventoryView, player: Player) {
         val item = gui.getItem(2)
         val material = gui.getItem(4)
         if (item != null) {

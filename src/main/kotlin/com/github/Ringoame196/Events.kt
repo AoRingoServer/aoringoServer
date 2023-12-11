@@ -618,7 +618,7 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
         when (gui.title) {
-            "${ChatColor.YELLOW}カスタム金床" -> Anvil().close(gui, player)
+            "${ChatColor.YELLOW}カスタム金床" -> Anvil().returnItemFromPlayer(gui, player)
             "${ChatColor.RED}エンチャント" -> {
                 val item = gui.getItem(4) ?: return
                 if (item.type != Material.ENCHANTED_BOOK) {
