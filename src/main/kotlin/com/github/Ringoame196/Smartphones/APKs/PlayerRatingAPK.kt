@@ -1,16 +1,20 @@
-package com.github.Ringoame196
+package com.github.Ringoame196.Smartphones.APKs
 
+import com.github.Ringoame196.APKs
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
+import org.bukkit.plugin.Plugin
 
-class Evaluation(private val voidScoreboardName:String = "playerRating", private val voidJudgmentScoreboardName:String = "evaluationVote") {
-    fun display(player: Player) {
+class PlayerRatingAPK(private val voidScoreboardName:String = "playerRating", private val voidJudgmentScoreboardName:String = "evaluationVote"):APKs {
+    override val customModelData: Int = 5
+    override fun openGUI(player: Player, plugin: Plugin) {
         val guiSize = 18
         val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.BLUE}プレイヤー評価")
         var i = 0
@@ -20,6 +24,19 @@ class Evaluation(private val voidScoreboardName:String = "playerRating", private
             i ++
         }
         player.openInventory(gui)
+    }
+    private fun playerHead(target: Player): ItemStack {
+        val item = ItemStack(Material.PLAYER_HEAD)
+        val meta = item.itemMeta as SkullMeta
+        val evaluation = getRating(target.uniqueId.toString())
+        meta.setDisplayName(target.name)
+        meta.setOwningPlayer(target)
+        meta.lore = mutableListOf("評価:$evaluation", target.uniqueId.toString())
+        item.setItemMeta(meta)
+        return item
+    }
+    private fun getRating(targetUUID: String): Int {
+        return Scoreboard().getValue(voidScoreboardName, targetUUID)
     }
     fun voidGUI(player: Player, target: ItemStack) {
         val guiSize = 9
@@ -51,18 +68,5 @@ class Evaluation(private val voidScoreboardName:String = "playerRating", private
         )
         player.closeInventory()
         player.sendMessage("${ChatColor.YELLOW}プレイヤー評価しました")
-    }
-    private fun getRating(targetUUID: String): Int {
-        return Scoreboard().getValue(voidScoreboardName, targetUUID)
-    }
-    private fun playerHead(target: Player): ItemStack {
-        val item = ItemStack(Material.PLAYER_HEAD)
-        val meta = item.itemMeta as SkullMeta
-        val evaluation = getRating(target.uniqueId.toString())
-        meta.setDisplayName(target.name)
-        meta.setOwningPlayer(target)
-        meta.lore = mutableListOf("評価:$evaluation", target.uniqueId.toString())
-        item.setItemMeta(meta)
-        return item
     }
 }

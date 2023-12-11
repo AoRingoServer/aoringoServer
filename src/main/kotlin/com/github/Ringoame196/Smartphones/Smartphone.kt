@@ -5,7 +5,6 @@ import com.github.Ringoame196.APKs
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -13,6 +12,7 @@ import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.APKs.ConversionMoneyAPK
 import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
+import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
 import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
@@ -29,7 +29,9 @@ class Smartphone {
         "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
         "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK(),
         "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
-        "${ChatColor.GREEN}テレポート" to TeleportAPK()
+        "${ChatColor.GREEN}テレポート" to TeleportAPK(),
+        "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingAPK(),
+
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
