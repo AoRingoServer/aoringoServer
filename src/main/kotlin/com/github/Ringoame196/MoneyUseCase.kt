@@ -20,9 +20,9 @@ class MoneyUseCase {
             moneyManager.tradeMoney(admin, playerClass.playerAccount , amount)
         }
     }
-    fun addMoney(playerClass:AoringoPlayer,totalAmount:Int){
-        moneyManager.addMoney(playerClass.playerAccount,totalAmount)
-        playerClass.sendActionBar("${ChatColor.GREEN}+$totalAmount")
+    fun addMoney(playerClass:AoringoPlayer,amount:Int){
+        moneyManager.addMoney(playerClass.playerAccount,amount)
+        playerClass.sendActionBar("${ChatColor.GREEN}+$amount")
     }
     fun reduceMoney(playerClass: AoringoPlayer,amount: Int,account: Account){
         if(moneyManager.reduceMoney(account,amount)){

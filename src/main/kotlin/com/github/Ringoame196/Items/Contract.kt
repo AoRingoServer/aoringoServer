@@ -1,6 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.Money
+import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -21,13 +22,16 @@ class Contract {
         return setBookMessage
     }
     fun returnMoney(player: Player) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val playerAccount = aoringoPlayer.playerAccount
         val item = player.inventory.itemInMainHand
         val bookMessage = item.itemMeta as BookMeta
         if (!bookMessage.getPage(1).contains("UUID：${player.uniqueId}")) {
             return
         }
-        val money = item.itemMeta?.displayName?.replace("${ChatColor.RED}契約本@", "")?.replace("円契約", "")?.toInt()
-        Money().add(player.uniqueId.toString(), money ?: return, false)
+        val itemName = item.itemMeta?.displayName
+        val money = itemName?.replace("${ChatColor.RED}契約本@", "")?.replace("円契約", "")?.toInt()?:0
+        aoringoPlayer.moneyUseCase.addMoney(aoringoPlayer,money)
         player.inventory.setItemInMainHand(ItemStack(Material.AIR))
     }
     fun copyBlock(item: ItemStack, player: Player): ItemStack {
