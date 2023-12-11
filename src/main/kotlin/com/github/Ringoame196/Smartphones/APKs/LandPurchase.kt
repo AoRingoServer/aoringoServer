@@ -23,21 +23,22 @@ import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 import java.util.UUID
 
-class LandPurchase() {
-    private fun ownerGUI(player: Player, name: String, money: Int) {
+class LandPurchase {
+    private fun openOwnerGUI(player: Player, name: String, money: Int) {
         val item = Item()
         val memberAddSlot = 3
         val memberRemoveSlot = 5
         val prepaymentButtonSlot = 8
         val protectionScoreboadName = "protectionContract"
+        val contractPeriod = Scoreboard().getValue(protectionScoreboadName,name)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
+        player.openInventory(gui)
         gui.setItem(memberAddSlot, item.make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
         gui.setItem(memberRemoveSlot, item.make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
-        if (player.world.name == "shop" && Scoreboard().getValue(protectionScoreboadName, name) == 1) {
-            val price = money * 1.5.toInt()
-            gui.setItem(prepaymentButtonSlot, Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${price}円"))
-        }
-        player.openInventory(gui)
+        if (player.world.name != "shop") { return }
+        if (contractPeriod != 1) { return }
+        val price = money * 1.5.toInt()
+        gui.setItem(prepaymentButtonSlot, item.make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${price}円"))
     }
     fun addMemberGUI(player: Player, name: String) {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}$name@メンバー追加")
@@ -85,7 +86,7 @@ class LandPurchase() {
         val name = WorldGuard().getName(sign.location) ?: return
         if (WorldGuard().getOwnerOfRegion(sign.location)?.size() != 0) {
             if (WorldGuard().getOwnerOfRegion(sign.location)?.contains(player.uniqueId) == true) {
-                ownerGUI(player, name, money)
+                openOwnerGUI(player, name, money)
             } else {
                 aoringoPlayer.sendErrorMessage("この土地は既に買われています")
             }
