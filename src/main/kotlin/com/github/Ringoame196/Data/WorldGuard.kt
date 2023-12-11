@@ -67,7 +67,7 @@ class WorldGuard {
         getRegion(player.world, regionName, null)?.members?.addPlayer(player.uniqueId)
         getRegionManager(player.world)?.save()
     }
-    fun removeMember(regionName: String, uuid: String, world: World) {
+    fun reduceMember(regionName: String, uuid: String, world: World) {
         getRegion(world, regionName, null)?.members?.removePlayer(uuid)
         getRegionManager(world)?.save()
     }

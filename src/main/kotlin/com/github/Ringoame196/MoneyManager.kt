@@ -1,12 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Data.PluginData
-import com.github.Ringoame196.Items.Item
-import org.bukkit.ChatColor
-import org.bukkit.Material
-import org.bukkit.inventory.Inventory
-import java.util.*
-
 class MoneyManager {
     fun getMoney(targetAccount: Account): Int {
         val accountID = targetAccount.getAccountID()

@@ -15,7 +15,7 @@ class Config(private val dataManager: PluginData.DataManager, private val config
         Database.dataBaseinfo.password = password ?: return
     }
     fun getDiscordWebhook() {
-        dataManager.serverlog = config.getString("Discord.serverlog")
+        dataManager.serverlogWebhook = config.getString("Discord.serverlog")
         dataManager.shopPromotionWebhook = config.getString("Discord.shopPromotion")
     }
 }

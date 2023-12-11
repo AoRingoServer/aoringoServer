@@ -478,7 +478,7 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (title.contains("@メンバー削除")) {
             e.isCancelled = true
             val name = gui.title.replace("${ChatColor.RED}", "").replace("@メンバー削除", "")
-            WorldGuard().removeMember(name, item.itemMeta?.displayName ?: return, player.world)
+            WorldGuard().reduceMember(name, item.itemMeta?.displayName ?: return, player.world)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
         } else if (title.contains("${ChatColor.BLUE}保護設定") && itemName == "${ChatColor.GREEN}作成") {
