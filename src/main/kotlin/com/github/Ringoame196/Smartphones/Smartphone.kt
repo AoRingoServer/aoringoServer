@@ -2,9 +2,12 @@ package com.github.Ringoame196.Smartphones
 
 import com.github.Ringoame196.APK
 import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
@@ -177,29 +180,35 @@ class Smartphone {
         return gui
     }
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val playerAccount = aoringoPlayer.playerAccount
         val price = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
         val world = player.world
-        if ((Money().get(player.uniqueId.toString())) < price) {
-            com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
+        val playerMoney = aoringoPlayer.moneyUseCase.getMoney(playerAccount)
+        if (playerMoney < price) {
+            AoringoPlayer(player).sendErrorMessage("お金が足りません")
             return
         }
         player.performCommand("/expand vert")
         player.performCommand("rg claim $name")
         if (WorldGuard().getProtection(world, name)) {
             player.sendMessage("${ChatColor.GREEN}[WG]正常に保護をかけました")
-            Money().remove(player.uniqueId.toString(), price, true)
+            MoneyManager().tradeMoney(Admin(),playerAccount,price)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         }
         player.closeInventory()
     }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
-        if ((Money().get(player.uniqueId.toString())) < money) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val playerAccount = aoringoPlayer.playerAccount
+        val playerMoney = aoringoPlayer.moneyUseCase.getMoney(playerAccount)
+        if (playerMoney < money) {
             com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1
             player.inventory.addItem(giveItem)
-            Money().remove(player.uniqueId.toString(), money, true)
+            MoneyManager().tradeMoney(Admin(),playerAccount,money)
         }
         player.closeInventory()
     }
