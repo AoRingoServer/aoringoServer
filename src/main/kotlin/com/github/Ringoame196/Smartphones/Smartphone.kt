@@ -12,6 +12,7 @@ import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtection
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
+import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -23,6 +24,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
+    val apks = mapOf<String,APKs>(
+        "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK,
+    )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         val smartphone = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)

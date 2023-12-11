@@ -5,7 +5,7 @@ import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class enderChestAPK:APKs {
+class EnderChestAPK:APKs {
     override val customModelData: Int = 1
     override fun openGUI(player:Player,plugin:Plugin) {
         Bukkit.getScheduler().runTask(
