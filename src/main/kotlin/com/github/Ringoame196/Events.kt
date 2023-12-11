@@ -66,18 +66,18 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerJoin(e: PlayerJoinEvent) {
         val player = e.player
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         if (!player.scoreboardTags.contains("member")) {
             e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
-            playerClass.fastJoin()
+            aoringoPlayer.fastJoin()
         }
-        playerClass.setPlayer(plugin)
+        aoringoPlayer.setPlayer(plugin)
     }
 
     @EventHandler
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val item = e.item ?: ItemStack(Material.AIR)
         val playerItem = player.inventory.itemInMainHand
         val itemName = item.itemMeta?.displayName ?: ""
@@ -89,10 +89,10 @@ class Events(private val plugin: Plugin) : Listener {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
                 when (sign.getLine(0)) {
-                    "Fshop" -> playerClass.makeShop(sign)
+                    "Fshop" -> aoringoPlayer.makeShop(sign)
                     "[土地販売]" -> {
                         if (!player.isOp) { return }
-                        playerClass.makeLandPurchase(sign)
+                        aoringoPlayer.makeLandPurchase(sign)
                     }
                     "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
                 }
@@ -100,12 +100,12 @@ class Events(private val plugin: Plugin) : Listener {
             Material.ANVIL, Material.DAMAGED_ANVIL -> {
                 if (player.gameMode == GameMode.CREATIVE) { return }
                 e.isCancelled = true
-                playerClass.useAnvil()
+                aoringoPlayer.useAnvil()
             }
             Material.SMITHING_TABLE -> {
                 if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") { return }
                 e.isCancelled = true
-                playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
+                aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
             }
             Material.SMOKER -> e.isCancelled = true
             Material.LAVA_CAULDRON -> {
@@ -114,7 +114,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.ENCHANTING_TABLE -> {
                 e.isCancelled = true
-                playerClass.useEnchantingTable()
+                aoringoPlayer.useEnchantingTable()
             }
             Material.BARREL -> {
                 val barrel = block.state as Barrel
@@ -165,14 +165,14 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.RED}会社情報本" -> {
                 if (!ItemProtection().isPlayerProtection(item?:return, player)) {
-                    playerClass.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
+                    aoringoPlayer.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
                 } else {
                     player.openInventory(Company().createGUI())
                 }
             }
             "${ChatColor.YELLOW}エンダーチェスト容量UP" -> {
                 e.isCancelled = true
-                playerClass.upDataEnderChestLevel(plugin)
+                aoringoPlayer.upDataEnderChestLevel(plugin)
             }
             "${ChatColor.YELLOW}契約書[未記入]" -> {
                 player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")
@@ -200,14 +200,14 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 val totalAmount = item.amount * money
-                moneyUseCase.addMoney(playerClass,totalAmount)
+                moneyUseCase.addMoney(aoringoPlayer,totalAmount)
                 player.inventory.remove(item)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
             } else {
-                playerClass.sendActionBar("お金を受け取るにはシフトをしてください")
+                aoringoPlayer.sendActionBar("お金を受け取るにはシフトをしてください")
             }
         } else if (itemName.contains("[アプリケーション]")) {
             APK().add(player, itemName, plugin)
@@ -223,7 +223,7 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         val itemFrame = entity as ItemFrame
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val name = entity.customName ?: ""
         val item = entity.item
         val itemName = item.itemMeta?.displayName
@@ -234,7 +234,7 @@ class Events(private val plugin: Plugin) : Listener {
             } else {
                 e.isCancelled = true
                 if (item.type == Material.AIR) {
-                    playerClass.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
+                    aoringoPlayer.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
                 Fshop().buyGUI(item, name, entity.uniqueId.toString())
@@ -242,7 +242,7 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (name == "まな板") {
             if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
-                playerClass.sendErrorMessage("料理人のみ包丁を使用することができます")
+                aoringoPlayer.sendErrorMessage("料理人のみ包丁を使用することができます")
                 return
             }
             val mainItem = player.inventory.itemInMainHand
@@ -259,7 +259,7 @@ class Events(private val plugin: Plugin) : Listener {
             "衣" -> {
                 e.isCancelled = true
                 if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
-                    playerClass.sendErrorMessage("料理人のみ衣をつけることができます")
+                    aoringoPlayer.sendErrorMessage("料理人のみ衣をつけることができます")
                     return
                 }
                 itemFrame.setItem(ItemStack(Material.AIR))
@@ -269,17 +269,17 @@ class Events(private val plugin: Plugin) : Listener {
                 if (block.type != Material.BARREL) { return }
                 if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
                     e.isCancelled = true
-                    playerClass.sendErrorMessage("料理人のみ混ぜることができます")
+                    aoringoPlayer.sendErrorMessage("料理人のみ混ぜることができます")
                     return
                 }
                 player.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
                 Cook().mix(player, block.state as Barrel)
-                Item().breakHandle(itemFrame, playerClass)
+                Item().breakHandle(itemFrame, aoringoPlayer)
             }
             "${ChatColor.RED}ポスト" -> {
                 e.isCancelled = true
                 if (!player.isSneaking) {
-                    playerClass.sendActionBar("${ChatColor.RED}スニークでアイテム投下")
+                    aoringoPlayer.sendActionBar("${ChatColor.RED}スニークでアイテム投下")
                     return
                 }
                 if (player.inventory.itemInMainHand.type == Material.AIR) { return }
@@ -288,13 +288,13 @@ class Events(private val plugin: Plugin) : Listener {
                 val blockBehind: org.bukkit.block.Block = blockBehindLocation.block
                 if (blockBehind.type != Material.BARREL) { return }
                 val barrel = blockBehind.state as Barrel
-                playerClass.putItemInPost(barrel)
+                aoringoPlayer.putItemInPost(barrel)
             }
         }
         if (block.type == Material.SMOKER) {
             if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
-                playerClass.sendErrorMessage("料理人のみコンロを使用することができます")
+                aoringoPlayer.sendErrorMessage("料理人のみコンロを使用することができます")
                 return
             }
             val smoker = block.state as Smoker
@@ -338,7 +338,7 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
         val player = e.whoClicked as? org.bukkit.entity.Player ?: return
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val gui = e.view
         val item = e.currentItem ?: return
         val itemName = item.itemMeta?.displayName
@@ -521,7 +521,7 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val block = e.block
         val worldName = player.world.name
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         if (player.gameMode == GameMode.CREATIVE) { return }
         if (worldName == "shop" || worldName == "world") {
             return
@@ -531,14 +531,14 @@ class Events(private val plugin: Plugin) : Listener {
                 Material.OBSIDIAN -> ArmorStand().summonMarker(block.location, " ").addScoreboardTag("breakObsidian")
                 Material.FIRE -> {}
                 else -> {
-                    playerClass.sendErrorMessage("黒曜石以外破壊禁止されています")
+                    aoringoPlayer.sendErrorMessage("黒曜石以外破壊禁止されています")
                     e.isCancelled = true
                 }
             }
         } else if (block.type.toString().contains("ORE")) {
             if (Job().get(player) == "${ChatColor.GOLD}ハンター") { return }
             e.isCancelled = true
-            playerClass.sendErrorMessage("${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
+            aoringoPlayer.sendErrorMessage("${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         }
         when (block.type) {
             Material.GRASS, Material.TALL_GRASS -> {
@@ -549,7 +549,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
-                playerClass.breakVegetables(block)
+                aoringoPlayer.breakVegetables(block)
             }
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
@@ -582,7 +582,7 @@ class Events(private val plugin: Plugin) : Listener {
         val item = e.currentItem ?: return
         val type = item.type
         val displayName = item.itemMeta?.displayName ?: ""
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
@@ -594,7 +594,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
             if (Job().tool().contains(type)) {
                 if (e.isShiftClick) {
-                    playerClass.sendErrorMessage("ツールを一括作成はできません")
+                    aoringoPlayer.sendErrorMessage("ツールを一括作成はできません")
                     e.isCancelled = true
                 } else {
                     e.currentItem?.durability = Job().craftRandomDurable(type).toShort()
@@ -604,10 +604,10 @@ class Events(private val plugin: Plugin) : Listener {
         }
         if (!Job().tool().contains(type) && item.hasItemMeta()) {
             e.isCancelled = true
-            playerClass.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
+            aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         } else if (ngItem.contains(type)) {
             e.isCancelled = true
-            playerClass.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
+            aoringoPlayer.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
         } else if (type == Material.WRITTEN_BOOK && displayName.contains("${ChatColor.RED}契約本@")) {
             e.currentItem = Contract().copyBlock(item, player)
         }
@@ -639,19 +639,19 @@ class Events(private val plugin: Plugin) : Listener {
     fun onBlockPlace(e: BlockPlaceEvent) {
         val player = e.player
         val block = e.block
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         when (block.type) {
             Material.SMOKER -> {
                 if (Job().get(player) == "${ChatColor.YELLOW}料理人") {
                     Cook().furnace(block)
                 } else {
                     e.isCancelled = true
-                    playerClass.sendErrorMessage("使えるのは料理人だけです")
+                    aoringoPlayer.sendErrorMessage("使えるのは料理人だけです")
                 }
             }
             Material.HOPPER -> {
                 e.isCancelled = true
-                playerClass.sendErrorMessage("ホッパーを設置することは禁止されています")
+                aoringoPlayer.sendErrorMessage("ホッパーを設置することは禁止されています")
             }
 
             else -> {}
@@ -754,9 +754,9 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
-        val playerClass = AoringoPlayer(player)
-        playerClass.setTab()
-        playerClass.setProtectionPermission(plugin)
+        val aoringoPlayer = AoringoPlayer(player)
+        aoringoPlayer.setTab()
+        aoringoPlayer.setProtectionPermission(plugin)
     }
 
     @EventHandler
@@ -787,14 +787,14 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         val player = e.player
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
         if (downBlock.type == Material.COMMAND_BLOCK) {
             when (block.type) {
                 Material.IRON_BLOCK -> player.openInventory(Resource().createSelectTpGUI())
-                Material.QUARTZ_BLOCK -> playerClass.teleporterWorld("shop")
-                Material.GOLD_BLOCK -> playerClass.teleporterWorld("Home")
+                Material.QUARTZ_BLOCK -> aoringoPlayer.teleporterWorld("shop")
+                Material.GOLD_BLOCK -> aoringoPlayer.teleporterWorld("Home")
                 else -> {}
             }
         }
@@ -810,27 +810,27 @@ class Events(private val plugin: Plugin) : Listener {
     fun onAsyncPlayerChat(e: AsyncPlayerChatEvent) {
         val player = e.player
         val message = e.message
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val playerItem = player.inventory.itemInMainHand
         if (player.scoreboardTags.contains("rg")) {
             e.isCancelled = true
-            playerClass.namingConservationLand(plugin, message)
+            aoringoPlayer.namingConservationLand(plugin, message)
             return
         }
         if (message.contains("@")) {
             e.isCancelled = true
-            playerClass.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
+            aoringoPlayer.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
         } else if (message.contains("!契約")) {
             e.isCancelled = true
             if (playerItem.amount != 1) {
-                playerClass.sendErrorMessage("アイテムを1つのみ持ってください")
+                aoringoPlayer.sendErrorMessage("アイテムを1つのみ持ってください")
                 return
             }
             val contractMoney = message.replace("!契約 ", "").toInt()
             if (contractMoney == 0) { return }
             when (playerItem.itemMeta?.displayName) {
-                "${ChatColor.YELLOW}契約書[未記入]" -> playerClass.writeContractRequest(contractMoney)
-                "${ChatColor.YELLOW}契約書[契約待ち]" -> playerClass.createContractBook(contractMoney)
+                "${ChatColor.YELLOW}契約書[未記入]" -> aoringoPlayer.writeContractRequest(contractMoney)
+                "${ChatColor.YELLOW}契約書[契約待ち]" -> aoringoPlayer.createContractBook(contractMoney)
             }
         }
     }
