@@ -4,16 +4,16 @@ import com.github.Ringoame196.APK
 import com.github.Ringoame196.APKs
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Evaluation
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
-import com.github.Ringoame196.Smartphone.APKs.ItemProtection
+import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.APKs.ConversionMoneyAPK
 import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
+import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -27,7 +27,9 @@ import org.bukkit.plugin.Plugin
 class Smartphone {
     private val apkList = mapOf<String,APKs>(
         "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
-        "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK()
+        "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK(),
+        "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
+        "${ChatColor.GREEN}テレポート" to TeleportAPK()
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
@@ -72,7 +74,7 @@ class Smartphone {
         when (itemName) {
             "${ChatColor.YELLOW}エンダーチェスト" -> playerClass.useEnderChest(plugin)
             "${ChatColor.GREEN}所持金変換" -> conversion(player)
-            "${ChatColor.RED}アイテム保護" -> ItemProtection().open(player)
+            "${ChatColor.RED}アイテム保護" -> ItemProtectionAPK().open(player)
             "${ChatColor.GREEN}テレポート" -> player.openInventory(createTpGUI())
             "${ChatColor.GOLD}ロビー" -> player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
             "${ChatColor.GREEN}生活ワールド" -> player.teleport(Bukkit.getWorld("Home")?.spawnLocation ?: return)
@@ -195,15 +197,6 @@ class Smartphone {
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         }
         player.closeInventory()
-    }
-    private fun createTpGUI(): Inventory {
-        val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
-        gui.setItem(1, Item().make(Material.CHEST, "${ChatColor.GOLD}ロビー"))
-        gui.setItem(3, Item().make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド"))
-        gui.setItem(5, Item().make(Material.DIAMOND_PICKAXE, "${ChatColor.AQUA}資源ワールド"))
-        gui.setItem(7, Item().make(Material.QUARTZ_BLOCK, "${ChatColor.YELLOW}ショップ"))
-        gui.setItem(19, Item().make(Material.BEDROCK, "${ChatColor.RED}イベント"))
-        return gui
     }
     private fun op(player: org.bukkit.entity.Player) {
         if (!player.isOp) { return }

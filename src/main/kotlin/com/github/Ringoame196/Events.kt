@@ -12,7 +12,7 @@ import com.github.Ringoame196.Job.Cook
 import com.github.Ringoame196.Job.Job
 import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
-import com.github.Ringoame196.Smartphone.APKs.ItemProtection
+import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
@@ -164,7 +164,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
-                if (!ItemProtection().isPlayerProtection(item?:return, player)) {
+                if (!ItemProtectionAPK().isPlayerProtection(item?:return, player)) {
                     aoringoPlayer.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
                 } else {
                     player.openInventory(Company().createGUI())
@@ -422,7 +422,7 @@ class Events(private val plugin: Plugin) : Listener {
                     Material.RED_STAINED_GLASS_PANE -> e.isCancelled = true
                     Material.ANVIL -> {
                         e.isCancelled = true
-                        gui.setItem(3, ItemProtection().chekcProtection(gui.getItem(3) ?: return, player))
+                        gui.setItem(3, ItemProtectionAPK().chekcProtection(gui.getItem(3) ?: return, player))
                     }
                     else -> return
                 }
@@ -843,7 +843,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerDropItem(e: PlayerDropItemEvent) {
         val player = e.player
         val item = e.itemDrop
-        if (ItemProtection().isProtection(item.itemStack)) {
+        if (ItemProtectionAPK().isProtection(item.itemStack)) {
             e.isCancelled = true
             AoringoPlayer(player).sendErrorMessage("[アイテム保護]保護アイテムを捨てることはできません")
         }

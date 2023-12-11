@@ -1,5 +1,7 @@
 package com.github.Ringoame196.Smartphone.APKs
 
+import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.GUI
 import com.github.Ringoame196.Items.Item
 import org.bukkit.ChatColor
@@ -7,15 +9,17 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 
-class ItemProtection {
-    fun open(player: Player) {
+class ItemProtectionAPK:APKs {
+    override val customModelData = 3
+    override fun openGUI(player: Player, plugin: Plugin) {
         val gui = GUI().make("${ChatColor.YELLOW}アイテム保護", 9)
         for (i in 0 until gui.size) {
-            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " ", null, null, 1))
+            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(3, Item().make(Material.AIR, "", null, null, 1))
-        gui.setItem(6, Item().make(Material.ANVIL, "${ChatColor.RED}ロック/解除", null, null, 1))
+        gui.setItem(3, Item().make(Material.AIR, "", ))
+        gui.setItem(6, Item().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
         player.openInventory(gui)
     }
     fun isPlayerProtection(item: ItemStack, player: Player): Boolean {
@@ -33,6 +37,7 @@ class ItemProtection {
         return false
     }
     fun chekcProtection(item: ItemStack, player: Player): ItemStack {
+        val aoringoPlayer = AoringoPlayer(player)
         if (item.itemMeta?.lore == null) {
             protection(item, player)
             return item
@@ -44,7 +49,7 @@ class ItemProtection {
             return if (lore == "所有者:${player.uniqueId}") {
                 unProtection(item, lore, playerName, player)
             } else {
-                AoringoEvents().onErrorEvent(player, "所有者設定はできませんでした")
+                aoringoPlayer.sendErrorMessage("所有者設定はできませんでした")
                 item
             }
         }
