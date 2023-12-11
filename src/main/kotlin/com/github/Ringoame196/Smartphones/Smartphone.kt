@@ -12,8 +12,11 @@ import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.APKs.ConversionMoneyAPK
 import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
+import com.github.Ringoame196.Smartphones.APKs.HealthCcareAPK
 import com.github.Ringoame196.Smartphones.APKs.LandProtectionAPK
+import com.github.Ringoame196.Smartphones.APKs.OPAPK
 import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
+import com.github.Ringoame196.Smartphones.APKs.SortAPK
 import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
@@ -26,14 +29,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    private val apkList = mapOf<String,APKs>(
+    val apkList = mapOf<String,APKs>(
         "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
         "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK(),
         "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
         "${ChatColor.GREEN}テレポート" to TeleportAPK(),
         "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingAPK(),
-        "${ChatColor.GREEN}土地保護" to LandProtectionAPK()
-
+        "${ChatColor.GREEN}土地保護" to LandProtectionAPK(),
+        "${ChatColor.YELLOW}OP用" to OPAPK(),
+        "${ChatColor.YELLOW}アプリ並べ替え" to SortAPK(),
+        "${ChatColor.AQUA}ヘルスケア" to HealthCcareAPK()
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
@@ -50,16 +55,7 @@ class Smartphone {
         }
         return gui
     }
-    fun giveCustomModel(itemName: String): Int {
-        return when (itemName) {
-            "${ChatColor.YELLOW}OP用" -> 7
-            "${ChatColor.YELLOW}アプリ並べ替え" -> 8
-            "${ChatColor.AQUA}ヘルスケア" -> 9
-            else -> 0
-        }
-    }
     fun clickItem(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
-        val playerClass = AoringoPlayer(player)
         val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
@@ -75,9 +71,6 @@ class Smartphone {
             "${ChatColor.AQUA}資源ワールド" -> player.teleport(Bukkit.getWorld("Survival")?.spawnLocation ?: return)
             "${ChatColor.YELLOW}ショップ" -> player.teleport(Bukkit.getWorld("shop")?.spawnLocation ?: return)
             "${ChatColor.RED}イベント" -> player.teleport(Bukkit.getWorld("event")?.spawnLocation ?: return)
-            "${ChatColor.YELLOW}OP用" -> op(player)
-            "${ChatColor.YELLOW}アプリ並べ替え" -> APK().sortGUIOpen(player, plugin)
-            "${ChatColor.AQUA}ヘルスケア" -> healthcare(player)
         }
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
@@ -190,15 +183,6 @@ class Smartphone {
         }
         player.closeInventory()
     }
-    private fun op(player: org.bukkit.entity.Player) {
-        if (!player.isOp) { return }
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}OP用")
-        gui.setItem(0, Item().make(Material.COMMAND_BLOCK, "${ChatColor.YELLOW}リソパ更新"))
-        gui.setItem(2, Item().make(Material.WOODEN_AXE, "${ChatColor.RED}ショップ保護リセット"))
-        gui.setItem(4, Item().make(Material.DIAMOND, "${ChatColor.GREEN}運営ギフトリセット"))
-        gui.setItem(6, Item().make(Material.CRAFTING_TABLE, "${ChatColor.GREEN}テストワールド"))
-        player.openInventory(gui)
-    }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
             com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
@@ -209,11 +193,5 @@ class Smartphone {
             Money().remove(player.uniqueId.toString(), money, true)
         }
         player.closeInventory()
-    }
-    private fun healthcare(player: Player) {
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}ヘルスケア")
-        gui.setItem(3, Item().make(Material.MELON_SLICE, "${ChatColor.RED}マックスHP", "${player.maxHealth.toInt()}HP", 92, 1))
-        gui.setItem(5, Item().make(Material.MELON_SLICE, "${ChatColor.GREEN}Power", "${Scoreboard().getValue("status_Power",player.uniqueId.toString())}パワー", 91, 1))
-        player.openInventory(gui)
     }
 }

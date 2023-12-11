@@ -179,15 +179,6 @@ class AoringoPlayer(val player: Player) {
         bossbar.addPlayer(player)
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
     }
-
-    fun useEnderChest(plugin: Plugin) {
-        Bukkit.getScheduler().runTask(
-            plugin,
-            Runnable {
-                Bukkit.dispatchCommand(player, "enderchest")
-            }
-        )
-    }
     fun makeShop(sign: Sign) {
         val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
         if (downBlock.type != Material.BARREL) { return }

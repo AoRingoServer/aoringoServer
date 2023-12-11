@@ -52,14 +52,6 @@ class APK {
         player.sendMessage("${ChatColor.RED}[スマートフォン]${itemName}${ChatColor.RED}をアンインストールしました")
         player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }
-    fun sortGUIOpen(player: org.bukkit.entity.Player, plugin: Plugin) {
-        val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}スマートフォン(並び替え)")
-        player.openInventory(gui)
-        val apkList = get(plugin, player) ?: return
-        for (apk in apkList) {
-            gui.addItem(Item().make(Material.GREEN_CONCRETE, "[アプリケーション]$apk", customModelData = Smartphone().giveCustomModel(apk)))
-        }
-    }
     fun setSort(player: HumanEntity, gui: InventoryView, plugin: Plugin) {
         val apkList = mutableListOf<String>()
         var c = 1
