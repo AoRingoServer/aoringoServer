@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    val apks = mapOf<String,APKs>(
+    private val apkList = mapOf<String,APKs>(
         "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
         "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK()
     )
@@ -68,6 +68,7 @@ class Smartphone {
             return
         }
         if (shift) { return }
+        apkList[itemName]?.openGUI(player,plugin)
         when (itemName) {
             "${ChatColor.YELLOW}エンダーチェスト" -> playerClass.useEnderChest(plugin)
             "${ChatColor.GREEN}所持金変換" -> conversion(player)
