@@ -31,11 +31,11 @@ class Food{
         return if(totalFoodLevel > 20) { 20 } else { totalFoodLevel }
     }
     fun increaseStatus(player: Player, food: ItemStack){
-        val playerClass = AoringoPlayer(player)
+        val aoringoPlayer = AoringoPlayer(player)
         val foodName = food.itemMeta?.displayName
         when(foodName){
-            "${ChatColor.YELLOW}力のプロテイン" -> playerClass.addPower()
-            "${ChatColor.RED}ハートのハーブ" -> playerClass.addMaxHP()
+            "${ChatColor.YELLOW}力のプロテイン" -> aoringoPlayer.addPower()
+            "${ChatColor.RED}ハートのハーブ" -> aoringoPlayer.addMaxHP()
         }
     }
     fun makeItem(name: String, customModelData: Int): ItemStack {
