@@ -20,6 +20,7 @@ import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -47,8 +48,8 @@ class Smartphone {
             return gui
         }
 
-        val minSize = minOf(smartphoneSlots.size, playerHaveAPKList.size)
-        for (i in 0 until minSize) {
+        val apkCount = minOf(smartphoneSlots.size, playerHaveAPKList.size)
+        for (i in 0 until apkCount) {
             val apkName = playerHaveAPKList[i]
             val customModelData = apkList[apkName]?.customModelData?:0
             gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
@@ -56,27 +57,35 @@ class Smartphone {
         return gui
     }
     fun startUpAKS(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
-        val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
+        val itemName = item.itemMeta?.displayName
+        val apkName = itemName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
-            APK().remove(player, itemName, item.itemMeta?.customModelData ?: 0, plugin)
+            APK().remove(player, apkName, item.itemMeta?.customModelData ?: 0, plugin)
             player.openInventory(createGUI(plugin, player))
             return
         }
-        if (shift) { return }
-        apkList[itemName]?.openGUI(player,plugin)
-        when (itemName) {
-            "${ChatColor.GOLD}ロビー" -> player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
-            "${ChatColor.GREEN}生活ワールド" -> player.teleport(Bukkit.getWorld("Home")?.spawnLocation ?: return)
-            "${ChatColor.AQUA}資源ワールド" -> player.teleport(Bukkit.getWorld("Survival")?.spawnLocation ?: return)
-            "${ChatColor.YELLOW}ショップ" -> player.teleport(Bukkit.getWorld("shop")?.spawnLocation ?: return)
-            "${ChatColor.RED}イベント" -> player.teleport(Bukkit.getWorld("event")?.spawnLocation ?: return)
-        }
+        apkList[apkName]?.openGUI(player,plugin)
+        teleportWorldFromPlayer(player,apkName)
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             moneyItem(player, money, item)
         }
+    }
+    private fun getWorldSpawnLocation(worldName:String): Location? {
+        return Bukkit.getWorld(worldName)?.spawnLocation
+    }
+    private fun teleportWorldFromPlayer(player:Player,worldName:String){
+        val worldID = mapOf<String,String>(
+            "${ChatColor.GOLD}ロビー" to "world",
+            "${ChatColor.GREEN}生活ワールド" to "Home",
+            "${ChatColor.AQUA}資源ワールド" to "Survival",
+            "${ChatColor.YELLOW}ショップ" to "shop"
+        )
+        val playerLocation = player.location
+        val location = getWorldSpawnLocation(worldID[worldName] ?:"world")
+        player.teleport(location?:playerLocation)
     }
     fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
         when (item.itemMeta?.displayName) {
