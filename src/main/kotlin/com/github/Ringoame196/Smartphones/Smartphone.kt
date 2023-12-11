@@ -26,8 +26,8 @@ import org.bukkit.plugin.Plugin
 
 class Smartphone {
     val apks = mapOf<String,APKs>(
-        "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK,
-        "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK
+        "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
+        "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK()
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
