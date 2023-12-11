@@ -25,11 +25,17 @@ import java.util.UUID
 
 class LandPurchase() {
     private fun ownerGUI(player: Player, name: String, money: Int) {
+        val item = Item()
+        val memberAddSlot = 3
+        val memberRemoveSlot = 5
+        val prepaymentButtonSlot = 8
+        val protectionScoreboadName = "protectionContract"
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
-        gui.setItem(3, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
-        gui.setItem(5, Item().make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
-        if (player.world.name == "shop" && Scoreboard().getValue("protectionContract", name) == 1) {
-            gui.setItem(8, Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${(money * 1.5).toInt()}円"))
+        gui.setItem(memberAddSlot, item.make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
+        gui.setItem(memberRemoveSlot, item.make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
+        if (player.world.name == "shop" && Scoreboard().getValue(protectionScoreboadName, name) == 1) {
+            val price = money * 1.5.toInt()
+            gui.setItem(prepaymentButtonSlot, Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${price}円"))
         }
         player.openInventory(gui)
     }
