@@ -1,9 +1,11 @@
 package com.github.Ringoame196.Smartphone.APKs
 
+import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import com.sk89q.worldedit.IncompleteRegionException
@@ -63,10 +65,13 @@ class LandPurchase {
     }
     fun advancePayment(player: Player, name: String, money: Int) {
         val aoringoPlayer = AoringoPlayer(player)
-        if (money > Money().get(player.uniqueId.toString())) {
+        val moneyUseCase = aoringoPlayer.moneyUseCase
+        val playerAccount = aoringoPlayer.playerAccount
+        val playerMoney = moneyUseCase.getMoney(playerAccount)
+        if (money > playerMoney) {
             aoringoPlayer.sendErrorMessage("お金が足りません")
         } else {
-            Money().remove(player.name, money, true)
+            MoneyManager().tradeMoney(Admin(),playerAccount,money)
             Scoreboard().set("protectionContract", name, 2)
             player.sendMessage("${ChatColor.AQUA}前払いしました")
         }
@@ -98,11 +103,14 @@ class LandPurchase {
     }
     fun buy(player: Player, item: ItemStack, guiName: String, plugin: Plugin) {
         val aoringoPlayer = AoringoPlayer(player)
+        val moneyUseCase = aoringoPlayer.moneyUseCase
+        val playerAccount = aoringoPlayer.playerAccount
+        val playerMoney = moneyUseCase.getMoney(playerAccount)
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         when (item.itemMeta?.displayName) {
             "${ChatColor.GREEN}購入" -> {
                 val money = item.itemMeta?.lore?.get(0)?.replace("円", "")?.toInt() ?: return
-                if (money > Money().get(player.uniqueId.toString())) {
+                if (money > playerMoney) {
                     aoringoPlayer.sendErrorMessage("お金が足りません")
                     return
                 }
@@ -114,7 +122,7 @@ class LandPurchase {
                 WorldGuard().addOwnerToRegion(name, player)
                 player.closeInventory()
                 player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-                Money().remove(player.uniqueId.toString(), money, true)
+                MoneyManager().tradeMoney(Admin(),playerAccount,money)
                 if (player.world.name != "shop") { return }
                 Yml().addToList(plugin, "", "conservationLand", "protectedName", name)
                 Scoreboard().set("protectionContract", name, 1)
