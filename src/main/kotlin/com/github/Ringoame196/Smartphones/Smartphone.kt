@@ -84,7 +84,7 @@ class Smartphone {
             "${ChatColor.YELLOW}ショップ" to "shop"
         )
         val playerLocation = player.location
-        val location = getWorldSpawnLocation(worldID[worldName] ?:"world")
+        val location = getWorldSpawnLocation(worldID[worldName] ?:return)
         player.teleport(location?:playerLocation)
     }
     fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
