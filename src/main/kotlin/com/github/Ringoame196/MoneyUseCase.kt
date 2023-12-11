@@ -40,8 +40,8 @@ class MoneyUseCase {
             bossbar.setTitle(bossbarTitle(playerClass.playerAccount))
         }
     }
-    fun setMoney(account: Account,amount: Int){
-        moneyManager.setMoney(account,amount)
+    fun setMoney(account: Account,total: Int){
+        moneyManager.setMoney(account,total)
     }
     private fun bossbarTitle(targetAccount: PlayerAccount): String {
         return "${ChatColor.GOLD}所持金${formalCurrency(moneyManager.getMoney(targetAccount))}円"
