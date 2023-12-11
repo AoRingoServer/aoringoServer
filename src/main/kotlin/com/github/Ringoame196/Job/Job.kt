@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Job
 
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard

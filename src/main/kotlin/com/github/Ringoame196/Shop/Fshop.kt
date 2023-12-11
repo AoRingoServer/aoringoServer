@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Shop
 
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.MoneyUseCase

@@ -1,6 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
 import org.bukkit.Material

@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Items
 
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Location

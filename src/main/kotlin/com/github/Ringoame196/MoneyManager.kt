@@ -1,6 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Items.Item
 import org.bukkit.ChatColor
