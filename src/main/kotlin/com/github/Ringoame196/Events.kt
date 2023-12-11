@@ -408,7 +408,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.BLUE}スマートフォン" -> {
                 e.isCancelled = true
-                Smartphone().clickItem(player, item, plugin, e.isShiftClick)
+                Smartphone().startUpAKS(player, item, plugin, e.isShiftClick)
             }
 
             "${ChatColor.GREEN}資源テレポート" -> {

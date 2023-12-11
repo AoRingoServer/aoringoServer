@@ -4,7 +4,6 @@ import com.github.Ringoame196.APK
 import com.github.Ringoame196.APKs
 import com.github.Ringoame196.Data.Money
 import com.github.Ringoame196.Data.WorldGuard
-import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
@@ -42,20 +41,20 @@ class Smartphone {
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
-        val smartphone = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
+        val smartphoneSlots = mutableListOf(1, 3, 5, 7, 10, 12, 14, 16, 19, 21, 23, 25)
         val apks = Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
         if (apks.isNullOrEmpty()) {
             return gui
         }
 
-        val minSize = minOf(smartphone.size, apks.size)
+        val minSize = minOf(smartphoneSlots.size, apks.size)
         for (i in 0 until minSize) {
             val apkName = apks[i]
-            gui.setItem(smartphone[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = giveCustomModel(apkName)))
+            gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = giveCustomModel(apkName)))
         }
         return gui
     }
-    fun clickItem(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
+    fun startUpAKS(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
         val itemName = item.itemMeta?.displayName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
