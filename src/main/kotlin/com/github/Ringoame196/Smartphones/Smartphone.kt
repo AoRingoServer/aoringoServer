@@ -219,14 +219,6 @@ class Smartphone {
         gui.setItem(8, Item().make(Material.WOODEN_AXE, "${ChatColor.GOLD}木の斧ゲット"))
         player.openInventory(gui)
     }
-    private fun conversion(player: org.bukkit.entity.Player) {
-        val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}スマートフォン")
-        gui.setItem(1, Item().make(Material.EMERALD, "${ChatColor.GREEN}100円", customModelData = 1))
-        gui.setItem(3, Item().make(Material.EMERALD, "${ChatColor.GREEN}1000円", customModelData = 2))
-        gui.setItem(5, Item().make(Material.EMERALD, "${ChatColor.GREEN}10000円", customModelData = 3))
-        gui.setItem(7, Item().make(Material.EMERALD, "${ChatColor.GREEN}100000円", customModelData = 4))
-        player.openInventory(gui)
-    }
     private fun moneyItem(player: Player, money: Int, item: ItemStack) {
         if ((Money().get(player.uniqueId.toString())) < money) {
             com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
