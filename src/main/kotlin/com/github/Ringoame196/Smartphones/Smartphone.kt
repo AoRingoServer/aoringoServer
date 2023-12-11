@@ -50,7 +50,8 @@ class Smartphone {
         val minSize = minOf(smartphoneSlots.size, apks.size)
         for (i in 0 until minSize) {
             val apkName = apks[i]
-            gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = giveCustomModel(apkName)))
+            val customModelData = apkList[apkName]?.customModelData?:0
+            gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
         }
         return gui
     }
