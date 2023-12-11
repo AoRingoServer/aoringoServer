@@ -1,5 +1,6 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
@@ -16,14 +17,15 @@ class APK {
         return Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
     }
     fun add(player: org.bukkit.entity.Player, itemName: String, plugin: Plugin) {
+        val aoringoPlayer = AoringoPlayer(player)
         val apkName = itemName.replace("[アプリケーション]", "")
         val apks = get(plugin, player)
         if ((apks?.size ?: 0) > 12) {
-            AoringoEvents().onErrorEvent(player, "[スマートフォン]容量が足りませんでした")
+            aoringoPlayer.sendErrorMessage("[スマートフォン]容量が足りませんでした")
             return
         }
         if (apks?.contains(apkName) == true) {
-            AoringoEvents().onErrorEvent(player, "[スマートフォン]同アプリをインストールすることはできません")
+            aoringoPlayer.sendErrorMessage("[スマートフォン]同アプリをインストールすることはできません")
             return
         }
         val playerItem = player.inventory.itemInMainHand.clone()
@@ -55,7 +57,7 @@ class APK {
         player.openInventory(gui)
         val apkList = get(plugin, player) ?: return
         for (apk in apkList) {
-            gui.addItem(Item().make(Material.GREEN_CONCRETE, "[アプリケーション]$apk", null, Smartphone().giveCustomModel(apk), 1))
+            gui.addItem(Item().make(Material.GREEN_CONCRETE, "[アプリケーション]$apk", customModelData = Smartphone().giveCustomModel(apk)))
         }
     }
     fun setSort(player: HumanEntity, gui: InventoryView, plugin: Plugin) {
