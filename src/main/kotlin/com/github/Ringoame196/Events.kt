@@ -60,6 +60,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.util.Vector
+import java.util.*
 import kotlin.random.Random
 
 class Events(private val plugin: Plugin) : Listener {
@@ -230,7 +231,8 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item.itemMeta?.displayName
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name.contains("@Fshop")) {
-            if (item.type == Material.AIR && Fshop().isOwner(player, entity.location)) {
+            val fshop = Fshop(entity)
+            if (item.type == Material.AIR && fshop.isOwner(player)) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
             } else {
                 e.isCancelled = true
@@ -238,7 +240,7 @@ class Events(private val plugin: Plugin) : Listener {
                     aoringoPlayer.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
-                Fshop().buyGUI(item, name, entity.uniqueId.toString())
+                fshop.buyGUI(item)
             }
         } else if (name == "まな板") {
             if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
@@ -395,16 +397,17 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
             "${ChatColor.BLUE}Fショップ" -> {
+                val shopInfoSlot = 0
+                val shopUUIDinfoNumber = 0
+                val shopInfo = gui.getItem(shopInfoSlot) ?: return
+                val shopUUID = shopInfo.itemMeta?.lore?.get(shopUUIDinfoNumber) ?: return
+                val shop = Bukkit.getEntity(UUID.fromString(shopUUID))
+                if (shop !is ItemFrame) { return }
+                val fshop = Fshop(shop)
                 e.isCancelled = true
                 if (itemName == "${ChatColor.GREEN}購入") {
-                    val meta = item.itemMeta ?: return
-                    val price = meta.lore?.get(0)?.replace("円", "")?.toInt() ?: return
-                    Fshop().buy(
-                        player,
-                        gui.getItem(3) ?: return,
-                        price,
-                        gui.getItem(0)?.itemMeta?.lore?.get(0) ?: return
-                    )
+                    val goodsSlot = 3
+                    fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return,)
                 }
             }
             "${ChatColor.BLUE}スマートフォン" -> {
