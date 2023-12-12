@@ -31,6 +31,7 @@ class MoneyManager {
         return getMoney(adminAccount) > amount
     }
     fun tradeMoney(fromAccount: Account, targetAccount: Account, amount: Int) {
+        if (getMoney(targetAccount) < amount) { return }
         reduceMoney(targetAccount, amount)
         addMoney(fromAccount, amount)
     }
