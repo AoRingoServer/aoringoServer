@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Items
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Location
@@ -68,22 +69,24 @@ class Item {
     }
 
     fun contract(player: Player, message: String) {
-        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
+        val aoringoPlayer = com.github.Ringoame196.Entity.AoringoPlayer(player)
         val item = player.inventory.itemInMainHand
         val meta = item.itemMeta as BookMeta
+        val moneyUseCase = aoringoPlayer.moneyUseCase
         val money = message.replace("!契約 ", "")
         val bookMessage = meta.getPage(1)
         val priceIndex = bookMessage.indexOf("取引金額：")
         val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "")
         if (money != priceMessage) {
-            playerClass.sendErrorMessage("金額が違います")
+            aoringoPlayer.sendErrorMessage("金額が違います")
             return
         }
-        if (Money().get(player.name) < money.toInt()) {
-            playerClass.sendErrorMessage("お金が足りません")
+        val playerMoney = moneyUseCase.getMoney(aoringoPlayer.playerAccount)
+        if (playerMoney < money.toInt()) {
+            aoringoPlayer.sendErrorMessage("お金が足りません")
             return
         }
-        Money().remove(player.name, money.toInt(), false)
+        moneyUseCase.reduceMoney(aoringoPlayer, money.toInt())
         val currentDate = LocalDate.now()
 
         // 日付を指定したフォーマットで文字列として取得
@@ -100,13 +103,15 @@ class Item {
     }
 
     fun returnMoney(player: Player) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val moneyUseCase = aoringoPlayer.moneyUseCase
         val item = player.inventory.itemInMainHand
         val bookMessage = item.itemMeta as BookMeta
         if (!bookMessage.getPage(1).contains("UUID：${player.uniqueId}")) {
             return
         }
         val money = item.itemMeta?.displayName?.replace("${ChatColor.RED}契約本@", "")?.replace("円契約", "")?.toInt()
-        Money().add(player.name, money ?: return, false)
+        moneyUseCase.addMoney(aoringoPlayer, money ?: return)
         player.inventory.setItemInMainHand(ItemStack(Material.AIR))
     }
 
