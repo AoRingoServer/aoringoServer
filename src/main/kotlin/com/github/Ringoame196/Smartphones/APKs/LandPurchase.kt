@@ -5,6 +5,7 @@ import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.MoneyManager
+import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import com.sk89q.worldedit.IncompleteRegionException
@@ -70,7 +71,7 @@ class LandPurchase {
         if (money > playerMoney) {
             aoringoPlayer.sendErrorMessage("お金が足りません")
         } else {
-            MoneyManager().tradeMoney(Admin(),playerAccount,money)
+            moneyUseCase.tradeMoney(aoringoPlayer,Admin(),money)
             Scoreboard().set("protectionContract", name, 2)
             player.sendMessage("${ChatColor.AQUA}前払いしました")
         }
@@ -121,7 +122,7 @@ class LandPurchase {
                 WorldGuard().addOwnerToRegion(name, player)
                 player.closeInventory()
                 player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-                MoneyManager().tradeMoney(Admin(),playerAccount,money)
+                moneyUseCase.tradeMoney(aoringoPlayer,Admin(),money)
                 if (player.world.name != "shop") { return }
                 Yml().addToList(plugin, "", "conservationLand", "protectedName", name)
                 Scoreboard().set("protectionContract", name, 1)
@@ -151,6 +152,7 @@ class LandPurchase {
         }
         return 0
     }
+
     fun doesRegionContainProtection(player: Player): Boolean {
         val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
 
