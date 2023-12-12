@@ -24,8 +24,8 @@ class MoneyUseCase {
         moneyManager.addMoney(playerClass.playerAccount,amount)
         playerClass.sendActionBar("${ChatColor.GREEN}+$amount")
     }
-    fun reduceMoney(playerClass: AoringoPlayer,amount: Int,account: Account){
-        if(moneyManager.reduceMoney(account,amount)){
+    fun reduceMoney(playerClass: AoringoPlayer,amount: Int){
+        if(moneyManager.reduceMoney(playerClass.playerAccount,amount)){
             playerClass.sendErrorMessage("所持金が足りません")
         } else {
             playerClass.sendActionBar("${ChatColor.RED}-$amount")
@@ -51,5 +51,9 @@ class MoneyUseCase {
     }
     fun getMoney(account: Account):Int{
         return moneyManager.getMoney(account)
+    }
+    fun tradeMoney(aoringoPlayer: AoringoPlayer,fromAccount: Account,amount: Int){
+        reduceMoney(aoringoPlayer,amount)
+        MoneyManager().addMoney(fromAccount,amount)
     }
 }
