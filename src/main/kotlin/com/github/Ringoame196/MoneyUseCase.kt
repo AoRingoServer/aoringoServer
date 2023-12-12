@@ -9,35 +9,35 @@ import java.util.UUID
 
 class MoneyUseCase {
     private val moneyManager = MoneyManager()
-    fun getMoneyFromAdmin(playerClass:AoringoPlayer,amount:Int){
-        val sender = playerClass.player
+    fun getMoneyFromAdmin(aoringoPlayer:AoringoPlayer, amount:Int){
+        val sender = aoringoPlayer.player
         val admin = Admin()
         if (moneyManager.canGetMoneyFromAdmin(admin,amount)) {
-            playerClass.sendErrorMessage("運営のお金が不足したため 運営手形が発行されました")
+            aoringoPlayer.sendErrorMessage("運営のお金が不足したため 運営手形が発行されました")
             sender.sendMessage("${ChatColor.GOLD}運営に発行された手形をお渡しください")
             sender.inventory.addItem(Item().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${amount}円)", "手形を運営に渡してください", 11, 1))
         } else {
-            moneyManager.tradeMoney(admin, playerClass.playerAccount , amount)
+            moneyManager.tradeMoney(admin, aoringoPlayer.playerAccount , amount)
         }
     }
-    fun addMoney(playerClass:AoringoPlayer,amount:Int){
-        moneyManager.addMoney(playerClass.playerAccount,amount)
-        playerClass.sendActionBar("${ChatColor.GREEN}+$amount")
+    fun addMoney(aoringoPlayer:AoringoPlayer, amount:Int){
+        moneyManager.addMoney(aoringoPlayer.playerAccount,amount)
+        aoringoPlayer.sendActionBar("${ChatColor.GREEN}+$amount")
     }
-    fun reduceMoney(playerClass: AoringoPlayer,amount: Int){
-        if(moneyManager.reduceMoney(playerClass.playerAccount,amount)){
-            playerClass.sendErrorMessage("所持金が足りません")
+    fun reduceMoney(aoringoPlayer: AoringoPlayer, amount: Int){
+        if(moneyManager.reduceMoney(aoringoPlayer.playerAccount,amount)){
+            aoringoPlayer.sendErrorMessage("所持金が足りません")
         } else {
-            playerClass.sendActionBar("${ChatColor.RED}-$amount")
+            aoringoPlayer.sendActionBar("${ChatColor.RED}-$amount")
         }
     }
-    fun displayMoney(playerClass: AoringoPlayer){
-        val playerUUID = UUID.fromString(playerClass.playerAccount.getAccountID())
+    fun displayMoney(aoringoPlayer: AoringoPlayer){
+        val playerUUID = UUID.fromString(aoringoPlayer.playerAccount.getAccountID())
         val bossbar = PluginData.DataManager.playerDataMap.getOrPut(playerUUID) { AoringoPlayer.PlayerData() }.titleMoneyBossbar
         if (bossbar == null) {
-            playerClass.createBossbar(bossbarTitle(playerClass.playerAccount))
+            aoringoPlayer.createBossbar(bossbarTitle(aoringoPlayer.playerAccount))
         } else {
-            bossbar.setTitle(bossbarTitle(playerClass.playerAccount))
+            bossbar.setTitle(bossbarTitle(aoringoPlayer.playerAccount))
         }
     }
     fun setMoney(account: Account,total: Int){
