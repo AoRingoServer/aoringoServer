@@ -25,7 +25,8 @@ class Fshop(private val shop:ItemFrame):Account {
     override fun getAccountID(): String {
         return acquisitionAccountName()
     }
-    fun isOwner(player: Player, location: Location): Boolean {
+    fun isOwner(player: Player): Boolean {
+        val location = shop.location
         return WorldGuard().getOwnerOfRegion(location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(location)?.contains(player.uniqueId) == true
     }
     private fun acquisitionAccountName():String{
@@ -48,22 +49,18 @@ class Fshop(private val shop:ItemFrame):Account {
         val priceSubstring = shopInfo.substring(index + 6)
         return priceSubstring.toIntOrNull() ?: throw RuntimeException("価格の変換に失敗しました")
     }
-    fun buyGUI(item: ItemStack, name: String, uuid: String): Inventory {
+    fun buyGUI(item: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
         val price = acquisitionPrice()
-        gui.setItem(0, Item().make(Material.COMPASS, "ショップ", uuid))
+        gui.setItem(0, Item().make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
         gui.setItem(3, item)
         gui.setItem(4, Item().make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
         return gui
     }
-    fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack, price: Int, uuid: String) {
-        val itemFrame = Bukkit.getEntity(UUID.fromString(uuid)) ?: return
+    fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack) {
         val sender = aoringoPlayer.player
-        if (itemFrame !is ItemFrame) {
-            aoringoPlayer.sendErrorMessage("ショップが見つかりませんでした")
-            return
-        }
-        if (itemFrame.item != item) {
+        val price = acquisitionPrice()
+        if (shop.item != item) {
             aoringoPlayer.sendErrorMessage("売り物が更新されました")
             return
         }
@@ -75,19 +72,19 @@ class Fshop(private val shop:ItemFrame):Account {
         moneyUseCase.tradeMoney(aoringoPlayer,this,price)
         sender.sendMessage("${ChatColor.GREEN}購入しました")
         sender.playSound(sender, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-        replenishment(itemFrame)
-        if (itemFrame.item.type == Material.AIR) {
+        replenishment()
+        if (shop.item.type == Material.AIR) {
             sender.closeInventory()
-        } else { sender.openInventory(buyGUI(itemFrame.item, itemFrame.customName ?: return, itemFrame.uniqueId.toString())) }
+        } else { sender.openInventory(buyGUI(shop.item)) }
     }
-    private fun replenishment(itemFrame: ItemFrame) {
-        val block = itemFrame.location.add(0.0, -1.0, 0.0).block
+    private fun replenishment() {
+        val block = shop.location.add(0.0, -1.0, 0.0).block
         if (block.type != Material.BARREL) { return }
         val barrel = block.state as Barrel
-        itemFrame.setItem(ItemStack(Material.AIR))
+            shop.setItem(ItemStack(Material.AIR))
         for (item in barrel.inventory) {
             item ?: continue
-            itemFrame.setItem(item)
+            shop.setItem(item)
             item.amount = item.amount - 1
             return
         }
