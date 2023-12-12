@@ -3,6 +3,7 @@ package com.github.Ringoame196.Smartphone.APKs
 import com.github.Ringoame196.APKs
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -13,7 +14,7 @@ import org.bukkit.plugin.Plugin
 class ItemProtectionAPK : APKs {
     override val customModelData = 3
     override fun openGUI(player: Player, plugin: Plugin) {
-        val gui = GUI().make("${ChatColor.YELLOW}アイテム保護", 9)
+        val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}アイテム保護")
         for (i in 0 until gui.size) {
             gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }

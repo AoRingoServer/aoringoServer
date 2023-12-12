@@ -60,7 +60,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.util.Vector
-import java.util.*
+import java.util.UUID
 import kotlin.random.Random
 
 class Events(private val plugin: Plugin) : Listener {

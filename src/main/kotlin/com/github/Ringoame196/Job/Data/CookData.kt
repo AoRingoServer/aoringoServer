@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack
 
 class CookData {
     fun food(name: String, custom: Int): ItemStack {
-        return Item().make(Material.MELON_SLICE, name, null, custom, 1)
+        return Item().make(Material.MELON_SLICE, name, customModelData = custom)
     }
     fun cut(itemStack: ItemStack): ItemStack? {
         return when (itemStack.itemMeta?.displayName) {
@@ -101,7 +101,7 @@ class CookData {
     fun fermentationMix(ingredients: MutableList<String>): ItemStack? {
         val liquor = mutableListOf("${ChatColor.GREEN}麦汁")
         return when (ingredients.toSet()) {
-            liquor.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GOLD}[完成品]ビール", null, 3, 1)
+            liquor.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GOLD}[完成品]ビール", customModelData = 3)
             else -> null
         }
     }

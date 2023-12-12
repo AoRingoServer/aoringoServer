@@ -1,5 +1,6 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -63,11 +64,13 @@ class Scratch {
         return c
     }
     fun result(result: Boolean, player: Player, price: Int) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val moneyUseCase = aoringoPlayer.moneyUseCase
         player.closeInventory()
         if (result) {
             player.sendMessage("${ChatColor.GREEN}[スクラッチ]当選！")
             player.playSound(player, Sound.ENTITY_FIREWORK_ROCKET_BLAST_FAR, 1f, 1f)
-            Money().add(player.uniqueId.toString(), price, true)
+            moneyUseCase.getMoneyFromAdmin(aoringoPlayer, price)
         } else {
             player.sendMessage("${ChatColor.GOLD}[スクラッチ]ハズレ")
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)

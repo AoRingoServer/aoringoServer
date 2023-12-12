@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Job
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard
@@ -60,6 +61,8 @@ class Job {
         }
     }
     private fun giveMoney(player: Player) {
+        val aoringoPlayer = AoringoPlayer(player)
+        val moneyUseCase = aoringoPlayer.moneyUseCase
         val list = mutableListOf(
             Scoreboard().getValue("job", "${ChatColor.YELLOW}料理人"),
             Scoreboard().getValue("job", "${ChatColor.GOLD}ハンター"),
@@ -72,7 +75,7 @@ class Job {
             2 -> 10000
             else -> 0
         }
-        Money().add(player.uniqueId.toString(), giveMoney, true)
+        moneyUseCase.getMoneyFromAdmin(aoringoPlayer, giveMoney)
     }
     fun makeSelectGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}職業選択")
@@ -83,7 +86,7 @@ class Job {
     }
     private fun jobGUI(material: Material, jobName: String): ItemStack {
         val employmentRate = "${Scoreboard().getValue("job",jobName)}人が就職しています"
-        return Item().make(material, jobName, employmentRate, null, 1)
+        return Item().make(material, jobName, employmentRate)
     }
     fun tool(): List<Material> {
         return mutableListOf(
@@ -136,7 +139,7 @@ class Job {
         val fish = mutableListOf(
             Food().makeItem("${ChatColor.RED}マグロ", 31),
             Food().makeItem("${ChatColor.GOLD}サーモン", 32),
-            Item().make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", "", null, 1),
+            Item().make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
             Item().enchant(Enchantment.LURE, 1)
         )
         if (Job().get(player) == "${ChatColor.GOLD}ハンター") {

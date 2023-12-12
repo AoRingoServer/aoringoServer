@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Job
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
@@ -36,14 +37,15 @@ class Mission {
             reward(player)
         } else {
             val gui = Bukkit.createInventory(null, 9, "${ChatColor.GOLD}クエスト")
-            gui.setItem(0, Item().make(Material.PLAYER_HEAD, "${ChatColor.YELLOW}${Scoreboard().getValue("missionCount",player.name)}連続", null, null, 1))
+            gui.setItem(0, Item().make(Material.PLAYER_HEAD, "${ChatColor.YELLOW}${Scoreboard().getValue("missionCount",player.name)}連続"))
             gui.setItem(4, item)
-            gui.setItem(6, Item().make(Material.REDSTONE, "${ChatColor.RED}辞退", null, null, 1))
+            gui.setItem(6, Item().make(Material.REDSTONE, "${ChatColor.RED}辞退"))
             player.openInventory(gui)
         }
     }
     fun reset(player: Player) {
-        AoringoEvents().onErrorEvent(player, "クエストを辞退しました")
+        val aoringoPlayer = AoringoPlayer(player)
+        aoringoPlayer.sendErrorMessage("クエストを辞退しました")
         Scoreboard().set("mission", player.name, 0)
         Scoreboard().set("missionCount", player.name, 0)
         player.closeInventory()
@@ -55,13 +57,13 @@ class Mission {
         Scoreboard().set("missionCount", player.name, 0)
         player.sendMessage("${ChatColor.YELLOW}[クエスト]10連クリア！！")
         when (Job().get(player)) {
-            "${ChatColor.YELLOW}料理人" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", null, 1, 1))
-            "${ChatColor.GRAY}鍛冶屋" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", null, 1, 1))
+            "${ChatColor.YELLOW}料理人" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", customModelData = 1))
+            "${ChatColor.GRAY}鍛冶屋" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", customModelData = 1))
             "${ChatColor.GOLD}ハンター" -> {
                 when (Random.nextInt(1, 101)) {
-                    in 1..90 -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", null, 1, 1))
-                    in 91..95 -> player.inventory.addItem(Item().make(Material.MELON_SLICE, "${ChatColor.YELLOW}力のプロテイン", null, 91, 1))
-                    in 96..100 -> player.inventory.addItem(Item().make(Material.MELON_SLICE, "${ChatColor.RED}ハートのハーブ", null, 92, 1))
+                    in 1..90 -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", customModelData = 1))
+                    in 91..95 -> player.inventory.addItem(Item().make(Material.MELON_SLICE, "${ChatColor.YELLOW}力のプロテイン", customModelData = 91))
+                    in 96..100 -> player.inventory.addItem(Item().make(Material.MELON_SLICE, "${ChatColor.RED}ハートのハーブ", customModelData = 92))
                 }
             }
         }
