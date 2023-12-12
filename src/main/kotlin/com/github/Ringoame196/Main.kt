@@ -20,7 +20,6 @@ class Main : JavaPlugin() {
         Scoreboard().make("protectionContract", "protectionContract")
         Scoreboard().make("admingift", "admingift")
         Scoreboard().make("haveEnderChest", "haveEnderChest")
-        Scoreboard().make("blockCount", "blockCount")
         Scoreboard().make("money", "money")
         Scoreboard().make("status_Power", "status_Power")
         Scoreboard().make("status_HP", "status_HP")

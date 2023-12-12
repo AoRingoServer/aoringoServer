@@ -48,7 +48,6 @@ class AoringoPlayer(val player: Player) {
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
-        scoreboardClass.set("blockCount", player.name, 0)
         permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
         moneyUseCase.displayMoney(this)
         if (player.isOp) {
