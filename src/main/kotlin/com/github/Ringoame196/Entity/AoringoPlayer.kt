@@ -44,7 +44,7 @@ class AoringoPlayer(val player: Player) {
         setProtectionPermission(plugin)
         setTab()
         player.maxHealth = 20.0 + scoreboardClass.getValue("status_HP", player.uniqueId.toString()).toDouble()
-        ResourcePack(plugin ?: return).adaptation(player)
+        ResourcePack(plugin).adaptation(player)
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }

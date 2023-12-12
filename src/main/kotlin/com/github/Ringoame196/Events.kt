@@ -14,6 +14,7 @@ import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
+import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -434,14 +435,15 @@ class Events(private val plugin: Plugin) : Listener {
             }
 
             "${ChatColor.BLUE}プレイヤー評価" -> {
+                val playerRatingAPK = PlayerRatingAPK()
                 e.isCancelled = true
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 if (item.type == Material.PLAYER_HEAD) {
                     if (itemName != player.name) {
-                        Evaluation().voidGUI(player, item)
+                        playerRatingAPK.voidGUI(player, item)
                     }
                 } else if (item.type == Material.STONE_BUTTON) {
-                    Evaluation().void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
+                    playerRatingAPK.void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
                 }
             }
 
