@@ -173,7 +173,7 @@ class Smartphone {
         }
     }
     fun createProtectionGUI(player: Player, name: String): Inventory {
-        val price = LandPurchase().price(player)
+        val price = LandPurchase().calculatePrice(player)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
         gui.setItem(4, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
         return gui

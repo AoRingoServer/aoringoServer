@@ -17,7 +17,7 @@ class LandProtectionAPK:APKs {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}WorldGuardGUI")
         gui.setItem(
             2,
-            item.make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${landPurchase.price(player)}円")
+            item.make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${landPurchase.calculatePrice(player)}円")
         )
         gui.setItem(4, item.make(Material.MAP, "${ChatColor.GREEN}情報"))
         gui.setItem(6, item.make(Material.CHEST, "${ChatColor.AQUA}保護一覧"))

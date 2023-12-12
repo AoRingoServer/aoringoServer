@@ -4,8 +4,6 @@ import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.MoneyManager
-import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import com.sk89q.worldedit.IncompleteRegionException
@@ -129,28 +127,28 @@ class LandPurchase {
             }
         }
     }
-    fun price(player: Player): Int {
+    fun calculatePrice(player: Player): Int {
+        val blockCount = countSelectBlocks(player)
+        return blockCount * if (blockCount <= 256) { 10 } else { 100 }
+    }
+    private fun countSelectBlocks(player: Player):Int {
         val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
 
-        try {
-            val region: Region = session.getSelection(BukkitAdapter.adapt(player.world))
-            if (region is CuboidRegion) {
-                val cuboidRegion = region
-
-                // x軸およびz軸の長さを計算
-                val xLength =
-                    Math.abs(cuboidRegion.maximumPoint.blockX - cuboidRegion.minimumPoint.blockX) + 1
-                val zLength =
-                    Math.abs(cuboidRegion.maximumPoint.blockZ - cuboidRegion.minimumPoint.blockZ) + 1
-
-                // x軸およびz軸上のブロック数を計算
-                val blockCount = xLength * zLength
-                return blockCount * if (blockCount <= 256) { 10 } else { 100 }
-            }
-        } catch (e: IncompleteRegionException) {
-            e.printStackTrace()
+        val region: Region = session.getSelection(BukkitAdapter.adapt(player.world))
+        if (region !is CuboidRegion) {
+            return 0
         }
-        return 0
+        val maximumPoint = region.maximumPoint
+        val minimumPoint = region.minimumPoint
+
+        // x軸およびz軸の長さを計算
+        val xLength =
+            Math.abs(maximumPoint.blockX - minimumPoint.blockX) + 1
+        val zLength =
+            Math.abs(maximumPoint.blockZ - minimumPoint.blockZ) + 1
+
+        // x軸およびz軸上のブロック数を計算
+        return xLength * zLength
     }
 
     fun doesRegionContainProtection(player: Player): Boolean {
