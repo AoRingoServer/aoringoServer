@@ -8,7 +8,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class TeleportAPK:APKs {
+class TeleportAPK : APKs {
     override val customModelData = 4
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")

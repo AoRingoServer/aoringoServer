@@ -10,14 +10,14 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class ItemProtectionAPK:APKs {
+class ItemProtectionAPK : APKs {
     override val customModelData = 3
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = GUI().make("${ChatColor.YELLOW}アイテム保護", 9)
         for (i in 0 until gui.size) {
             gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(3, Item().make(Material.AIR, "", ))
+        gui.setItem(3, Item().make(Material.AIR, "",))
         gui.setItem(6, Item().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
         player.openInventory(gui)
     }

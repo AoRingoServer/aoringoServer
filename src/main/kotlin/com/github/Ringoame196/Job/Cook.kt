@@ -21,7 +21,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class Cook(val food: Food = Food(),val cookData: CookData = CookData()) {
+class Cook(val food: Food = Food(), val cookData: CookData = CookData()) {
     fun furnace(block: Block) {
         val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
         itemFrame.isVisible = false

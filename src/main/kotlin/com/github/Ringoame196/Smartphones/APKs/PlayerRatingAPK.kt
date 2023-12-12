@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 
-class PlayerRatingAPK(private val voidScoreboardName:String = "playerRating", private val voidJudgmentScoreboardName:String = "evaluationVote"):APKs {
+class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") : APKs {
     override val customModelData: Int = 5
     override fun openGUI(player: Player, plugin: Plugin) {
         val guiSize = 18

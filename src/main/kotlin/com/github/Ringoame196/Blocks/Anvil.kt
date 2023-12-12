@@ -18,20 +18,20 @@ class Anvil {
         val itemSlotNumber = 2
         val materialSlotNumber = 4
         val compositeButtonSlotNumber = 7
-        InstallationAir(gui,itemSlotNumber)
-        InstallationAir(gui,materialSlotNumber)
-        InstallationCompositeButton(gui,compositeButtonSlotNumber)
+        InstallationAir(gui, itemSlotNumber)
+        InstallationAir(gui, materialSlotNumber)
+        InstallationCompositeButton(gui, compositeButtonSlotNumber)
         return gui
     }
-    private fun fillGUI(gui: Inventory){
+    private fun fillGUI(gui: Inventory) {
         for (i in 0 until gui.size) {
             gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
     }
-    private fun InstallationAir(gui: Inventory,slot:Int){
+    private fun InstallationAir(gui: Inventory, slot: Int) {
         gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
     }
-    private fun InstallationCompositeButton(gui: Inventory,slot: Int){
+    private fun InstallationCompositeButton(gui: Inventory, slot: Int) {
         gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
     }
     fun click(player: Player, item: ItemStack, e: InventoryClickEvent) {
@@ -104,8 +104,8 @@ class Anvil {
         player.inventory.addItem(completedItem)
         val itemSlotNumber = 2
         val materialSlotNumber = 4
-        InstallationAir(gui,itemSlotNumber)
-        InstallationAir(gui,materialSlotNumber)
+        InstallationAir(gui, itemSlotNumber)
+        InstallationAir(gui, materialSlotNumber)
     }
     private fun enchantItem(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
         for ((enchant, level) in beforeItem.itemMeta?.enchants ?: return afterItem) {

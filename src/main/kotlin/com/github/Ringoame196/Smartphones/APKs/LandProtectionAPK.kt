@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class LandProtectionAPK:APKs {
+class LandProtectionAPK : APKs {
     override val customModelData = 6
     override fun openGUI(player: Player, plugin: Plugin) {
         val item = Item()

@@ -68,9 +68,9 @@ class Block {
         val minimumPerformance = 10
         val maxPerformance = 20
         val performances = Random.nextInt(minimumPerformance, maxPerformance)
-        showDirections(plugin,gui,player,performances)
+        showDirections(plugin, gui, player, performances)
     }
-    private fun showDirections(plugin: Plugin, gui: InventoryView, player: Player, performances:Int){
+    private fun showDirections(plugin: Plugin, gui: InventoryView, player: Player, performances: Int) {
         val enchantBookSlot = 4
         val frequency = 5L
         val pieces = enchantBookList.size - 1
@@ -82,14 +82,14 @@ class Block {
                 gui.setItem(enchantBookSlot, enchantBookList[Random.nextInt(0, pieces)])
                 if (performances == executions) {
                     val enchantBook = gui.getItem(enchantBookSlot)
-                    giveEnchantBookFromPlayer(player,enchantBook?:return)
+                    giveEnchantBookFromPlayer(player, enchantBook ?: return)
                     player.closeInventory()
                     this.cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, frequency) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    private fun giveEnchantBookFromPlayer(player: Player, enchantBook:ItemStack){
+    private fun giveEnchantBookFromPlayer(player: Player, enchantBook: ItemStack) {
         player.inventory.addItem(enchantBook)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }

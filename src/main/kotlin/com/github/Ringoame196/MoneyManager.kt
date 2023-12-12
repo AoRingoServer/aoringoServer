@@ -19,7 +19,7 @@ class MoneyManager {
         val accountID = targetAccount.getAccountID()
         Scoreboard().set("money", accountID, money)
     }
-    fun isTargetPlayer(targetAccount: Account):Boolean{
+    fun isTargetPlayer(targetAccount: Account): Boolean {
         return targetAccount is PlayerAccount
     }
 
@@ -27,7 +27,7 @@ class MoneyManager {
         val money = getMoney(targetAccount) + amount
         setMoney(targetAccount, money)
     }
-    fun canGetMoneyFromAdmin(adminAccount: Admin, amount: Int):Boolean {
+    fun canGetMoneyFromAdmin(adminAccount: Admin, amount: Int): Boolean {
         return getMoney(adminAccount) > amount
     }
     fun tradeMoney(fromAccount: Account, targetAccount: Account, amount: Int) {

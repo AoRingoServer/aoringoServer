@@ -38,7 +38,7 @@ class Cage {
         item.itemMeta = meta // 更新したメタデータをアイテムに設定
         return item
     }
-    private fun acquisitionMaterial(number:Int):Material{
+    private fun acquisitionMaterial(number: Int): Material {
         val materials = listOf(
             Material.MELON_SLICE,
             Material.WHEAT,
@@ -47,7 +47,7 @@ class Cage {
         )
         try {
             return materials[number]
-        } catch(e: IndexOutOfBoundsException) {
+        } catch (e: IndexOutOfBoundsException) {
             throw RuntimeException("Materialが見つかりませんでした")
         }
     }
@@ -79,8 +79,8 @@ class Cage {
         cage.itemMeta = meta
         player.inventory.setItemInMainHand(cage)
     }
-    private fun compressionMaterial(material: Material):Int{
-        return when(material) {
+    private fun compressionMaterial(material: Material): Int {
+        return when (material) {
             Material.MELON_SLICE -> 0
             Material.WHEAT -> 1
             Material.CARROT -> 2

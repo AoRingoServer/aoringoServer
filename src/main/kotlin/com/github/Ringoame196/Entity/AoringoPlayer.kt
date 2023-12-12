@@ -235,7 +235,7 @@ class AoringoPlayer(val player: Player) {
             sendErrorMessage("お金が足りません")
             return
         }
-        moneyUseCase.reduceMoney(this,money)
+        moneyUseCase.reduceMoney(this, money)
         val setBookMessage = Contract().writeContractDate(meta, player, money)
         meta.setPage(1, setBookMessage)
         item.setItemMeta(meta)

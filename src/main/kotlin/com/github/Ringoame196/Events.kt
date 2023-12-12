@@ -201,7 +201,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 val totalAmount = item.amount * money
-                moneyUseCase.addMoney(aoringoPlayer,totalAmount)
+                moneyUseCase.addMoney(aoringoPlayer, totalAmount)
                 player.inventory.remove(item)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
@@ -381,7 +381,7 @@ class Events(private val plugin: Plugin) : Listener {
                 if (itemName == "${ChatColor.YELLOW}カゴ") {
                     e.isCancelled = true
                 }
-                val lore = item.itemMeta?.lore?.get(0)?:""
+                val lore = item.itemMeta?.lore?.get(0) ?: ""
                 if (lore.contains("消費期限:")) {
                     return
                 }
@@ -687,10 +687,10 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         e.isCancelled = true
-        player.foodLevel = food.calculateFoodLevel(player,item)
-        player.saturation = hiddenFoodLevel //隠し満腹度
-        food.increaseStatus(player,item)
-        Item().reduceItem(player,item)
+        player.foodLevel = food.calculateFoodLevel(player, item)
+        player.saturation = hiddenFoodLevel // 隠し満腹度
+        food.increaseStatus(player, item)
+        Item().reduceItem(player, item)
     }
 
     @EventHandler

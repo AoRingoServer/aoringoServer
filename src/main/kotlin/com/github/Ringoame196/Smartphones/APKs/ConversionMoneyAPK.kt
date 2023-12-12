@@ -8,7 +8,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class ConversionMoneyAPK:APKs {
+class ConversionMoneyAPK : APKs {
     override val customModelData: Int = 2
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}スマートフォン")

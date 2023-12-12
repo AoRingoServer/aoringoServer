@@ -30,7 +30,7 @@ class LandPurchase {
         val memberRemoveSlot = 5
         val prepaymentButtonSlot = 8
         val protectionScoreboadName = "protectionContract"
-        val contractPeriod = Scoreboard().getValue(protectionScoreboadName,name)
+        val contractPeriod = Scoreboard().getValue(protectionScoreboadName, name)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
         player.openInventory(gui)
         gui.setItem(memberAddSlot, item.make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
@@ -69,7 +69,7 @@ class LandPurchase {
         if (money > playerMoney) {
             aoringoPlayer.sendErrorMessage("お金が足りません")
         } else {
-            moneyUseCase.tradeMoney(aoringoPlayer,Admin(),money)
+            moneyUseCase.tradeMoney(aoringoPlayer, Admin(), money)
             Scoreboard().set("protectionContract", name, 2)
             player.sendMessage("${ChatColor.AQUA}前払いしました")
         }
@@ -120,7 +120,7 @@ class LandPurchase {
                 WorldGuard().addOwnerToRegion(name, player)
                 player.closeInventory()
                 player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-                moneyUseCase.tradeMoney(aoringoPlayer,Admin(),money)
+                moneyUseCase.tradeMoney(aoringoPlayer, Admin(), money)
                 if (player.world.name != "shop") { return }
                 Yml().addToList(plugin, "", "conservationLand", "protectedName", name)
                 Scoreboard().set("protectionContract", name, 1)
@@ -131,7 +131,7 @@ class LandPurchase {
         val blockCount = countSelectBlocks(player)
         return blockCount * if (blockCount <= 256) { 10 } else { 100 }
     }
-    private fun countSelectBlocks(player: Player):Int {
+    private fun countSelectBlocks(player: Player): Int {
         val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
 
         val region: Region = session.getSelection(BukkitAdapter.adapt(player.world))

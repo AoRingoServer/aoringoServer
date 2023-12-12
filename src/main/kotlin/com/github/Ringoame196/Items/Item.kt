@@ -34,7 +34,7 @@ class Item {
     }
     fun reduceMainItem(player: Player) {
         val playerItem = player.inventory.itemInMainHand.clone()
-        reduceItem(player,playerItem)
+        reduceItem(player, playerItem)
     }
 
     fun enchant(enchant: Enchantment, level: Int): ItemStack {
@@ -163,7 +163,7 @@ class Item {
         }
         player.sendMessage("${ChatColor.AQUA}Great gift for you!")
     }
-    fun reduceItem(player: Player,item:ItemStack){
+    fun reduceItem(player: Player, item: ItemStack) {
         val reduceItem = item.clone()
         reduceItem.amount = 1
         player.inventory.remove(reduceItem)

@@ -8,7 +8,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class OPAPK:APKs {
+class OPAPK : APKs {
     override val customModelData: Int = 7
     override fun openGUI(player: Player, plugin: Plugin) {
         val item = Item()

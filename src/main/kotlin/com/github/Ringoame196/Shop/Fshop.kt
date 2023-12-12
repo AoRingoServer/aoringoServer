@@ -4,23 +4,19 @@ import com.github.Ringoame196.Account
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.MoneyUseCase
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
-import org.bukkit.block.Sign
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.util.UUID
 
-class Fshop(private val shop:ItemFrame):Account {
-    private val shopInfo:String = shop.customName?: throw RuntimeException("ショップ情報を取得できませんでした")
+class Fshop(private val shop: ItemFrame) : Account {
+    private val shopInfo: String = shop.customName ?: throw RuntimeException("ショップ情報を取得できませんでした")
     private val moneyUseCase = MoneyUseCase()
     override fun getAccountID(): String {
         return acquisitionAccountName()
@@ -29,7 +25,7 @@ class Fshop(private val shop:ItemFrame):Account {
         val location = shop.location
         return WorldGuard().getOwnerOfRegion(location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(location)?.contains(player.uniqueId) == true
     }
-    private fun acquisitionAccountName():String{
+    private fun acquisitionAccountName(): String {
         val userIDStartIndex = shopInfo.indexOf("userID:") + 7
         val userIDEndIndex = shopInfo.indexOf(",", userIDStartIndex)
 
@@ -69,7 +65,7 @@ class Fshop(private val shop:ItemFrame):Account {
             return
         }
         sender.inventory.addItem(item)
-        moneyUseCase.tradeMoney(aoringoPlayer,this,price)
+        moneyUseCase.tradeMoney(aoringoPlayer, this, price)
         sender.sendMessage("${ChatColor.GREEN}購入しました")
         sender.playSound(sender, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         replenishment()
@@ -81,7 +77,7 @@ class Fshop(private val shop:ItemFrame):Account {
         val block = shop.location.add(0.0, -1.0, 0.0).block
         if (block.type != Material.BARREL) { return }
         val barrel = block.state as Barrel
-            shop.setItem(ItemStack(Material.AIR))
+        shop.setItem(ItemStack(Material.AIR))
         for (item in barrel.inventory) {
             item ?: continue
             shop.setItem(item)

@@ -30,7 +30,7 @@ class Discord {
             e.printStackTrace()
         }
     }
-    fun makeJson(player: Player, userName: String, icon: String, color: String, title: String, message: String, webhook: String):String {
+    fun makeJson(player: Player, userName: String, icon: String, color: String, title: String, message: String, webhook: String): String {
         val location = "${player.world.name}x:${player.location.x.toInt()}y:${player.location.y.toInt()}z:${player.location.z.toInt()}"
         val json = """
 {

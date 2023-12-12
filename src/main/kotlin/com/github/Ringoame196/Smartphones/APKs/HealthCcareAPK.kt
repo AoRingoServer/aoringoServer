@@ -9,7 +9,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class HealthCcareAPK:APKs {
+class HealthCcareAPK : APKs {
     override val customModelData: Int = 9
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}ヘルスケア")

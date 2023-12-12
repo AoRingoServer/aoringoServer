@@ -29,8 +29,8 @@ class Contract {
             return
         }
         val itemName = item.itemMeta?.displayName
-        val money = itemName?.replace("${ChatColor.RED}契約本@", "")?.replace("円契約", "")?.toInt()?:0
-        aoringoPlayer.moneyUseCase.addMoney(aoringoPlayer,money)
+        val money = itemName?.replace("${ChatColor.RED}契約本@", "")?.replace("円契約", "")?.toInt() ?: 0
+        aoringoPlayer.moneyUseCase.addMoney(aoringoPlayer, money)
         player.inventory.setItemInMainHand(ItemStack(Material.AIR))
     }
     fun copyBlock(item: ItemStack, player: Player): ItemStack {

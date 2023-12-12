@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    val apkList = mapOf<String,APKs>(
+    val apkList = mapOf<String, APKs>(
         "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
         "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK(),
         "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
@@ -53,7 +53,7 @@ class Smartphone {
         val apkCount = minOf(smartphoneSlots.size, playerHaveAPKList.size)
         for (i in 0 until apkCount) {
             val apkName = playerHaveAPKList[i]
-            val customModelData = apkList[apkName]?.customModelData?:0
+            val customModelData = apkList[apkName]?.customModelData ?: 0
             gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
         }
         return gui
@@ -67,27 +67,27 @@ class Smartphone {
             player.openInventory(createGUI(plugin, player))
             return
         }
-        apkList[apkName]?.openGUI(player,plugin)
-        teleportWorldFromPlayer(player,apkName)
+        apkList[apkName]?.openGUI(player, plugin)
+        teleportWorldFromPlayer(player, apkName)
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             moneyItem(player, money, item)
         }
     }
-    private fun getWorldSpawnLocation(worldName:String): Location? {
+    private fun getWorldSpawnLocation(worldName: String): Location? {
         return Bukkit.getWorld(worldName)?.spawnLocation
     }
-    private fun teleportWorldFromPlayer(player:Player,worldName:String){
-        val worldID = mapOf<String,String>(
+    private fun teleportWorldFromPlayer(player: Player, worldName: String) {
+        val worldID = mapOf<String, String>(
             "${ChatColor.GOLD}ロビー" to "world",
             "${ChatColor.GREEN}生活ワールド" to "Home",
             "${ChatColor.AQUA}資源ワールド" to "Survival",
             "${ChatColor.YELLOW}ショップ" to "shop"
         )
         val playerLocation = player.location
-        val location = getWorldSpawnLocation(worldID[worldName] ?:return)
-        player.teleport(location?:playerLocation)
+        val location = getWorldSpawnLocation(worldID[worldName] ?: return)
+        player.teleport(location ?: playerLocation)
     }
     fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
         when (item.itemMeta?.displayName) {
@@ -192,7 +192,7 @@ class Smartphone {
         player.performCommand("rg claim $name")
         if (WorldGuard().getProtection(world, name)) {
             player.sendMessage("${ChatColor.GREEN}[WG]正常に保護をかけました")
-            MoneyManager().tradeMoney(Admin(),playerAccount,price)
+            MoneyManager().tradeMoney(Admin(), playerAccount, price)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         }
         player.closeInventory()
@@ -207,7 +207,7 @@ class Smartphone {
             val giveItem = item.clone()
             giveItem.amount = 1
             player.inventory.addItem(giveItem)
-            MoneyManager().tradeMoney(Admin(),playerAccount,money)
+            MoneyManager().tradeMoney(Admin(), playerAccount, money)
         }
         player.closeInventory()
     }

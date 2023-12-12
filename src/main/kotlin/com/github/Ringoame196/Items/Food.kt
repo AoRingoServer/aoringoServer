@@ -12,8 +12,8 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class Food{
-    private fun returnFoodHasLevel(item: ItemStack):Int {
+class Food {
+    private fun returnFoodHasLevel(item: ItemStack): Int {
         val itemName = item.itemMeta?.displayName
         return when (itemName) {
             "おにぎり" -> 6
@@ -24,16 +24,16 @@ class Food{
             else -> 2
         }
     }
-    fun calculateFoodLevel(player: Player,food: ItemStack):Int {
+    fun calculateFoodLevel(player: Player, food: ItemStack): Int {
         val playerFoodLevel = player.foodLevel
         val foodHasLevel = returnFoodHasLevel(food)
         val totalFoodLevel = playerFoodLevel + foodHasLevel
-        return if(totalFoodLevel > 20) { 20 } else { totalFoodLevel }
+        return if (totalFoodLevel > 20) { 20 } else { totalFoodLevel }
     }
-    fun increaseStatus(player: Player, food: ItemStack){
+    fun increaseStatus(player: Player, food: ItemStack) {
         val aoringoPlayer = AoringoPlayer(player)
         val foodName = food.itemMeta?.displayName
-        when(foodName){
+        when (foodName) {
             "${ChatColor.YELLOW}力のプロテイン" -> aoringoPlayer.addPower()
             "${ChatColor.RED}ハートのハーブ" -> aoringoPlayer.addMaxHP()
         }
@@ -72,15 +72,15 @@ class Food{
         }
         return false
     }
-    private fun compareDateFromCurreantDate(date:Date): Long {
+    private fun compareDateFromCurreantDate(date: Date): Long {
         val currentDate = Date()
         val diff = currentDate.time - date.time
         return convertMillisecondsToDay(diff)
     }
-    private fun convertMillisecondsToDay(diff:Long):Long{
+    private fun convertMillisecondsToDay(diff: Long): Long {
         return diff / (1000 * 60 * 60 * 24)
     }
-    private fun takeOutDate(lore:String): Date {
+    private fun takeOutDate(lore: String): Date {
         val expiration = lore
         val dateStr = expiration.replace("消費期限:", "")
         val dateFormat = SimpleDateFormat("yyyy/MM/dd") // フォーマットに合わせて変更
