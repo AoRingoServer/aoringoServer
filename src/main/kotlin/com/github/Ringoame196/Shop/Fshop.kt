@@ -45,7 +45,7 @@ class Fshop(private val shop: ItemFrame) : Account {
         val priceSubstring = shopInfo.substring(index + 6)
         return priceSubstring.toIntOrNull() ?: throw RuntimeException("価格の変換に失敗しました")
     }
-    fun buyGUI(item: ItemStack): Inventory {
+    fun makeBuyGUI(item: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
         val price = acquisitionPrice()
         gui.setItem(0, Item().make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
@@ -71,7 +71,7 @@ class Fshop(private val shop: ItemFrame) : Account {
         replenishment()
         if (shop.item.type == Material.AIR) {
             sender.closeInventory()
-        } else { sender.openInventory(buyGUI(shop.item)) }
+        } else { sender.openInventory(makeBuyGUI(shop.item)) }
     }
     private fun replenishment() {
         val block = shop.location.add(0.0, -1.0, 0.0).block

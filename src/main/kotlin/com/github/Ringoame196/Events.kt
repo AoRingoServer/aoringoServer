@@ -244,7 +244,7 @@ class Events(private val plugin: Plugin) : Listener {
                     aoringoPlayer.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
-                fshop.buyGUI(item)
+                player.openInventory(fshop.makeBuyGUI(item))
             }
         } else if (name == "まな板") {
             if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
