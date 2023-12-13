@@ -26,7 +26,7 @@ class Item {
         if (customModelData != 0) {
             meta?.setCustomModelData(customModelData)
         }
-        if (!lore.isEmpty()) {
+        if (lore.isNotEmpty()) {
             meta?.lore = mutableListOf(lore)
         }
         item.setItemMeta(meta)
