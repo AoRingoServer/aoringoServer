@@ -235,7 +235,8 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item.itemMeta?.displayName
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name.contains("@Fshop")) {
-            val fshop = Fshop(entity)
+            val fshop = Fshop(itemFrame)
+            player.sendMessage(itemFrame.uniqueId)
             if (item.type == Material.AIR && fshop.isOwner(player)) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
             } else {
@@ -401,6 +402,7 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
             "${ChatColor.BLUE}Fショップ" -> {
+                e.isCancelled = true
                 val shopInfoSlot = 0
                 val shopUUIDinfoNumber = 0
                 val shopInfo = gui.getItem(shopInfoSlot) ?: return
@@ -408,7 +410,6 @@ class Events(private val plugin: Plugin) : Listener {
                 val shop = Bukkit.getEntity(UUID.fromString(shopUUID))
                 if (shop !is ItemFrame) { return }
                 val fshop = Fshop(shop)
-                e.isCancelled = true
                 if (itemName == "${ChatColor.GREEN}購入") {
                     val goodsSlot = 3
                     fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return,)

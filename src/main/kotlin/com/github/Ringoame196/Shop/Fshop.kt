@@ -45,12 +45,13 @@ class Fshop(private val shop: ItemFrame) : Account {
         val priceSubstring = shopInfo.substring(index + 6)
         return priceSubstring.toIntOrNull() ?: throw RuntimeException("価格の変換に失敗しました")
     }
-    fun makeBuyGUI(item: ItemStack): Inventory {
+    fun makeBuyGUI(goods: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
         val price = acquisitionPrice()
-        gui.setItem(0, Item().make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
-        gui.setItem(3, item)
-        gui.setItem(4, Item().make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
+        val item = Item()
+        gui.setItem(0, item.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
+        gui.setItem(3, goods)
+        gui.setItem(4, item.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
         return gui
     }
     fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack) {
