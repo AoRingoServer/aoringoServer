@@ -79,12 +79,12 @@ class Job {
     }
     fun makeSelectGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}職業選択")
-        gui.setItem(2, jobGUI(Material.IRON_SWORD, "${ChatColor.GOLD}ハンター"))
-        gui.setItem(4, jobGUI(Material.MILK_BUCKET, "${ChatColor.YELLOW}料理人"))
-        gui.setItem(6, jobGUI(Material.ANVIL, "${ChatColor.GRAY}鍛冶屋"))
+        gui.setItem(2, showPeopleEmployedNumber(Material.IRON_SWORD, "${ChatColor.GOLD}ハンター"))
+        gui.setItem(4, showPeopleEmployedNumber(Material.MILK_BUCKET, "${ChatColor.YELLOW}料理人"))
+        gui.setItem(6, showPeopleEmployedNumber(Material.ANVIL, "${ChatColor.GRAY}鍛冶屋"))
         return gui
     }
-    private fun jobGUI(material: Material, jobName: String): ItemStack {
+    private fun showPeopleEmployedNumber(material: Material, jobName: String): ItemStack {
         val employmentRate = "${Scoreboard().getValue("job",jobName)}人が就職しています"
         return Item().make(material, jobName, employmentRate)
     }
