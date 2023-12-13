@@ -13,11 +13,11 @@ class MoneyUseCase {
         val sender = aoringoPlayer.player
         val admin = Admin()
         if (moneyManager.canGetMoneyFromAdmin(admin, amount)) {
+            moneyManager.tradeMoney(admin, aoringoPlayer.playerAccount, amount)
+        } else {
             aoringoPlayer.sendErrorMessage("運営のお金が不足したため 運営手形が発行されました")
             sender.sendMessage("${ChatColor.GOLD}運営に発行された手形をお渡しください")
             sender.inventory.addItem(Item().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${amount}円)", "手形を運営に渡してください", 11, 1))
-        } else {
-            moneyManager.tradeMoney(admin, aoringoPlayer.playerAccount, amount)
         }
     }
     fun addMoney(aoringoPlayer: AoringoPlayer, amount: Int) {
