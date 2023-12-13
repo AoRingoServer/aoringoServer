@@ -183,7 +183,6 @@ class AoringoPlayer(val player: Player) {
         if (downBlock.type != Material.BARREL) { return }
         val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
         itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
-        sign.type = Material.AIR
     }
     fun makeLandPurchase(sign: Sign) {
         sign.setLine(0, "${ChatColor.YELLOW}[土地販売]")

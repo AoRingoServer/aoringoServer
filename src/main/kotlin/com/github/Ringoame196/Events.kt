@@ -86,12 +86,16 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
-        if (item != playerItem) { return }
+        if (item != playerItem && item.type != Material.AIR) { return }
         when (block?.type) {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
                 when (sign.getLine(0)) {
-                    "Fshop" -> aoringoPlayer.makeShop(sign)
+                    "Fshop" -> {
+                        e.isCancelled = true
+                        aoringoPlayer.makeShop(sign)
+                        sign.block.type = Material.AIR
+                    }
                     "[土地販売]" -> {
                         if (!player.isOp) { return }
                         aoringoPlayer.makeLandPurchase(sign)
