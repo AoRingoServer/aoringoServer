@@ -50,14 +50,14 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         itemFrame.changeTransparency(ironPlate)
         val armorStand = cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
         val world = ironPlate.world
+        val burnedTime = completeTime * 2
+        val item = ironPlate.item
+        if (food.isExpirationDateHasExpired(player, item)) {
+            armorStand.remove()
+            return
+        }
         object : BukkitRunnable() {
             override fun run() {
-                val item = ironPlate.item
-                if (food.isExpirationDateHasExpired(player, item)) {
-                    this.cancel()
-                    armorStand.remove()
-                    return
-                }
                 c++
                 world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
                 smoker.burnTime = 40
@@ -65,7 +65,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
                 smoker.update()
                 if (c == completeTime) {
                     completeBaking(item, player, ironPlate)
-                } else if (c == (completeTime * 2) || item.type == Material.AIR) {
+                } else if (c == burnedTime || item.type == Material.AIR) {
                     if (item.type != Material.AIR) {
                         ironPlate.setItem(ItemStack(Material.AIR))
                         world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
