@@ -22,13 +22,13 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class Cook(val food: Food = Food(), val cookData: CookData = CookData(), val cookArmorStand: ArmorStand = ArmorStand()) {
-    val armorStandTag = "cookGame"
-    fun furnace(block: Block) {
+class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {
+    private val armorStandTag = "cookGame"
+    fun summonIronPlate(block: Block) {
         val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
         itemFrame.isVisible = false
     }
-    fun cuttingBoard(block: Block) {
+    fun summonChoppingBoard(block: Block) {
         val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
         itemFrame.customName = "まな板"
     }

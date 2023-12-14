@@ -149,7 +149,7 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
                 if (upBlock?.type != Material.AIR) { return }
-                Cook().cuttingBoard(block)
+                Cook().summonChoppingBoard(block)
                 Item().reduceMainItem(player)
             }
             "${ChatColor.YELLOW}おたま" -> {
@@ -653,7 +653,7 @@ class Events(private val plugin: Plugin) : Listener {
         when (block.type) {
             Material.SMOKER -> {
                 if (Job().get(player) == "${ChatColor.YELLOW}料理人") {
-                    Cook().furnace(block)
+                    Cook().summonIronPlate(block)
                 } else {
                     e.isCancelled = true
                     aoringoPlayer.sendErrorMessage("使えるのは料理人だけです")
