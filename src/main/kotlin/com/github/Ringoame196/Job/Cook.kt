@@ -44,42 +44,46 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         val shortening = level * 2
         return cookTime - shortening
     }
-    fun bake(plugin: Plugin, player: Player, entity: ItemFrame, smoker: Smoker) {
+    fun bakingFoods(plugin: Plugin, player: Player, ironPlate: ItemFrame, smoker: Smoker) {
         var c = 0
         val completeTime = calculateCookTime(10,player)
-        itemFrame.changeTransparency(entity)
-        val armorStand = cookArmorStand.summonMarker(entity.location, "", armorStandTag)
-        val world = entity.world
+        itemFrame.changeTransparency(ironPlate)
+        val armorStand = cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
+        val world = ironPlate.world
         object : BukkitRunnable() {
             override fun run() {
-                val item = entity.item
-                if (food.isExpirationDateHasExpired(player, entity.item)) {
+                val item = ironPlate.item
+                if (food.isExpirationDateHasExpired(player, item)) {
                     this.cancel()
                     armorStand.remove()
                     return
                 }
                 c++
-                world.playSound(entity.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
+                world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
                 smoker.burnTime = 40
                 armorStand.customName = "${ChatColor.YELLOW}${c}秒"
                 smoker.update()
                 if (c == completeTime) {
-                    val bakeItem = cookData.bake(item) ?: return
-                    if (!isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
-                        return
-                    }
-                    entity.setItem(bakeItem)
-                    world.playSound(entity.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
+                    completeBaking(item, player, ironPlate)
                 } else if (c == (completeTime * 2) || item.type == Material.AIR) {
                     if (item.type != Material.AIR) {
-                        entity.setItem(ItemStack(Material.AIR))
-                        world.playSound(entity.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
+                        ironPlate.setItem(ItemStack(Material.AIR))
+                        world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
                     }
                     armorStand.remove()
                     this.cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, 20) // 1秒間隔 (20 ticks) でタスクを実行
+    }
+    private fun completeBaking(item: ItemStack,player: Player,ironPlate: ItemFrame){
+        val bakeItem = cookData.bake(item) ?: return
+        val world = player.world
+        if (!isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
+            return
+        }
+        ironPlate.setItem(bakeItem)
+        world.playSound(ironPlate.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }
     fun cut(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand

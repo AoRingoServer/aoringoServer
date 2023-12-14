@@ -315,7 +315,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.sendMessage("${ChatColor.RED}クールタイム中")
                 return
             }
-            Cook().bake(plugin, player, entity, smoker)
+            Cook().bakingFoods(plugin, player, entity, smoker)
         }
     }
 
