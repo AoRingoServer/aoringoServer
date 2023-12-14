@@ -18,11 +18,12 @@ import kotlin.random.Random
 
 class JobManager {
     private val jobList = mutableListOf("無職", "${ChatColor.YELLOW}料理人", "${ChatColor.GOLD}ハンター", "${ChatColor.GRAY}鍛冶屋")
+    private val jobScoreboardName = "job"
     fun setJob(player: Player, id: Int) {
-        Scoreboard().set("job", player.uniqueId.toString(), id)
+        Scoreboard().set(jobScoreboardName, player.uniqueId.toString(), id)
     }
     fun get(player: Player): String {
-        val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
+        val jobID = Scoreboard().getValue(jobScoreboardName, player.uniqueId.toString())
         return jobList[jobID]
     }
     fun prefix(player: Player) {
@@ -48,9 +49,9 @@ class JobManager {
         item.amount = item.amount - 1
         for (i in 0 until jobList.size) {
             if (jobList[i] != jobName) { continue }
-            Scoreboard().reduce("job", get(player), 1)
+            Scoreboard().reduce(jobScoreboardName, get(player), 1)
             setJob(player, i)
-            Scoreboard().add("job", get(player), 1)
+            Scoreboard().add(jobScoreboardName, get(player), 1)
             prefix(player)
             player.sendMessage("${jobName}に就職しました")
             player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -64,9 +65,9 @@ class JobManager {
         val aoringoPlayer = AoringoPlayer(player)
         val moneyUseCase = aoringoPlayer.moneyUseCase
         val list = mutableListOf(
-            Scoreboard().getValue("job", "${ChatColor.YELLOW}料理人"),
-            Scoreboard().getValue("job", "${ChatColor.GOLD}ハンター"),
-            Scoreboard().getValue("job", "${ChatColor.GRAY}鍛冶屋"),
+            Scoreboard().getValue(jobScoreboardName, "${ChatColor.YELLOW}料理人"),
+            Scoreboard().getValue(jobScoreboardName, "${ChatColor.GOLD}ハンター"),
+            Scoreboard().getValue(jobScoreboardName, "${ChatColor.GRAY}鍛冶屋"),
         )
         val rankList = list.sortedByDescending { it }
         val giveMoney = when (rankList.indexOf(Scoreboard().getValue("job", JobManager().get(player)))) {
@@ -85,7 +86,7 @@ class JobManager {
         return gui
     }
     private fun showPeopleEmployedNumber(material: Material, jobName: String): ItemStack {
-        val employmentRate = "${Scoreboard().getValue("job",jobName)}人が就職しています"
+        val employmentRate = "${Scoreboard().getValue(jobScoreboardName,jobName)}人が就職しています"
         return Item().make(material, jobName, employmentRate)
     }
     fun tool(): List<Material> {
