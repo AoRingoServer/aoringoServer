@@ -24,12 +24,15 @@ import kotlin.random.Random
 
 class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {
     private val armorStandTag = "cookGame"
+    private val itemFrame = com.github.Ringoame196.Entity.ItemFrame()
     fun summonIronPlate(block: Block) {
-        val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
+        val location = block.location.clone().add(0.0,1.0,0.0)
+        val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.isVisible = false
     }
     fun summonChoppingBoard(block: Block) {
-        val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
+        val location = block.location.clone().add(0.0,1.0,0.0)
+        val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.customName = "まな板"
     }
     fun bake(plugin: Plugin, player: Player, entity: ItemFrame, smoker: Smoker) {
