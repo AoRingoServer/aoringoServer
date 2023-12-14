@@ -26,27 +26,27 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
     private val armorStandTag = "cookGame"
     private val itemFrame = com.github.Ringoame196.Entity.ItemFrame()
     fun summonIronPlate(block: Block) {
-        val location = block.location.clone().add(0.0,1.0,0.0)
+        val location = block.location.clone().add(0.0, 1.0, 0.0)
         val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.isVisible = false
     }
     fun summonChoppingBoard(block: Block) {
-        val location = block.location.clone().add(0.0,1.0,0.0)
+        val location = block.location.clone().add(0.0, 1.0, 0.0)
         val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.customName = "まな板"
     }
-    private fun acquisitionCookLevel(uuid:String):Int{
+    private fun acquisitionCookLevel(uuid: String): Int {
         val scoreboardName = "cookingLevel"
-        return Scoreboard().getValue(scoreboardName,uuid)
+        return Scoreboard().getValue(scoreboardName, uuid)
     }
-    private fun calculateCookTime(cookTime:Int,player: Player):Int{
+    private fun calculateCookTime(cookTime: Int, player: Player): Int {
         val level = acquisitionCookLevel(player.uniqueId.toString())
         val shortening = level * 2
         return cookTime - shortening
     }
     fun bakingFoods(plugin: Plugin, player: Player, ironPlate: ItemFrame, smoker: Smoker) {
         var c = 0
-        val completeTime = calculateCookTime(10,player)
+        val completeTime = calculateCookTime(10, player)
         itemFrame.changeTransparency(ironPlate)
         val armorStand = cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
         val world = ironPlate.world
@@ -76,7 +76,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
             }
         }.runTaskTimer(plugin, 0L, 20) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    private fun completeBaking(item: ItemStack,player: Player,ironPlate: ItemFrame){
+    private fun completeBaking(item: ItemStack, player: Player, ironPlate: ItemFrame) {
         val bakeItem = cookData.bake(item) ?: return
         val world = player.world
         if (!isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {

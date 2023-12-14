@@ -4,11 +4,11 @@ import org.bukkit.Location
 import org.bukkit.entity.ItemFrame
 
 class ItemFrame {
-    fun summonItemFrame(location: Location):ItemFrame{
+    fun summonItemFrame(location: Location): ItemFrame {
         val world = location.world
         return world?.spawn(location, org.bukkit.entity.ItemFrame::class.java)!!
     }
-    fun changeTransparency(itemFrame: ItemFrame){
+    fun changeTransparency(itemFrame: ItemFrame) {
         itemFrame.isVisible = false
     }
 }
