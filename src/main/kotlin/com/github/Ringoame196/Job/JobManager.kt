@@ -16,7 +16,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-class Job {
+class JobManager {
     private val jobList = mutableListOf("無職", "${ChatColor.YELLOW}料理人", "${ChatColor.GOLD}ハンター", "${ChatColor.GRAY}鍛冶屋")
     fun setJob(player: Player, id: Int) {
         Scoreboard().set("job", player.uniqueId.toString(), id)
@@ -69,7 +69,7 @@ class Job {
             Scoreboard().getValue("job", "${ChatColor.GRAY}鍛冶屋"),
         )
         val rankList = list.sortedByDescending { it }
-        val giveMoney = when (rankList.indexOf(Scoreboard().getValue("job", Job().get(player)))) {
+        val giveMoney = when (rankList.indexOf(Scoreboard().getValue("job", JobManager().get(player)))) {
             0 -> 1000
             1 -> 5000
             2 -> 10000
@@ -142,14 +142,14 @@ class Job {
             Item().make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
             Item().enchant(Enchantment.LURE, 1)
         )
-        if (Job().get(player) == "${ChatColor.GOLD}ハンター") {
+        if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") {
             fish.add(Food().makeItem("${ChatColor.RED}タコ", 38))
             fish.add(Food().makeItem("イカ", 35))
             fish.add(Food().makeItem("${ChatColor.AQUA}エビ", 28))
             fish.add(ItemStack(Material.LEATHER))
             fish.add(Food().makeItem("${ChatColor.BLACK}海苔", 37))
         }
-        if (Job().get(player) == "${ChatColor.GOLD}ハンター" || Random.nextInt(0, 10) == 0) {
+        if (JobManager().get(player) == "${ChatColor.GOLD}ハンター" || Random.nextInt(0, 10) == 0) {
             return fish.get(Random.nextInt(0, fish.size))
         }
         val rubbish = mutableListOf(

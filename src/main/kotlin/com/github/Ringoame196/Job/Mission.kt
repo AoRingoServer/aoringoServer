@@ -56,7 +56,7 @@ class Mission {
     private fun reward(player: Player) {
         Scoreboard().set("missionCount", player.name, 0)
         player.sendMessage("${ChatColor.YELLOW}[クエスト]10連クリア！！")
-        when (Job().get(player)) {
+        when (JobManager().get(player)) {
             "${ChatColor.YELLOW}料理人" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", customModelData = 1))
             "${ChatColor.GRAY}鍛冶屋" -> player.inventory.addItem(Item().make(Material.GOLD_INGOT, "${ChatColor.YELLOW}クエストコイン", customModelData = 1))
             "${ChatColor.GOLD}ハンター" -> {

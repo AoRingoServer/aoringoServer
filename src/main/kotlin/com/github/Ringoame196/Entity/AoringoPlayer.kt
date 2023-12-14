@@ -9,7 +9,7 @@ import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.Job.Job
+import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.PlayerAccount
 import com.github.Ringoame196.ResourcePack
@@ -59,7 +59,7 @@ class AoringoPlayer(val player: Player) {
         val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
         val jobColor = mutableListOf("", "${ChatColor.DARK_PURPLE}", "${ChatColor.DARK_RED}", "${ChatColor.GRAY}")
         val jobPrefix = jobColor[jobID]
-        player.setDisplayName("$jobPrefix${player.displayName}@${Job().get(player)}")
+        player.setDisplayName("$jobPrefix${player.displayName}@${JobManager().get(player)}")
         player.setPlayerListName("$jobPrefix${player.playerListName}")
     }
     private fun levelupMessage(player: Player, message: String) {
@@ -154,7 +154,7 @@ class AoringoPlayer(val player: Player) {
         player.openInventory(Block().makeEnchantGUI())
     }
     fun useAnvil() {
-        if (Job().get(player) != "${ChatColor.GRAY}鍛冶屋") {
+        if (JobManager().get(player) != "${ChatColor.GRAY}鍛冶屋") {
             sendErrorMessage("金床は鍛冶屋以外使用できません")
             return
         }

@@ -9,7 +9,7 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Cook
-import com.github.Ringoame196.Job.Job
+import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
@@ -109,7 +109,7 @@ class Events(private val plugin: Plugin) : Listener {
                 aoringoPlayer.useAnvil()
             }
             Material.SMITHING_TABLE -> {
-                if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") { return }
+                if (JobManager().get(player) == "${ChatColor.GRAY}鍛冶屋") { return }
                 e.isCancelled = true
                 aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
             }
@@ -144,7 +144,7 @@ class Events(private val plugin: Plugin) : Listener {
             else -> {}
         }
         when (itemName) {
-            "職業スター" -> player.openInventory(Job().makeSelectGUI())
+            "職業スター" -> player.openInventory(JobManager().makeSelectGUI())
             "まな板" -> {
                 e.isCancelled = true
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
@@ -248,7 +248,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(fshop.makeBuyGUI(item))
             }
         } else if (name == "まな板") {
-            if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+            if (JobManager().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
                 aoringoPlayer.sendErrorMessage("料理人のみ包丁を使用することができます")
                 return
@@ -266,7 +266,7 @@ class Events(private val plugin: Plugin) : Listener {
         when (itemName) {
             "衣" -> {
                 e.isCancelled = true
-                if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                if (JobManager().get(player) != "${ChatColor.YELLOW}料理人") {
                     aoringoPlayer.sendErrorMessage("料理人のみ衣をつけることができます")
                     return
                 }
@@ -275,7 +275,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}混ぜハンドル" -> {
                 if (block.type != Material.BARREL) { return }
-                if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+                if (JobManager().get(player) != "${ChatColor.YELLOW}料理人") {
                     e.isCancelled = true
                     aoringoPlayer.sendErrorMessage("料理人のみ混ぜることができます")
                     return
@@ -300,7 +300,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
         }
         if (block.type == Material.SMOKER) {
-            if (Job().get(player) != "${ChatColor.YELLOW}料理人") {
+            if (JobManager().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
                 aoringoPlayer.sendErrorMessage("料理人のみコンロを使用することができます")
                 return
@@ -366,7 +366,7 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)
             "${ChatColor.BLUE}職業選択" -> {
                 e.isCancelled = true
-                Job().change(player, item.itemMeta?.displayName ?: return)
+                JobManager().change(player, item.itemMeta?.displayName ?: return)
             }
             "${ChatColor.BLUE}ヘルスケア" -> {
                 e.isCancelled = true
@@ -546,16 +546,16 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
         } else if (block.type.toString().contains("ORE")) {
-            if (Job().get(player) == "${ChatColor.GOLD}ハンター") { return }
+            if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") { return }
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         }
         when (block.type) {
             Material.GRASS, Material.TALL_GRASS -> {
                 if (WorldGuard().getOwnerOfRegion(player.location) != null) { return }
-                if (Job().get(player) != "${ChatColor.GOLD}ハンター") { return }
+                if (JobManager().get(player) != "${ChatColor.GOLD}ハンター") { return }
                 if (Random.nextInt(0, 3) != 0) { return }
-                Job().giveVegetables(block.location)
+                JobManager().giveVegetables(block.location)
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
@@ -601,18 +601,18 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (displayName.contains("契約書")) {
             e.currentItem = Item().copyBlock(item, player)
         }
-        if (Job().get(player) == "${ChatColor.GRAY}鍛冶屋") {
-            if (Job().tool().contains(type)) {
+        if (JobManager().get(player) == "${ChatColor.GRAY}鍛冶屋") {
+            if (JobManager().tool().contains(type)) {
                 if (e.isShiftClick) {
                     aoringoPlayer.sendErrorMessage("ツールを一括作成はできません")
                     e.isCancelled = true
                 } else {
-                    e.currentItem?.durability = Job().craftRandomDurable(type).toShort()
+                    e.currentItem?.durability = JobManager().craftRandomDurable(type).toShort()
                 }
             }
             return
         }
-        if (!Job().tool().contains(type) && item.hasItemMeta()) {
+        if (!JobManager().tool().contains(type) && item.hasItemMeta()) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         } else if (ngItem.contains(type)) {
@@ -652,7 +652,7 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         when (block.type) {
             Material.SMOKER -> {
-                if (Job().get(player) == "${ChatColor.YELLOW}料理人") {
+                if (JobManager().get(player) == "${ChatColor.YELLOW}料理人") {
                     Cook().summonIronPlate(block)
                 } else {
                     e.isCancelled = true
@@ -677,7 +677,7 @@ class Events(private val plugin: Plugin) : Listener {
         }
         // プレイヤーが魚を釣り上げた場合
         e.caught?.remove()
-        hook.world.dropItem(player.location, Job().givefish(player))
+        hook.world.dropItem(player.location, JobManager().givefish(player))
     }
 
     @EventHandler
