@@ -35,10 +35,18 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.customName = "まな板"
     }
+    private fun acquisitionCookLevel(uuid:String):Int{
+        val scoreboardName = "cookingLevel"
+        return Scoreboard().getValue(scoreboardName,uuid)
+    }
+    private fun calculateCookTime(cookTime:Int,player: Player):Int{
+        val level = acquisitionCookLevel(player.uniqueId.toString())
+        val shortening = level * 2
+        return cookTime - shortening
+    }
     fun bake(plugin: Plugin, player: Player, entity: ItemFrame, smoker: Smoker) {
         var c = 0
-        val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
-        val completeTime = 10 - (level * 2)
+        val completeTime = calculateCookTime(10,player)
         if (entity.isVisible) { entity.isVisible = false }
         val armorStand = cookArmorStand.summonMarker(entity.location, "", armorStandTag)
         val world = entity.world
