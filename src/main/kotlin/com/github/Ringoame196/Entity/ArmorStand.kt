@@ -2,10 +2,9 @@ package com.github.Ringoame196.Entity
 
 import org.bukkit.Location
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Marker
 
 class ArmorStand {
-    fun summonMarker(location: Location, name: String,tag:String = ""): ArmorStand {
+    fun summonMarker(location: Location, name: String, tag: String = ""): ArmorStand {
         val world = location.world
         val armorStand: ArmorStand = world!!.spawn(location, org.bukkit.entity.ArmorStand::class.java)
 

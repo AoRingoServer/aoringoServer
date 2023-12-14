@@ -22,7 +22,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class Cook(val food: Food = Food(), val cookData: CookData = CookData(),val cookArmorStand:ArmorStand = ArmorStand()) {
+class Cook(val food: Food = Food(), val cookData: CookData = CookData(), val cookArmorStand: ArmorStand = ArmorStand()) {
     val armorStandTag = "cookGame"
     fun furnace(block: Block) {
         val itemFrame = block.world.spawn(block.location.clone().add(0.0, 1.0, 0.0), org.bukkit.entity.ItemFrame::class.java)
@@ -37,7 +37,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(),val cook
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         val completeTime = 10 - (level * 2)
         if (entity.isVisible) { entity.isVisible = false }
-        val armorStand = cookArmorStand.summonMarker(entity.location, "",armorStandTag)
+        val armorStand = cookArmorStand.summonMarker(entity.location, "", armorStandTag)
         val world = entity.world
         object : BukkitRunnable() {
             override fun run() {
@@ -190,7 +190,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(),val cook
         Item().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (food.isExpirationDateHasExpired(player, item)) { return }
-        val timer = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), " ",armorStandTag)
+        val timer = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), " ", armorStandTag)
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 15 - (level * 2)
         object : BukkitRunnable() {
@@ -212,7 +212,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(),val cook
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
     private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
-        val armorStand = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), "",armorStandTag)
+        val armorStand = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), "", armorStandTag)
         val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
         var c = 30 - (level * 2)
         val barrel = block.state as Barrel
