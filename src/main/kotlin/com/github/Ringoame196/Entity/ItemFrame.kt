@@ -8,5 +8,7 @@ class ItemFrame {
         val world = location.world
         return world?.spawn(location, org.bukkit.entity.ItemFrame::class.java)!!
     }
-    fun
+    fun changeTransparency(itemFrame: ItemFrame){
+        itemFrame.isVisible = false
+    }
 }

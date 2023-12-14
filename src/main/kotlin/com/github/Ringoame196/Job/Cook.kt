@@ -47,7 +47,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
     fun bake(plugin: Plugin, player: Player, entity: ItemFrame, smoker: Smoker) {
         var c = 0
         val completeTime = calculateCookTime(10,player)
-        if (entity.isVisible) { entity.isVisible = false }
+        itemFrame.changeTransparency(entity)
         val armorStand = cookArmorStand.summonMarker(entity.location, "", armorStandTag)
         val world = entity.world
         object : BukkitRunnable() {
