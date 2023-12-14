@@ -19,11 +19,14 @@ import kotlin.random.Random
 class JobManager {
     private val jobList = mutableListOf("無職", "${ChatColor.YELLOW}料理人", "${ChatColor.GOLD}ハンター", "${ChatColor.GRAY}鍛冶屋")
     private val jobScoreboardName = "job"
+    private val scoreboard = Scoreboard()
+    private val food = Food()
+    private val item = Item()
     fun setJob(player: Player, id: Int) {
-        Scoreboard().set(jobScoreboardName, player.uniqueId.toString(), id)
+        scoreboard.set(jobScoreboardName, player.uniqueId.toString(), id)
     }
     fun get(player: Player): String {
-        val jobID = Scoreboard().getValue(jobScoreboardName, player.uniqueId.toString())
+        val jobID = scoreboard.getValue(jobScoreboardName, player.uniqueId.toString())
         return jobList[jobID]
     }
     fun prefix(player: Player) {
@@ -49,9 +52,9 @@ class JobManager {
         item.amount = item.amount - 1
         for (i in 0 until jobList.size) {
             if (jobList[i] != jobName) { continue }
-            Scoreboard().reduce(jobScoreboardName, get(player), 1)
+            scoreboard.reduce(jobScoreboardName, get(player), 1)
             setJob(player, i)
-            Scoreboard().add(jobScoreboardName, get(player), 1)
+            scoreboard.add(jobScoreboardName, get(player), 1)
             prefix(player)
             player.sendMessage("${jobName}に就職しました")
             player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
@@ -65,9 +68,9 @@ class JobManager {
         val aoringoPlayer = AoringoPlayer(player)
         val moneyUseCase = aoringoPlayer.moneyUseCase
         val list = mutableListOf(
-            Scoreboard().getValue(jobScoreboardName, "${ChatColor.YELLOW}料理人"),
-            Scoreboard().getValue(jobScoreboardName, "${ChatColor.GOLD}ハンター"),
-            Scoreboard().getValue(jobScoreboardName, "${ChatColor.GRAY}鍛冶屋"),
+            scoreboard.getValue(jobScoreboardName, "${ChatColor.YELLOW}料理人"),
+            scoreboard.getValue(jobScoreboardName, "${ChatColor.GOLD}ハンター"),
+            scoreboard.getValue(jobScoreboardName, "${ChatColor.GRAY}鍛冶屋"),
         )
         val rankList = list.sortedByDescending { it }
         val giveMoney = when (rankList.indexOf(Scoreboard().getValue("job", JobManager().get(player)))) {
@@ -126,22 +129,22 @@ class JobManager {
     }
     fun giveVegetables(location: Location) {
         val vegetables = mutableListOf(
-            Food().makeItem("${ChatColor.GREEN}キュウリ", 1),
-            Food().makeItem("${ChatColor.GOLD}キャベツ", 2),
-            Food().makeItem("${ChatColor.GOLD}スパイス", 3),
-            Food().makeItem("稲", 4),
-            Food().makeItem("${ChatColor.DARK_PURPLE}なす", 5),
-            Food().makeItem("${ChatColor.GOLD}たまねぎ", 6),
-            Food().makeItem("${ChatColor.RED}トマト", 7),
+            food.makeItem("${ChatColor.GREEN}キュウリ", 1),
+            food.makeItem("${ChatColor.GOLD}キャベツ", 2),
+            food.makeItem("${ChatColor.GOLD}スパイス", 3),
+            food.makeItem("稲", 4),
+            food.makeItem("${ChatColor.DARK_PURPLE}なす", 5),
+            food.makeItem("${ChatColor.GOLD}たまねぎ", 6),
+            food.makeItem("${ChatColor.RED}トマト", 7),
         )
         location.world?.dropItem(location, vegetables[Random.nextInt(0, vegetables.size)])
     }
     fun givefish(player: Player): ItemStack {
         val fish = mutableListOf(
-            Food().makeItem("${ChatColor.RED}マグロ", 31),
-            Food().makeItem("${ChatColor.GOLD}サーモン", 32),
-            Item().make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
-            Item().enchant(Enchantment.LURE, 1)
+            food.makeItem("${ChatColor.RED}マグロ", 31),
+            food.makeItem("${ChatColor.GOLD}サーモン", 32),
+            item.make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
+            item.enchant(Enchantment.LURE, 1)
         )
         if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") {
             fish.add(Food().makeItem("${ChatColor.RED}タコ", 38))
@@ -164,7 +167,7 @@ class JobManager {
     }
     fun titleStar(player: Player) {
         player.setPlayerListName(
-            player.playerListName + when (Scoreboard().getValue("cookLevel", player.uniqueId.toString())) {
+            player.playerListName + when (scoreboard.getValue("cookLevel", player.uniqueId.toString())) {
                 1 -> "${ChatColor.YELLOW}★"
                 2 -> "${ChatColor.YELLOW}★★"
                 3 -> "${ChatColor.YELLOW}★★★"
