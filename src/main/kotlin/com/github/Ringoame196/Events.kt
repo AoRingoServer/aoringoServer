@@ -507,8 +507,8 @@ class Events(private val plugin: Plugin) : Listener {
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
             val scratchItem = Scratch().click(itemList)
             e.currentItem = scratchItem
-            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
-                Scratch().result(Scratch().check(gui, scratchItem) == 3, player, 10000)
+            if (Scratch().countItem(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
+                Scratch().result(Scratch().countItem(gui, scratchItem) == 3, player, 10000)
             }
         } else if (title == "${ChatColor.YELLOW}金リンゴスクラッチ" && e.clickedInventory != player.inventory) {
             e.isCancelled = true
@@ -520,8 +520,8 @@ class Events(private val plugin: Plugin) : Listener {
             )
             val scratchItem = Scratch().click(itemList)
             e.currentItem = scratchItem
-            if (Scratch().check(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
-                Scratch().result(Scratch().check(gui, scratchItem) == 9, player, 1000000)
+            if (Scratch().countItem(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
+                Scratch().result(Scratch().countItem(gui, scratchItem) == 9, player, 1000000)
             }
         }
     }

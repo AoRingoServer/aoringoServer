@@ -31,37 +31,13 @@ class Scratch {
     fun click(itemList: MutableList<Material>): ItemStack {
         return ItemStack(itemList[Random.nextInt(0, itemList.size)])
     }
-    fun check(gui: InventoryView, item: ItemStack): Int {
-        if (item.type == Material.BARRIER) { return 0 }
-        var c = 0
-        if (gui.getItem(3) == item) {
-            c += 1
+    fun countItem(gui: InventoryView, item: ItemStack): Int {
+        if (item.type == Material.BARRIER) {
+            return 0
         }
-        if (gui.getItem(4) == item) {
-            c += 1
-        }
-        if (gui.getItem(5) == item) {
-            c += 1
-        }
-        if (gui.getItem(12) == item) {
-            c += 1
-        }
-        if (gui.getItem(13) == item) {
-            c += 1
-        }
-        if (gui.getItem(14) == item) {
-            c += 1
-        }
-        if (gui.getItem(21) == item) {
-            c += 1
-        }
-        if (gui.getItem(22) == item) {
-            c += 1
-        }
-        if (gui.getItem(23) == item) {
-            c += 1
-        }
-        return c
+
+        val slots = listOf(3, 4, 5, 12, 13, 14, 21, 22, 23)
+        return slots.count { gui.getItem(it) == item }
     }
     fun result(result: Boolean, player: Player, price: Int) {
         val aoringoPlayer = AoringoPlayer(player)

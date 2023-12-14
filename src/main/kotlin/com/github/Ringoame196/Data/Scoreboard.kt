@@ -2,8 +2,7 @@ package com.github.Ringoame196
 
 import org.bukkit.Bukkit
 
-class Scoreboard {
-    val scoreboard = Bukkit.getScoreboardManager()?.mainScoreboard
+class Scoreboard(private val scoreboard: org.bukkit.scoreboard.Scoreboard? = Bukkit.getScoreboardManager()?.mainScoreboard) {
     fun make(id: String, name: String) {
         if (existence(id)) { return }
         scoreboard?.registerNewObjective(id, "dummy", name)
