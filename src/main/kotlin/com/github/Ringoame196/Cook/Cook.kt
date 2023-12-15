@@ -38,51 +38,6 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         val shortening = level * 2
         return cookTime - shortening
     }
-
-    fun cut(item: ItemStack, player: Player, entity: ItemFrame) {
-        val playerItem = player.inventory.itemInMainHand
-        if (playerItem.itemMeta?.customModelData != 1) { return }
-        playerItem.durability = (playerItem.durability + 4).toShort()
-        player.inventory.setItemInMainHand(playerItem)
-        if (!knife(player)) {
-            player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
-            if (playerItem.durability >= playerItem.type.maxDurability) {
-                player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-                player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-            }
-            return
-        }
-        if (food.isExpirationDateHasExpired(player, entity.item)) { return }
-        val cutItem = cookData.cut(item) ?: return
-        if (!isCookLevel(cutItem.itemMeta?.displayName?:return, player)) {
-            return
-        }
-        player.inventory.addItem(cutItem)
-        entity.setItem(ItemStack(Material.AIR))
-        player.world.playSound(player.location, Sound.ENTITY_SHEEP_SHEAR, 1f, 1f)
-        if (playerItem.durability >= playerItem.type.maxDurability) {
-            player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-            player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-        }
-    }
-    private fun knife(player: Player): Boolean {
-        val knife = player.inventory.itemInMainHand
-        val lore = knife.itemMeta?.lore?.get(0) ?: return false
-        val sharpness = lore.replace("切れ味:", "").toInt()
-        if (sharpness > 10) {
-            val chance = Random.nextInt(11, 25)
-            if (chance <= sharpness) {
-                chance(player)
-            }
-            return true
-        }
-        return Random.nextInt(0, (10 - sharpness)) <= 0
-    }
-    private fun chance(player: Player) {
-        val item = player.inventory.itemInMainHand
-        item.durability = (item.durability - 1).toShort()
-        player.inventory.setItemInMainHand(item)
-    }
     fun knifeSharpness(item: ItemStack): ItemStack {
         val max = when (item.type) {
             Material.STONE_SWORD -> 8
