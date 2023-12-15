@@ -23,68 +23,23 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
 class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {
-    private val armorStandTag = "cookGame"
+    val armorStandTag = "cookGame"
     private val itemFrame = com.github.Ringoame196.Entity.ItemFrame()
-    fun summonIronPlate(block: Block) {
-        val location = block.location.clone().add(0.0, 1.0, 0.0)
-        val itemFrame = itemFrame.summonItemFrame(location)
-        itemFrame.isVisible = false
-    }
     fun summonChoppingBoard(block: Block) {
         val location = block.location.clone().add(0.0, 1.0, 0.0)
         val itemFrame = itemFrame.summonItemFrame(location)
         itemFrame.customName = "まな板"
     }
-    private fun acquisitionCookLevel(uuid: String): Int {
+    fun acquisitionCookLevel(uuid: String): Int {
         val scoreboardName = "cookingLevel"
         return Scoreboard().getValue(scoreboardName, uuid)
     }
-    private fun calculateCookTime(cookTime: Int, player: Player): Int {
+    fun calculateCookTime(cookTime: Int, player: Player): Int {
         val level = acquisitionCookLevel(player.uniqueId.toString())
         val shortening = level * 2
         return cookTime - shortening
     }
-    fun bakingFoods(plugin: Plugin, player: Player, ironPlate: ItemFrame, smoker: Smoker) {
-        var c = 0
-        val completeTime = calculateCookTime(10, player)
-        itemFrame.changeTransparency(ironPlate)
-        val armorStand = cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
-        val world = ironPlate.world
-        val burnedTime = completeTime * 2
-        val item = ironPlate.item
-        if (food.isExpirationDateHasExpired(player, item)) {
-            armorStand.remove()
-            return
-        }
-        object : BukkitRunnable() {
-            override fun run() {
-                c++
-                world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
-                smoker.burnTime = 40
-                armorStand.customName = "${ChatColor.YELLOW}${c}秒"
-                smoker.update()
-                if (c == completeTime) {
-                    completeBaking(item, player, ironPlate)
-                } else if (c == burnedTime || item.type == Material.AIR) {
-                    if (item.type != Material.AIR) {
-                        ironPlate.setItem(ItemStack(Material.AIR))
-                        world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
-                    }
-                    armorStand.remove()
-                    this.cancel()
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 20) // 1秒間隔 (20 ticks) でタスクを実行
-    }
-    private fun completeBaking(item: ItemStack, player: Player, ironPlate: ItemFrame) {
-        val bakeItem = cookData.bake(item) ?: return
-        val world = player.world
-        if (!isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
-            return
-        }
-        ironPlate.setItem(bakeItem)
-        world.playSound(ironPlate.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
-    }
+
     fun cut(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.itemMeta?.customModelData != 1) { return }
