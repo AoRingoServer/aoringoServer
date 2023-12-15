@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Cook
 
-import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Job.Data.CookData
 import org.bukkit.Material
