@@ -15,12 +15,12 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
 class GasBurner {
-    val cook = Cook()
-    val itemFrame = ItemFrame()
-    val food = Food()
-    val armorStandTag = cook.armorStandTag
-    val cookData = CookData()
-    val armorStand = ArmorStand()
+    private val cook = Cook()
+    private val itemFrame = ItemFrame()
+    private val food = Food()
+    private val armorStandTag = cook.armorStandTag
+    private val cookData = CookData()
+    private val armorStand = ArmorStand()
     fun summonIronPlate(block: Block) {
         val location = block.location.clone().add(0.0, 1.0, 0.0)
         val ironPlate = itemFrame.summonItemFrame(location)
@@ -42,8 +42,9 @@ class GasBurner {
             override fun run() {
                 c++
                 val ingredient = ironPlate.item
+                val power:Short = 40
                 world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
-                smoker.burnTime = 40
+                smoker.burnTime = power
                 display.customName = "${ChatColor.YELLOW}${c}秒"
                 smoker.update()
                 if (c == completeTime) {
