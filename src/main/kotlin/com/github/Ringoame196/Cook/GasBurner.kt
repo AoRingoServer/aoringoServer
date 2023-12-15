@@ -42,7 +42,7 @@ class GasBurner {
             override fun run() {
                 c++
                 val ingredient = ironPlate.item
-                val power:Short = 40
+                val power: Short = 40
                 world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
                 smoker.burnTime = power
                 display.customName = "${ChatColor.YELLOW}${c}秒"
@@ -57,7 +57,7 @@ class GasBurner {
             }
         }.runTaskTimer(plugin, 0L, 20) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    private fun singeFoods(ironPlate: org.bukkit.entity.ItemFrame){
+    private fun singeFoods(ironPlate: org.bukkit.entity.ItemFrame) {
         val world = ironPlate.world
         val item = ironPlate.item
         if (item.type != Material.AIR) { return }

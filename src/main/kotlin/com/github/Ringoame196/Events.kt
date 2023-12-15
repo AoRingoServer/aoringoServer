@@ -1,6 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.Block
+import com.github.Ringoame196.Cook.ChoppingBoard
 import com.github.Ringoame196.Cook.Cook
 import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Data.Company
@@ -249,6 +250,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(fshop.makeBuyGUI(item))
             }
         } else if (name == "まな板") {
+            val choppingBoard = ChoppingBoard()
             if (JobManager().get(player) != "${ChatColor.YELLOW}料理人") {
                 e.isCancelled = true
                 aoringoPlayer.sendErrorMessage("料理人のみ包丁を使用することができます")
@@ -261,7 +263,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (mainItem.type.toString().contains("SWORD")) {
                 e.isCancelled = true
             }
-            Cook().cut(item, player, entity)
+            choppingBoard.cutFoods(item, player, entity)
             return
         }
         when (itemName) {

@@ -16,8 +16,7 @@ class ChoppingBoard {
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.itemMeta?.customModelData != 1) { return }
-        playerItem.durability = (playerItem.durability + 4).toShort()
-        player.inventory.setItemInMainHand(playerItem)
+        player.inventory.setItemInMainHand(reduceDurability(playerItem))
         if (!knife(player)) {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
             if (playerItem.durability >= playerItem.type.maxDurability) {
@@ -38,6 +37,13 @@ class ChoppingBoard {
             player.inventory.setItemInMainHand(ItemStack(Material.AIR))
             player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
         }
+    }
+    private fun reduceDurability(knife: ItemStack): ItemStack {
+        val durability = knife.durability
+        val decreasingNumber = 4
+        val newDurability: Short = (durability - decreasingNumber).toShort()
+        knife.durability = newDurability
+        return knife
     }
     private fun knife(player: Player): Boolean {
         val knife = player.inventory.itemInMainHand
