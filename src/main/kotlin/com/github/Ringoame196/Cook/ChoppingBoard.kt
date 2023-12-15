@@ -41,7 +41,7 @@ class ChoppingBoard {
     private fun reduceDurability(knife: ItemStack): ItemStack {
         val durability = knife.durability
         val decreasingNumber = 4
-        val newDurability: Short = (durability - decreasingNumber).toShort()
+        val newDurability = (durability + decreasingNumber).toShort()
         knife.durability = newDurability
         return knife
     }
