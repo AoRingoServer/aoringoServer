@@ -49,15 +49,19 @@ class GasBurner {
                 if (c == completeTime) {
                     completeBaking(ingredient, player, ironPlate)
                 } else if (c == burnedTime || ingredient.type == Material.AIR) {
-                    if (ingredient.type != Material.AIR) {
-                        ironPlate.setItem(ItemStack(Material.AIR))
-                        world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
-                    }
+                    singeFoods(ironPlate)
                     display.remove()
                     this.cancel()
                 }
             }
         }.runTaskTimer(plugin, 0L, 20) // 1秒間隔 (20 ticks) でタスクを実行
+    }
+    private fun singeFoods(ironPlate: org.bukkit.entity.ItemFrame){
+        val world = ironPlate.world
+        val item = ironPlate.item
+        if (item.type != Material.AIR) { return }
+        ironPlate.setItem(ItemStack(Material.AIR))
+        world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
     }
     private fun completeBaking(item: ItemStack, player: Player, ironPlate: org.bukkit.entity.ItemFrame) {
         val bakeItem = cookData.bake(item) ?: return
