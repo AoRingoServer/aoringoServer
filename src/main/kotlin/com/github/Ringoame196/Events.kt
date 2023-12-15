@@ -9,6 +9,7 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Cook.Cook
+import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
@@ -306,6 +307,7 @@ class Events(private val plugin: Plugin) : Listener {
                 return
             }
             val smoker = block.state as Smoker
+            val gasBurner = GasBurner()
             if (item.type != Material.AIR) {
                 return
             }
@@ -315,7 +317,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.sendMessage("${ChatColor.RED}クールタイム中")
                 return
             }
-            Cook().bakingFoods(plugin, player, entity, smoker)
+            gasBurner.bakingFoods(plugin, player, entity, smoker)
         }
     }
 
@@ -652,8 +654,9 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         when (block.type) {
             Material.SMOKER -> {
+                val gasBurner = GasBurner()
                 if (JobManager().get(player) == "${ChatColor.YELLOW}料理人") {
-                    Cook().summonIronPlate(block)
+                    gasBurner.summonIronPlate(block)
                 } else {
                     e.isCancelled = true
                     aoringoPlayer.sendErrorMessage("使えるのは料理人だけです")
