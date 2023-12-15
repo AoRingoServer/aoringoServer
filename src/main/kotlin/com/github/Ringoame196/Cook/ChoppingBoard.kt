@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Cook
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Job.Data.CookData
 import org.bukkit.Material
@@ -15,27 +16,28 @@ class ChoppingBoard {
     private val cook = Cook()
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
+        val aoringoPlayer = AoringoPlayer(player)
         if (playerItem.itemMeta?.customModelData != 1) { return }
-        player.inventory.setItemInMainHand(reduceDurability(playerItem))
-        if (!knife(player)) {
+        if (!checkCut(playerItem)) {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
-            if (playerItem.durability >= playerItem.type.maxDurability) {
-                player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-                player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
-            }
             return
         }
-        if (food.isExpirationDateHasExpired(player, entity.item)) { return }
+        if (food.isExpirationDateHasExpired(player, entity.item)) {
+            aoringoPlayer.sendErrorMessage("消費期限が切れています")
+            return
+        }
         val cutItem = cookData.cut(item) ?: return
-        if (!cook.isCookLevel(cutItem.itemMeta?.displayName?:return, player)) {
+        val ingredientName = cutItem.itemMeta?.displayName
+        if (!cook.isCookLevel(ingredientName?:return, player)) {
             return
         }
+        val usedKnife = reduceDurability(playerItem)
+        player.inventory.setItemInMainHand(usedKnife)
         player.inventory.addItem(cutItem)
         entity.setItem(ItemStack(Material.AIR))
         player.world.playSound(player.location, Sound.ENTITY_SHEEP_SHEAR, 1f, 1f)
-        if (playerItem.durability >= playerItem.type.maxDurability) {
-            player.inventory.setItemInMainHand(ItemStack(Material.AIR))
-            player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+        if (usedKnife.durability >= playerItem.type.maxDurability) {
+            breakKnife(player)
         }
     }
     private fun reduceDurability(knife: ItemStack): ItemStack {
@@ -45,22 +47,14 @@ class ChoppingBoard {
         knife.durability = newDurability
         return knife
     }
-    private fun knife(player: Player): Boolean {
-        val knife = player.inventory.itemInMainHand
+    private fun breakKnife(player: Player) {
+        player.inventory.setItemInMainHand(ItemStack(Material.AIR))
+        player.playSound(player, Sound.ENTITY_ITEM_BREAK, 1f, 1f)
+    }
+    private fun checkCut(knife: ItemStack): Boolean {
         val lore = knife.itemMeta?.lore?.get(0) ?: return false
         val sharpness = lore.replace("切れ味:", "").toInt()
-        if (sharpness > 10) {
-            val chance = Random.nextInt(11, 25)
-            if (chance <= sharpness) {
-                chance(player)
-            }
-            return true
-        }
+        if (sharpness > 10) { return true }
         return Random.nextInt(0, (10 - sharpness)) <= 0
-    }
-    private fun chance(player: Player) {
-        val item = player.inventory.itemInMainHand
-        item.durability = (item.durability - 1).toShort()
-        player.inventory.setItemInMainHand(item)
     }
 }
