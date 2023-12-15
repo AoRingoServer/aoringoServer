@@ -14,7 +14,6 @@ import org.bukkit.Sound
 import org.bukkit.World
 import org.bukkit.block.Barrel
 import org.bukkit.block.Block
-import org.bukkit.block.Smoker
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack

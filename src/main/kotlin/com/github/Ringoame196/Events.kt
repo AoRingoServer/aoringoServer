@@ -1,6 +1,8 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.Block
+import com.github.Ringoame196.Cook.Cook
+import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.WorldGuard
@@ -8,8 +10,6 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.Cook.Cook
-import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
