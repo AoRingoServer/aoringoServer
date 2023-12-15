@@ -41,14 +41,15 @@ class GasBurner {
         object : BukkitRunnable() {
             override fun run() {
                 c++
+                val ingredient = ironPlate.item
                 world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
                 smoker.burnTime = 40
                 display.customName = "${ChatColor.YELLOW}${c}秒"
                 smoker.update()
                 if (c == completeTime) {
-                    completeBaking(item, player, ironPlate)
-                } else if (c == burnedTime || item.type == Material.AIR) {
-                    if (item.type != Material.AIR) {
+                    completeBaking(ingredient, player, ironPlate)
+                } else if (c == burnedTime || ingredient.type == Material.AIR) {
+                    if (ingredient.type != Material.AIR) {
                         ironPlate.setItem(ItemStack(Material.AIR))
                         world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
                     }
