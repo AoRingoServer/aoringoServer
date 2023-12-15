@@ -16,14 +16,12 @@ class ChoppingBoard {
     private val cook = Cook()
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
-        val aoringoPlayer = AoringoPlayer(player)
         if (playerItem.itemMeta?.customModelData != 1) { return }
         if (!checkCut(playerItem)) {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
             return
         }
         if (food.isExpirationDateHasExpired(player, entity.item)) {
-            aoringoPlayer.sendErrorMessage("消費期限が切れています")
             return
         }
         val cutItem = cookData.cut(item) ?: return
@@ -32,13 +30,11 @@ class ChoppingBoard {
             return
         }
         val usedKnife = reduceDurability(playerItem)
-        player.inventory.setItemInMainHand(usedKnife)
         player.inventory.addItem(cutItem)
         entity.setItem(ItemStack(Material.AIR))
         player.world.playSound(player.location, Sound.ENTITY_SHEEP_SHEAR, 1f, 1f)
-        if (usedKnife.durability >= playerItem.type.maxDurability) {
-            breakKnife(player)
-        }
+        player.inventory.setItemInMainHand(usedKnife)
+        if (usedKnife.durability >= playerItem.type.maxDurability) { breakKnife(player) }
     }
     private fun reduceDurability(knife: ItemStack): ItemStack {
         val durability = knife.durability
