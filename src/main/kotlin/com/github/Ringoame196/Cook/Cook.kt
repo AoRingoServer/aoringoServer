@@ -1,4 +1,4 @@
-package com.github.Ringoame196.Job
+package com.github.Ringoame196.Cook
 
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food

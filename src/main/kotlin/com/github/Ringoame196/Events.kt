@@ -8,7 +8,7 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.Job.Cook
+import com.github.Ringoame196.Cook.Cook
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
