@@ -606,18 +606,18 @@ class Events(private val plugin: Plugin) : Listener {
             e.currentItem = Cook().knifeSharpness(item)
         } else if (displayName.contains("契約書")) {
             e.currentItem = itemClass.copyBlock(item, player)
-        }
-        if (job.get(player) == "${ChatColor.GRAY}鍛冶屋") {
-            return
-        }
-        if (!JobManager().tool().contains(type)) {
-            e.isCancelled = true
-            aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         } else if (ngItem.contains(type)) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
         } else if (type == Material.WRITTEN_BOOK && displayName.contains("${ChatColor.RED}契約本@")) {
             e.currentItem = Contract().copyBlock(item, player)
+        }
+        if (job.get(player) == "${ChatColor.GRAY}鍛冶屋") {
+            return
+        }
+        if (job.tool().contains(type)) {
+            e.isCancelled = true
+            aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         }
     }
 
