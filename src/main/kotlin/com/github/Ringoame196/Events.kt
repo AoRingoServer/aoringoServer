@@ -558,7 +558,8 @@ class Events(private val plugin: Plugin) : Listener {
             Material.GRASS, Material.TALL_GRASS -> {
                 if (WorldGuard().getOwnerOfRegion(player.location) != null) { return }
                 if (JobManager().get(player) != "${ChatColor.GOLD}ハンター") { return }
-                if (Random.nextInt(0, 3) != 0) { return }
+                val probability = 3
+                if (Random.nextInt(0, probability) != 0) { return }
                 JobManager().giveVegetables(block.location)
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
