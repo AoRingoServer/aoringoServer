@@ -744,7 +744,8 @@ class Events(private val plugin: Plugin) : Listener {
         }
         AoringoPlayer(player).sendActionBar("${ChatColor.RED}${health}HP")
         val power = Scoreboard().getValue("status_Power", player.uniqueId.toString())
-        entity.damage(power * 0.1)
+        val addPowerPercentage = 0.1
+        entity.damage(power * addPowerPercentage)
     }
 
     @EventHandler
