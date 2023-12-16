@@ -601,7 +601,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (job.get(player) == "${ChatColor.GRAY}鍛冶屋") {
             return
         }
-        if (job.tool().contains(type)) {
+        if (job.tool.contains(type)) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         }
