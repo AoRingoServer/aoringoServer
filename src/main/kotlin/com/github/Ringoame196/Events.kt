@@ -698,10 +698,11 @@ class Events(private val plugin: Plugin) : Listener {
     fun onEntityDropItem(e: EntityDropItemEvent) {
         val entity = e.entity
         if (entity.type == EntityType.CHICKEN && e.itemDrop.itemStack.type == Material.EGG) {
+            val term = 14
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                Item().make(material = Material.EGG, name = "卵", lore = Food().makeExpirationDate(14))
+                Item().make(material = Material.EGG, name = "卵", lore = Food().makeExpirationDate(term))
             )
         }
     }
