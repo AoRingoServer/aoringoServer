@@ -598,25 +598,19 @@ class Events(private val plugin: Plugin) : Listener {
         val displayName = item.itemMeta?.displayName ?: ""
         val aoringoPlayer = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
+        val itemClass = Item()
+        val job = JobManager()
         if (type == Material.FERMENTED_SPIDER_EYE) {
-            e.currentItem = Item().make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
+            e.currentItem = itemClass.make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (displayName.contains("包丁")) {
             e.currentItem = Cook().knifeSharpness(item)
         } else if (displayName.contains("契約書")) {
-            e.currentItem = Item().copyBlock(item, player)
+            e.currentItem = itemClass.copyBlock(item, player)
         }
-        if (JobManager().get(player) == "${ChatColor.GRAY}鍛冶屋") {
-            if (JobManager().tool().contains(type)) {
-                if (e.isShiftClick) {
-                    aoringoPlayer.sendErrorMessage("ツールを一括作成はできません")
-                    e.isCancelled = true
-                } else {
-                    e.currentItem?.durability = JobManager().craftRandomDurable(type).toShort()
-                }
-            }
+        if (job.get(player) == "${ChatColor.GRAY}鍛冶屋") {
             return
         }
-        if (!JobManager().tool().contains(type) && item.hasItemMeta()) {
+        if (!JobManager().tool().contains(type)) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         } else if (ngItem.contains(type)) {
