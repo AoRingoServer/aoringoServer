@@ -762,13 +762,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (world.name == "Survival") {
             e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
         }
-        Bukkit.getScheduler().runTaskLater(
-            plugin,
-            Runnable {
-                player.foodLevel = 6
-            },
-            20L
-        ) // 20Lは1秒を表す（1秒 = 20ticks）
+        AoringoPlayer(player).reduceFoodLevel(plugin)
     }
 
     @EventHandler

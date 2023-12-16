@@ -259,4 +259,13 @@ class AoringoPlayer(val player: Player) {
         }
         block.type = Material.AIR
     }
+    fun reduceFoodLevel(plugin:Plugin){
+        Bukkit.getScheduler().runTaskLater(
+            plugin,
+            Runnable {
+                player.foodLevel = 6
+            },
+            20L
+        ) // 20Lは1秒を表す（1秒 = 20ticks）
+    }
 }
