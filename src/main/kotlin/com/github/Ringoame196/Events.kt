@@ -570,21 +570,7 @@ class Events(private val plugin: Plugin) : Listener {
                 if (sign.getLine(0) != "${ChatColor.YELLOW}[土地販売]") { return }
                 e.isCancelled = true
             }
-            Material.SMOKER -> {
-                for (
-                    entity in block.world.getNearbyEntities(
-                        block.location.clone().add(0.0, 1.0, 0.0),
-                        0.5,
-                        0.5,
-                        0.5
-                    )
-                ) {
-                    if (entity !is ItemFrame) {
-                        continue
-                    }
-                    entity.remove()
-                }
-            }
+            Material.SMOKER -> GasBurner().breakGusBurner(block)
             else -> {}
         }
     }

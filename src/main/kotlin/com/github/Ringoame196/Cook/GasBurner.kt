@@ -73,4 +73,19 @@ class GasBurner {
         ironPlate.setItem(bakeItem)
         world.playSound(ironPlate.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }
+    fun breakGusBurner(block: Block) {
+        for (
+            entity in block.world.getNearbyEntities(
+                block.location.clone().add(0.0, 1.0, 0.0),
+                0.5,
+                0.5,
+                0.5
+            )
+        ) {
+            if (entity !is org.bukkit.entity.ItemFrame) {
+                continue
+            }
+            entity.remove()
+        }
+    }
 }
