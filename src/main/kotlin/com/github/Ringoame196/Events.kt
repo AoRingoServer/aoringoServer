@@ -5,6 +5,7 @@ import com.github.Ringoame196.Cook.ChoppingBoard
 import com.github.Ringoame196.Cook.Clothing
 import com.github.Ringoame196.Cook.Cook
 import com.github.Ringoame196.Cook.GasBurner
+import com.github.Ringoame196.Cook.Pot
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.WorldGuard
@@ -160,7 +161,7 @@ class Events(private val plugin: Plugin) : Listener {
                 if (block?.type != Material.BARREL) { return }
                 if (downBlock?.type != Material.CAMPFIRE) { return }
                 e.isCancelled = true
-                Cook().pot(block, player, plugin)
+                Pot().boil(block, player, plugin)
                 Item().breakLadle(player)
             }
             "${ChatColor.YELLOW}カゴ" -> {

@@ -46,25 +46,6 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         item.setItemMeta(meta)
         return item
     }
-    fun pot(block: Block, player: Player, plugin: Plugin) {
-        val barrel = block.state as Barrel
-        if (barrel.customName != null) { return }
-        val ingredients = mutableListOf<String>()
-        for (item in barrel.inventory) {
-            item ?: continue
-            ingredients.add(item.itemMeta?.displayName ?: continue)
-            if (food.isExpirationDateHasExpired(player, item)) { return }
-        }
-        val finishFood = cookData.pot(ingredients) ?: return
-        if (!isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
-            return
-        }
-        for (item in barrel.inventory) {
-            item ?: continue
-            item.amount = item.amount - 1
-        }
-        posCooking(plugin, block, finishFood, player)
-    }
     fun mix(player: Player, barrel: Barrel) {
         if (Random.nextInt(0, 8) != 0) { return }
         val recipe = mutableListOf<String>()
@@ -116,34 +97,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
             }
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
-        val armorStand = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), "", armorStandTag)
-        val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
-        var c = 30 - (level * 2)
-        val barrel = block.state as Barrel
-        barrel.customName = "${ChatColor.RED}オープン禁止"
-        barrel.update()
-        object : BukkitRunnable() {
-            override fun run() {
-                c--
-                armorStand.customName = "${ChatColor.YELLOW}${c}秒"
-                block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
-                if (block.location.block.type != Material.BARREL || block.location.clone().add(0.0, -1.0, 0.0).block.type != Material.CAMPFIRE) {
-                    armorStand.remove()
-                    this.cancel()
-                }
 
-                if (c == 0) {
-                    barrel.customName = null
-                    barrel.update()
-                    Item().drop(block.location.clone().add(0.5, 1.0, 0.5), item)
-                    armorStand.remove()
-                    block.world.playSound(block.location, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-                    this.cancel()
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
-    }
     fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
