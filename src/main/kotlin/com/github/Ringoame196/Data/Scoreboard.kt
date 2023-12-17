@@ -23,18 +23,6 @@ class Scoreboard(private val scoreboard: org.bukkit.scoreboard.Scoreboard? = Buk
         val value = getValue(scoreName, name) - remove
         set(scoreName, name, value)
     }
-    fun getSize(scoreName: String): Int {
-        val objective = scoreboard?.getObjective(scoreName) ?: return 0
-        var scoreCount = 0
-        for (entry in scoreboard.entries) {
-            val score = objective.getScore(entry)
-            if (Scoreboard().getValue(scoreName, entry) == 0) { continue }
-            if (score.isScoreSet) {
-                scoreCount++
-            }
-        }
-        return scoreCount
-    }
     fun getValue(score: String, name: String): Int {
         val objective = scoreboard?.getObjective(score) ?: return 0
         val scoreObject = objective.getScore(name)

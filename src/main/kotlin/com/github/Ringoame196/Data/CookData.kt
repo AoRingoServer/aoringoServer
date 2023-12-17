@@ -1,4 +1,4 @@
-package com.github.Ringoame196.Job.Data
+package com.github.Ringoame196.Data
 
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item

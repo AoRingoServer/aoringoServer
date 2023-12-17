@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Smartphones
 
-import com.github.Ringoame196.APK
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.ApplicationManager
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
@@ -9,16 +9,16 @@ import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
-import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
+import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.APKs.ConversionMoneyAPK
-import com.github.Ringoame196.Smartphones.APKs.EnderChestAPK
-import com.github.Ringoame196.Smartphones.APKs.HealthCcareAPK
-import com.github.Ringoame196.Smartphones.APKs.LandProtectionAPK
-import com.github.Ringoame196.Smartphones.APKs.OPAPK
-import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
-import com.github.Ringoame196.Smartphones.APKs.SortAPK
-import com.github.Ringoame196.Smartphones.APKs.TeleportAPK
+import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
+import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
+import com.github.Ringoame196.Smartphones.Applications.HealthCcareApplication
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionAPK
+import com.github.Ringoame196.Smartphones.Applications.OPApplication
+import com.github.Ringoame196.Smartphones.Applications.PlayerRatingAPK
+import com.github.Ringoame196.Smartphones.Applications.SortApplication
+import com.github.Ringoame196.Smartphones.Applications.TeleportApplication
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -31,16 +31,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class Smartphone {
-    val apkList = mapOf<String, APKs>(
-        "${ChatColor.YELLOW}エンダーチェスト" to EnderChestAPK(),
-        "${ChatColor.GREEN}所持金変換" to ConversionMoneyAPK(),
-        "${ChatColor.RED}アイテム保護" to ItemProtectionAPK(),
-        "${ChatColor.GREEN}テレポート" to TeleportAPK(),
+    val apkList = mapOf<String, Application>(
+        "${ChatColor.YELLOW}エンダーチェスト" to EnderChestApplication(),
+        "${ChatColor.GREEN}所持金変換" to ConversionMoneyApplication(),
+        "${ChatColor.RED}アイテム保護" to ItemProtectionApplication(),
+        "${ChatColor.GREEN}テレポート" to TeleportApplication(),
         "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingAPK(),
         "${ChatColor.GREEN}土地保護" to LandProtectionAPK(),
-        "${ChatColor.YELLOW}OP用" to OPAPK(),
-        "${ChatColor.YELLOW}アプリ並べ替え" to SortAPK(),
-        "${ChatColor.AQUA}ヘルスケア" to HealthCcareAPK()
+        "${ChatColor.YELLOW}OP用" to OPApplication(),
+        "${ChatColor.YELLOW}アプリ並べ替え" to SortApplication(),
+        "${ChatColor.AQUA}ヘルスケア" to HealthCcareApplication()
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
@@ -63,7 +63,7 @@ class Smartphone {
         val apkName = itemName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
-            APK().remove(player, apkName, item.itemMeta?.customModelData ?: 0, plugin)
+            ApplicationManager().remove(player, apkName, item.itemMeta?.customModelData ?: 0, plugin)
             player.openInventory(createGUI(plugin, player))
             return
         }

@@ -1,12 +1,11 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.Block
-import com.github.Ringoame196.Cook.ChoppingBoard
-import com.github.Ringoame196.Cook.Clothing
-import com.github.Ringoame196.Cook.Cook
-import com.github.Ringoame196.Cook.Fryer
-import com.github.Ringoame196.Cook.GasBurner
-import com.github.Ringoame196.Cook.Pot
+import com.github.Ringoame196.Items.Cookware.ChoppingBoard
+import com.github.Ringoame196.Items.Cookware.FryBatter
+import com.github.Ringoame196.Items.Cookware.Fryer
+import com.github.Ringoame196.Items.Cookware.GasBurner
+import com.github.Ringoame196.Items.Cookware.Pot
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.WorldGuard
@@ -15,11 +14,10 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.JobManager
-import com.github.Ringoame196.Job.Mission
 import com.github.Ringoame196.Shop.Fshop
-import com.github.Ringoame196.Smartphone.APKs.ItemProtectionAPK
+import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.APKs.PlayerRatingAPK
+import com.github.Ringoame196.Smartphones.Applications.PlayerRatingAPK
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -176,7 +174,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
-                if (!ItemProtectionAPK().isPlayerProtection(item?:return, player)) {
+                if (!ItemProtectionApplication().isPlayerProtection(item?:return, player)) {
                     aoringoPlayer.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
                 } else {
                     player.openInventory(Company().createGUI())
@@ -222,7 +220,7 @@ class Events(private val plugin: Plugin) : Listener {
                 aoringoPlayer.sendActionBar("お金を受け取るにはシフトをしてください")
             }
         } else if (itemName.contains("[アプリケーション]")) {
-            APK().add(player, itemName, plugin)
+            ApplicationManager().add(player, itemName, plugin)
             e.isCancelled = true
         }
     }
@@ -278,7 +276,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 itemFrame.setItem(ItemStack(Material.AIR))
-                Clothing().dressing(player, entity)
+                FryBatter().dressing(player, entity)
             }
             "${ChatColor.YELLOW}混ぜハンドル" -> {
                 if (block.type != Material.BARREL) { return }
@@ -439,7 +437,7 @@ class Events(private val plugin: Plugin) : Listener {
                     Material.RED_STAINED_GLASS_PANE -> e.isCancelled = true
                     Material.ANVIL -> {
                         e.isCancelled = true
-                        gui.setItem(3, ItemProtectionAPK().chekcProtection(gui.getItem(3) ?: return, player))
+                        gui.setItem(3, ItemProtectionApplication().chekcProtection(gui.getItem(3) ?: return, player))
                     }
                     else -> return
                 }
@@ -630,7 +628,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
             }
             "${ChatColor.YELLOW}アイテム保護" -> player.inventory.addItem(gui.getItem(3) ?: return)
-            "${ChatColor.BLUE}スマートフォン(並び替え)" -> APK().setSort(player, gui, plugin)
+            "${ChatColor.BLUE}スマートフォン(並び替え)" -> ApplicationManager().setSort(player, gui, plugin)
         }
     }
 
@@ -681,14 +679,14 @@ class Events(private val plugin: Plugin) : Listener {
         if (food.isExpirationDateHasExpired(player, item)) {
             food.giveDiarrheaEffect(player)
         }
-        if ((itemType == Material.POTION || itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
+        if ((itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
             return
         }
         e.isCancelled = true
         player.foodLevel = food.calculateFoodLevel(player, item)
         player.saturation = hiddenFoodLevel // 隠し満腹度
         food.increaseStatus(player, item)
-        Item().reduceItem(player, item)
+        Item().reduceOneItem(player, item)
     }
 
     @EventHandler
@@ -839,7 +837,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerDropItem(e: PlayerDropItemEvent) {
         val player = e.player
         val item = e.itemDrop
-        if (ItemProtectionAPK().isProtection(item.itemStack)) {
+        if (ItemProtectionApplication().isProtection(item.itemStack)) {
             e.isCancelled = true
             AoringoPlayer(player).sendErrorMessage("[アイテム保護]保護アイテムを捨てることはできません")
         }

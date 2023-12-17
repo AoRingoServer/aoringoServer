@@ -1,7 +1,8 @@
-package com.github.Ringoame196.Cook
+package com.github.Ringoame196.Items.Cookware
 
+import com.github.Ringoame196.Cook
+import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Items.Food
-import com.github.Ringoame196.Job.Data.CookData
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Block

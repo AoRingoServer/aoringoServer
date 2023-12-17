@@ -1,6 +1,6 @@
-package com.github.Ringoame196.Smartphones.APKs
+package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard
@@ -12,8 +12,10 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 
-class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") : APKs {
-    override val customModelData: Int = 5
+class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") : Application {
+    override fun getcustomModelData(): Int {
+        return 5
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         val guiSize = 18
         val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.BLUE}プレイヤー評価")

@@ -1,12 +1,14 @@
-package com.github.Ringoame196.Smartphones.APKs
+package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class EnderChestAPK : APKs {
-    override val customModelData: Int = 1
+class EnderChestApplication : Application {
+    override fun getcustomModelData(): Int {
+        return 1
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         Bukkit.getScheduler().runTask(
             plugin,

@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Smartphone.APKs
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
@@ -11,8 +11,10 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class ItemProtectionAPK : APKs {
-    override val customModelData = 3
+class ItemProtectionApplication : Application {
+    override fun getcustomModelData(): Int {
+        return 3
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}アイテム保護")
         for (i in 0 until gui.size) {

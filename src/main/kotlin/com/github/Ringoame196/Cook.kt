@@ -1,14 +1,12 @@
-package com.github.Ringoame196.Cook
+package com.github.Ringoame196
 
+import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
-import com.github.Ringoame196.Job.Data.CookData
-import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
-import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random

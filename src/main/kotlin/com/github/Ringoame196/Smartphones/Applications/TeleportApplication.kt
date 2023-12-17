@@ -1,6 +1,6 @@
-package com.github.Ringoame196.Smartphones.APKs
+package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -8,8 +8,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class TeleportAPK : APKs {
-    override val customModelData = 4
+class TeleportApplication : Application {
+    override fun getcustomModelData(): Int {
+        return 4
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
         gui.setItem(1, Item().make(Material.CHEST, "${ChatColor.GOLD}ロビー"))

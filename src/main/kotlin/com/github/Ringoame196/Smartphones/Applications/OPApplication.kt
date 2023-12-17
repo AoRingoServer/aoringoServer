@@ -1,6 +1,6 @@
-package com.github.Ringoame196.Smartphones.APKs
+package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Items.Item
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -8,8 +8,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class OPAPK : APKs {
-    override val customModelData: Int = 7
+class OPApplication : Application {
+    override fun getcustomModelData(): Int {
+        return 7
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         val item = Item()
         if (!player.isOp) { return }

@@ -10,7 +10,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class APK {
+class ApplicationManager {
     fun get(plugin: Plugin, player: HumanEntity): MutableList<String>? {
         return Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
     }

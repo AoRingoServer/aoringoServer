@@ -1,6 +1,6 @@
-package com.github.Ringoame196.Smartphones.APKs
+package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.APKs
+import com.github.Ringoame196.Application
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import org.bukkit.Bukkit
@@ -9,8 +9,10 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class LandProtectionAPK : APKs {
-    override val customModelData = 6
+class LandProtectionAPK : Application {
+    override fun getcustomModelData(): Int {
+        return 6
+    }
     override fun openGUI(player: Player, plugin: Plugin) {
         val item = Item()
         val landPurchase = LandPurchase()

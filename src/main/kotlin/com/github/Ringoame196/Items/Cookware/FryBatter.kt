@@ -1,14 +1,15 @@
-package com.github.Ringoame196.Cook
+package com.github.Ringoame196.Items.Cookware
 
+import com.github.Ringoame196.Cook
+import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
-import com.github.Ringoame196.Job.Data.CookData
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 
-class Clothing {
+class FryBatter {
     private val food = Food()
     private val cook = Cook()
     private val cookData = CookData()
