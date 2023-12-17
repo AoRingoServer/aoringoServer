@@ -51,20 +51,6 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         item.setItemMeta(meta)
         return item
     }
-    fun dressing(player: Player, entity: ItemFrame) {
-        val item = player.inventory.itemInMainHand
-        val playerItem = player.inventory.itemInMainHand
-        if (food.isExpirationDateHasExpired(player, entity.item)) { return }
-        playerItem.amount = playerItem.amount - 1
-        val dressingItem = cookData.dressing(item) ?: return
-        if (!isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
-            return
-        }
-        player.inventory.setItemInMainHand(playerItem)
-        player.inventory.addItem(dressingItem)
-        entity.world.spawnParticle(Particle.EXPLOSION_HUGE, entity.location.add(0.0, 1.0, 0.0), 1)
-        player.world.playSound(player.location, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-    }
     fun pot(block: Block, player: Player, plugin: Plugin) {
         val barrel = block.state as Barrel
         if (barrel.customName != null) { return }
