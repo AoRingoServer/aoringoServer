@@ -68,35 +68,6 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         }
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun fry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
-        val fryItem = cookData.fly(item) ?: return
-        if (!Cook().isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
-            return
-        }
-        Item().reduceMainItem(player)
-        player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-        if (food.isExpirationDateHasExpired(player, item)) { return }
-        val timer = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), " ", armorStandTag)
-        val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
-        var c = 15 - (level * 2)
-        object : BukkitRunnable() {
-            override fun run() {
-                if (block.location.block.type != Material.LAVA_CAULDRON) {
-                    timer.remove()
-                    this.cancel()
-                }
-                c--
-                timer.customName = "${ChatColor.YELLOW}${c}秒"
-                block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
-                if (c == 0) {
-                    Item().drop(block.location.clone().add(0.5, 1.0, 0.5), cookData.fly(item) ?: return)
-                    timer.remove()
-                    block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
-                    this.cancel()
-                }
-            }
-        }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
-    }
 
     fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
