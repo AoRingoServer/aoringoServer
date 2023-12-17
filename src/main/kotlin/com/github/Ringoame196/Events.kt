@@ -220,7 +220,7 @@ class Events(private val plugin: Plugin) : Listener {
                 aoringoPlayer.sendActionBar("お金を受け取るにはシフトをしてください")
             }
         } else if (itemName.contains("[アプリケーション]")) {
-            ApplicationManager().add(player, itemName, plugin)
+            ApplicationManager().install(player, itemName, plugin)
             e.isCancelled = true
         }
     }
@@ -628,7 +628,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
             }
             "${ChatColor.YELLOW}アイテム保護" -> player.inventory.addItem(gui.getItem(3) ?: return)
-            "${ChatColor.BLUE}スマートフォン(並び替え)" -> ApplicationManager().setSort(player, gui, plugin)
+            "${ChatColor.BLUE}スマートフォン(並び替え)" -> ApplicationManager().saveToYmlFile(player, gui, plugin)
         }
     }
 

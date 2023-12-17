@@ -63,7 +63,7 @@ class Smartphone {
         val apkName = itemName?.replace("${ChatColor.YELLOW}[アプリ]", "") ?: return
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
         if (shift && item.type == Material.GREEN_CONCRETE) {
-            ApplicationManager().remove(player, apkName, item.itemMeta?.customModelData ?: 0, plugin)
+            ApplicationManager().uninstall(player, apkName, item.itemMeta?.customModelData ?: 0, plugin)
             player.openInventory(createGUI(plugin, player))
             return
         }

@@ -14,7 +14,7 @@ class ApplicationManager {
     fun get(plugin: Plugin, player: HumanEntity): MutableList<String>? {
         return Yml().getList(plugin, "playerData", player.uniqueId.toString(), "apkList")
     }
-    fun add(player: org.bukkit.entity.Player, itemName: String, plugin: Plugin) {
+    fun install(player: org.bukkit.entity.Player, itemName: String, plugin: Plugin) {
         val aoringoPlayer = AoringoPlayer(player)
         val apkName = itemName.replace("[アプリケーション]", "")
         val apks = get(plugin, player)
@@ -44,13 +44,13 @@ class ApplicationManager {
             }
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    fun remove(player: org.bukkit.entity.Player, itemName: String, customModelData: Int, plugin: Plugin) {
+    fun uninstall(player: org.bukkit.entity.Player, itemName: String, customModelData: Int, plugin: Plugin) {
         player.inventory.addItem(Item().make(Material.GREEN_CONCRETE, "[アプリケーション]$itemName", "", customModelData, 1))
         Yml().removeToList(plugin, "playerData", player.uniqueId.toString(), "apkList", itemName)
         player.sendMessage("${ChatColor.RED}[スマートフォン]${itemName}${ChatColor.RED}をアンインストールしました")
         player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }
-    fun setSort(player: HumanEntity, gui: InventoryView, plugin: Plugin) {
+    fun saveToYmlFile(player: HumanEntity, gui: InventoryView, plugin: Plugin) {
         val apkList = mutableListOf<String>()
         var c = 1
         for (apk in gui.topInventory) {
