@@ -4,6 +4,7 @@ import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Job.Data.CookData
 import org.bukkit.Material
 import org.bukkit.Sound
+import org.bukkit.block.Block
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -51,5 +52,11 @@ class ChoppingBoard {
         val sharpness = lore.replace("切れ味:", "").toInt()
         if (sharpness > 10) { return true }
         return Random.nextInt(0, (10 - sharpness)) <= 0
+    }
+    fun summonChoppingBoard(block: Block) {
+        val itemFrameClass = com.github.Ringoame196.Entity.ItemFrame()
+        val summonLocation = block.location.clone().add(0.0,1.0,0.0)
+        val itemFrame = itemFrameClass.summonItemFrame(summonLocation)
+        itemFrame.customName = "まな板"
     }
 }

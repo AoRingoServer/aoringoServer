@@ -153,7 +153,7 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
                 if (upBlock?.type != Material.AIR) { return }
-                Cook().summonChoppingBoard(block)
+                ChoppingBoard().summonChoppingBoard(block)
                 Item().reduceMainItem(player)
             }
             "${ChatColor.YELLOW}おたま" -> {
