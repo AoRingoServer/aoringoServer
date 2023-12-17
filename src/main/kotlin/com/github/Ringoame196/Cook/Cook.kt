@@ -194,8 +194,9 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
                 in 101..1000 -> 1000
                 in 1001..10000 -> 10000
                 else -> 0
-            } - Scoreboard().getValue("cookCount", player.uniqueId.toString())
-            com.github.Ringoame196.Entity.AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${nextLevel}料理")
+            }
+            val remainingLevel = nextLevel - Scoreboard().getValue("cookCount", player.uniqueId.toString())
+            com.github.Ringoame196.Entity.AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${remainingLevel}料理")
         }
     }
 }
