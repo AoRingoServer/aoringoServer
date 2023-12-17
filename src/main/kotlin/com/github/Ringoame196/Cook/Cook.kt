@@ -2,23 +2,15 @@ package com.github.Ringoame196.Cook
 
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
-import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
 import com.github.Ringoame196.Scoreboard
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.Particle
 import org.bukkit.Sound
-import org.bukkit.World
 import org.bukkit.block.Barrel
-import org.bukkit.block.Block
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
-import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
 class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {

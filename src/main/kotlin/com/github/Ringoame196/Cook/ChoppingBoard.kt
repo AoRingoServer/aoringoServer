@@ -55,7 +55,7 @@ class ChoppingBoard {
     }
     fun summonChoppingBoard(block: Block) {
         val itemFrameClass = com.github.Ringoame196.Entity.ItemFrame()
-        val summonLocation = block.location.clone().add(0.0,1.0,0.0)
+        val summonLocation = block.location.clone().add(0.0, 1.0, 0.0)
         val itemFrame = itemFrameClass.summonItemFrame(summonLocation)
         itemFrame.customName = "まな板"
     }

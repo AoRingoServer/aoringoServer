@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Cook
 
-import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
@@ -23,7 +22,7 @@ class Clothing {
         }
         itemClass.reduceMainItem(player)
         player.inventory.addItem(dressingItem)
-        val particleLocation = entity.location.add(0.0,1.0,0.0)
+        val particleLocation = entity.location.add(0.0, 1.0, 0.0)
         entity.world.spawnParticle(Particle.EXPLOSION_HUGE, particleLocation, 1)
         player.world.playSound(player.location, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
     }

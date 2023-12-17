@@ -259,7 +259,7 @@ class AoringoPlayer(val player: Player) {
         }
         block.type = Material.AIR
     }
-    fun reduceFoodLevel(plugin:Plugin){
+    fun reduceFoodLevel(plugin: Plugin) {
         Bukkit.getScheduler().runTaskLater(
             plugin,
             Runnable {

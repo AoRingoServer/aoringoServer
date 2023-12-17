@@ -4,6 +4,7 @@ import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Cook.ChoppingBoard
 import com.github.Ringoame196.Cook.Clothing
 import com.github.Ringoame196.Cook.Cook
+import com.github.Ringoame196.Cook.Fryer
 import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Cook.Pot
 import com.github.Ringoame196.Data.Company
@@ -121,7 +122,7 @@ class Events(private val plugin: Plugin) : Listener {
             Material.SMOKER -> e.isCancelled = true
             Material.LAVA_CAULDRON -> {
                 e.isCancelled = true
-                Cook().fry(player, block, item, plugin)
+                Fryer().deepFry(player, block, item, plugin)
             }
             Material.ENCHANTING_TABLE -> {
                 e.isCancelled = true

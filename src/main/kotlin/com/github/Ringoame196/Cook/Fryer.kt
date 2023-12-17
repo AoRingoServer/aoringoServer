@@ -4,7 +4,6 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.Food
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.Data.CookData
-import com.github.Ringoame196.Scoreboard
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -29,7 +28,7 @@ class Fryer {
         if (food.isExpirationDateHasExpired(player, item)) { return }
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
         val timer = cookArmorStand.summonMarker(summonLocation, " ", cook.armorStandTag)
-        var c = cook.calculateCookTime(15,player)
+        var c = cook.calculateCookTime(15, player)
         object : BukkitRunnable() {
             override fun run() {
                 if (block.location.block.type != Material.LAVA_CAULDRON) {
