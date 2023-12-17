@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Blocks
 
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -15,41 +15,41 @@ import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
 class Block {
-    val item = Item()
+    val itemManager = ItemManager()
     val enchantBookList = mutableListOf(
-        item.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1),
-        item.enchant(Enchantment.PROTECTION_FIRE, 1),
-        item.enchant(Enchantment.PROTECTION_FALL, 1),
-        item.enchant(Enchantment.PROTECTION_EXPLOSIONS, 1),
-        item.enchant(Enchantment.PROTECTION_PROJECTILE, 1),
-        item.enchant(Enchantment.WATER_WORKER, 1),
-        item.enchant(Enchantment.THORNS, 1),
-        item.enchant(Enchantment.DEPTH_STRIDER, 1),
-        item.enchant(Enchantment.SOUL_SPEED, 1),
-        item.enchant(Enchantment.BINDING_CURSE, 1),
-        item.enchant(Enchantment.VANISHING_CURSE, 1),
-        item.enchant(Enchantment.DAMAGE_ALL, 1),
-        item.enchant(Enchantment.DAMAGE_ARTHROPODS, 1),
-        item.enchant(Enchantment.DAMAGE_UNDEAD, 1),
-        item.enchant(Enchantment.KNOCKBACK, 1),
-        item.enchant(Enchantment.PROTECTION_FIRE, 1),
-        item.enchant(Enchantment.LOOT_BONUS_MOBS, 1),
-        item.enchant(Enchantment.SWEEPING_EDGE, 1),
-        item.enchant(Enchantment.DIG_SPEED, 1),
-        item.enchant(Enchantment.SILK_TOUCH, 1),
-        item.enchant(Enchantment.ARROW_DAMAGE, 1),
-        item.enchant(Enchantment.ARROW_KNOCKBACK, 1),
-        item.enchant(Enchantment.ARROW_FIRE, 1),
-        item.enchant(Enchantment.ARROW_INFINITE, 1),
-        item.enchant(Enchantment.LOYALTY, 1),
-        item.enchant(Enchantment.LUCK, 1),
-        item.enchant(Enchantment.IMPALING, 1),
-        item.enchant(Enchantment.RIPTIDE, 1),
-        item.enchant(Enchantment.CHANNELING, 1),
-        item.enchant(Enchantment.QUICK_CHARGE, 1),
-        item.enchant(Enchantment.PIERCING, 1),
-        item.enchant(Enchantment.MULTISHOT, 1),
-        item.enchant(Enchantment.SWEEPING_EDGE, 1),
+        itemManager.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1),
+        itemManager.enchant(Enchantment.PROTECTION_FIRE, 1),
+        itemManager.enchant(Enchantment.PROTECTION_FALL, 1),
+        itemManager.enchant(Enchantment.PROTECTION_EXPLOSIONS, 1),
+        itemManager.enchant(Enchantment.PROTECTION_PROJECTILE, 1),
+        itemManager.enchant(Enchantment.WATER_WORKER, 1),
+        itemManager.enchant(Enchantment.THORNS, 1),
+        itemManager.enchant(Enchantment.DEPTH_STRIDER, 1),
+        itemManager.enchant(Enchantment.SOUL_SPEED, 1),
+        itemManager.enchant(Enchantment.BINDING_CURSE, 1),
+        itemManager.enchant(Enchantment.VANISHING_CURSE, 1),
+        itemManager.enchant(Enchantment.DAMAGE_ALL, 1),
+        itemManager.enchant(Enchantment.DAMAGE_ARTHROPODS, 1),
+        itemManager.enchant(Enchantment.DAMAGE_UNDEAD, 1),
+        itemManager.enchant(Enchantment.KNOCKBACK, 1),
+        itemManager.enchant(Enchantment.PROTECTION_FIRE, 1),
+        itemManager.enchant(Enchantment.LOOT_BONUS_MOBS, 1),
+        itemManager.enchant(Enchantment.SWEEPING_EDGE, 1),
+        itemManager.enchant(Enchantment.DIG_SPEED, 1),
+        itemManager.enchant(Enchantment.SILK_TOUCH, 1),
+        itemManager.enchant(Enchantment.ARROW_DAMAGE, 1),
+        itemManager.enchant(Enchantment.ARROW_KNOCKBACK, 1),
+        itemManager.enchant(Enchantment.ARROW_FIRE, 1),
+        itemManager.enchant(Enchantment.ARROW_INFINITE, 1),
+        itemManager.enchant(Enchantment.LOYALTY, 1),
+        itemManager.enchant(Enchantment.LUCK, 1),
+        itemManager.enchant(Enchantment.IMPALING, 1),
+        itemManager.enchant(Enchantment.RIPTIDE, 1),
+        itemManager.enchant(Enchantment.CHANNELING, 1),
+        itemManager.enchant(Enchantment.QUICK_CHARGE, 1),
+        itemManager.enchant(Enchantment.PIERCING, 1),
+        itemManager.enchant(Enchantment.MULTISHOT, 1),
+        itemManager.enchant(Enchantment.SWEEPING_EDGE, 1),
     )
     fun makeEnchantGUI(): Inventory {
         val guiSize = 9
@@ -57,9 +57,9 @@ class Block {
         val putInSlot = 4
         val enchantButtonSlot = 8
         for (i in 0 until guiSize) {
-            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
+            gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(enchantButtonSlot, Item().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
+        gui.setItem(enchantButtonSlot, ItemManager().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
         gui.setItem(putInSlot, ItemStack(Material.AIR))
         return gui
     }

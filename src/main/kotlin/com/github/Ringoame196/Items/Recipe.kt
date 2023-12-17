@@ -1,6 +1,6 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -35,8 +35,8 @@ class Recipe {
         bambooSkewer(plugin)
     }
     fun repairKit() {
-        val customItem = Item().make(Material.FLINT, "${ChatColor.YELLOW}修理キット", customModelData = 1)
-        val recipe = ShapelessRecipe(customItem)
+        val customItemManager = ItemManager().make(Material.FLINT, "${ChatColor.YELLOW}修理キット", customModelData = 1)
+        val recipe = ShapelessRecipe(customItemManager)
         recipe.addIngredient(1, Material.IRON_INGOT)
         recipe.addIngredient(1, Material.GOLD_INGOT)
         recipe.addIngredient(1, Material.COPPER_INGOT)
@@ -46,8 +46,8 @@ class Recipe {
         Bukkit.addRecipe(recipe)
     }
     fun cuttingBoard(plugin: Plugin) {
-        val customResultItem = Item().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板")
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "cuttingBoard"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板")
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "cuttingBoard"), customResultItemManager)
         customRecipe.shape("AAA", "III", "OOO")
         customRecipe.setIngredient('I', Material.IRON_INGOT)
         customRecipe.setIngredient('O', Material.OAK_PLANKS)
@@ -56,8 +56,8 @@ class Recipe {
         Bukkit.addRecipe(customRecipe)
     }
     fun bunMold(plugin: Plugin) {
-        val customResultItem = Item().make(Material.PAPER, "食パンの型", customModelData = 5)
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "bunMold"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.PAPER, "食パンの型", customModelData = 5)
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "bunMold"), customResultItemManager)
         customRecipe.shape("AAC", "AIC", "CCC")
         customRecipe.setIngredient('I', Material.IRON_INGOT)
         customRecipe.setIngredient('C', Material.COPPER_INGOT)
@@ -66,8 +66,8 @@ class Recipe {
         Bukkit.addRecipe(customRecipe)
     }
     fun breadMold(plugin: Plugin) {
-        val customResultItem = Item().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板")
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "breadMold"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板")
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "breadMold"), customResultItemManager)
         customRecipe.shape("AAC", "AIC", "CCC")
         customRecipe.setIngredient('I', Material.IRON_INGOT)
         customRecipe.setIngredient('C', Material.COPPER_INGOT)
@@ -76,8 +76,8 @@ class Recipe {
         Bukkit.addRecipe(customRecipe)
     }
     fun mixStick(plugin: Plugin) {
-        val customResultItem = Item().make(Material.STICK, "${ChatColor.YELLOW}おたま", customModelData = 1)
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "mixStick"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.STICK, "${ChatColor.YELLOW}おたま", customModelData = 1)
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "mixStick"), customResultItemManager)
         customRecipe.shape("SSS", "SWS", "SSS")
         customRecipe.setIngredient('S', Material.COBBLESTONE)
         customRecipe.setIngredient('W', Material.WOODEN_SHOVEL)
@@ -86,8 +86,8 @@ class Recipe {
         Bukkit.addRecipe(customRecipe)
     }
     fun handle(plugin: Plugin) {
-        val customResultItem = Item().make(Material.STICK, "${ChatColor.YELLOW}混ぜハンドル", customModelData = 2)
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "handle"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.STICK, "${ChatColor.YELLOW}混ぜハンドル", customModelData = 2)
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "handle"), customResultItemManager)
         customRecipe.shape("ASA", "SIS", "ASA")
         customRecipe.setIngredient('S', Material.COBBLESTONE)
         customRecipe.setIngredient('I', Material.IRON_INGOT)
@@ -96,8 +96,8 @@ class Recipe {
         Bukkit.addRecipe(customRecipe)
     }
     fun bambooSkewer(plugin: Plugin) {
-        val customResultItem = Item().make(Material.STICK, "${ChatColor.GOLD}竹串", customModelData = 3)
-        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "bambooSkewer"), customResultItem)
+        val customResultItemManager = ItemManager().make(Material.STICK, "${ChatColor.GOLD}竹串", customModelData = 3)
+        val customRecipe = ShapedRecipe(NamespacedKey(plugin, "bambooSkewer"), customResultItemManager)
         customRecipe.shape("AOA", "OSO", "AOA")
         customRecipe.setIngredient('O', Material.OAK_PLANKS)
         customRecipe.setIngredient('S', Material.STICK)

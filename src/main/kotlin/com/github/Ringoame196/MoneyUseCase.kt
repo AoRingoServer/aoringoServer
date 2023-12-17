@@ -2,7 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import java.util.UUID
@@ -18,7 +18,7 @@ class MoneyUseCase {
         } else {
             aoringoPlayer.sendErrorMessage("運営のお金が不足したため 運営手形が発行されました")
             sender.sendMessage("${ChatColor.GOLD}運営に発行された手形をお渡しください")
-            sender.inventory.addItem(Item().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${amount}円)", "手形を運営に渡してください", 11, 1))
+            sender.inventory.addItem(ItemManager().make(Material.PAPER, "${ChatColor.GOLD}運営手形(${amount}円)", "手形を運営に渡してください", 11, 1))
         }
     }
     fun addMoney(aoringoPlayer: AoringoPlayer, amount: Int) {

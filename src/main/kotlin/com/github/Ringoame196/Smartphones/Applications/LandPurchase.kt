@@ -3,7 +3,7 @@ package com.github.Ringoame196.Smartphone.APKs
 import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import com.sk89q.worldedit.IncompleteRegionException
@@ -25,7 +25,7 @@ import java.util.UUID
 
 class LandPurchase {
     private fun openOwnerGUI(player: Player, name: String, money: Int) {
-        val item = Item()
+        val itemManager = ItemManager()
         val memberAddSlot = 3
         val memberRemoveSlot = 5
         val prepaymentButtonSlot = 8
@@ -33,12 +33,12 @@ class LandPurchase {
         val contractPeriod = Scoreboard().getValue(protectionScoreboadName, name)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地設定")
         player.openInventory(gui)
-        gui.setItem(memberAddSlot, item.make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
-        gui.setItem(memberRemoveSlot, item.make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
+        gui.setItem(memberAddSlot, itemManager.make(Material.GREEN_WOOL, "${ChatColor.GREEN}メンバー追加"))
+        gui.setItem(memberRemoveSlot, itemManager.make(Material.RED_WOOL, "${ChatColor.RED}メンバー削除"))
         if (player.world.name != "shop") { return }
         if (contractPeriod != 1) { return }
         val price = money * 1.5.toInt()
-        gui.setItem(prepaymentButtonSlot, item.make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${price}円"))
+        gui.setItem(prepaymentButtonSlot, itemManager.make(Material.GOLD_INGOT, "${ChatColor.YELLOW}前払い", "${price}円"))
     }
     fun addMemberGUI(player: Player, name: String) {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}$name@メンバー追加")
@@ -55,7 +55,7 @@ class LandPurchase {
         var i = 0
         val members = WorldGuard().getMember(player.world, name)?.playerDomain?.uniqueIds
         for (worldPlayer in members?.toList() ?: return) {
-            gui.addItem(Item().make(Material.PLAYER_HEAD, worldPlayer.toString(), Bukkit.getPlayer(worldPlayer as UUID)?.name ?: worldPlayer.toString()))
+            gui.addItem(ItemManager().make(Material.PLAYER_HEAD, worldPlayer.toString(), Bukkit.getPlayer(worldPlayer as UUID)?.name ?: worldPlayer.toString()))
             i++
             if (i >= gui.size) { continue }
         }
@@ -96,7 +96,7 @@ class LandPurchase {
             return
         }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地購入")
-        gui.setItem(4, Item().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${money}円"))
+        gui.setItem(4, ItemManager().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${money}円"))
         player.openInventory(gui)
     }
     fun buy(player: Player, item: ItemStack, guiName: String, plugin: Plugin) {

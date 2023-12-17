@@ -1,14 +1,14 @@
 package com.github.Ringoame196.Data
 
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 class CookData {
     fun food(name: String, custom: Int): ItemStack {
-        return Item().make(Material.MELON_SLICE, name, customModelData = custom)
+        return ItemManager().make(Material.MELON_SLICE, name, customModelData = custom)
     }
     fun cut(itemStack: ItemStack): ItemStack? {
         return when (itemStack.itemMeta?.displayName) {
@@ -92,7 +92,7 @@ class CookData {
             rawYakitori.toSet() -> food("${ChatColor.RED}生焼き鳥", 99)
             octopusNigiri.toSet() -> food("${ChatColor.RED}タコの握り", 73)
             squidNigiri.toSet() -> food("イカの握り", 72)
-            wort.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GREEN}麦汁", FoodManager().makeExpirationDate(0), 2, 1)
+            wort.toSet() -> ItemManager().make(Material.MILK_BUCKET, "${ChatColor.GREEN}麦汁", FoodManager().makeExpirationDate(0), 2, 1)
             curryrRice.toSet() -> food("${ChatColor.YELLOW}[完成]カレーライス", 44)
             curryrUdon.toSet() -> food("${ChatColor.YELLOW}[完成]カレーうどん", 61)
             else -> null
@@ -101,7 +101,7 @@ class CookData {
     fun fermentationMix(ingredients: MutableList<String>): ItemStack? {
         val liquor = mutableListOf("${ChatColor.GREEN}麦汁")
         return when (ingredients.toSet()) {
-            liquor.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GOLD}[完成品]ビール", customModelData = 3)
+            liquor.toSet() -> ItemManager().make(Material.MILK_BUCKET, "${ChatColor.GOLD}[完成品]ビール", customModelData = 3)
             else -> null
         }
     }

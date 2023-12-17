@@ -2,7 +2,7 @@ package com.github.Ringoame196.Job
 
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -21,7 +21,7 @@ class JobManager {
     private val jobScoreboardName = "job"
     private val scoreboard = Scoreboard()
     private val foodManager = FoodManager()
-    private val item = Item()
+    private val itemManager = ItemManager()
     fun setJob(player: Player, id: Int) {
         scoreboard.set(jobScoreboardName, player.uniqueId.toString(), id)
     }
@@ -90,7 +90,7 @@ class JobManager {
     }
     private fun showPeopleEmployedNumber(material: Material, jobName: String): ItemStack {
         val employmentRate = "${Scoreboard().getValue(jobScoreboardName,jobName)}人が就職しています"
-        return Item().make(material, jobName, employmentRate)
+        return ItemManager().make(material, jobName, employmentRate)
     }
     val tool = mutableListOf(
         Material.IRON_SWORD,
@@ -141,8 +141,8 @@ class JobManager {
         val fish = mutableListOf(
             foodManager.makeItem("${ChatColor.RED}マグロ", 31),
             foodManager.makeItem("${ChatColor.GOLD}サーモン", 32),
-            item.make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
-            item.enchant(Enchantment.LURE, 1)
+            itemManager.make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
+            itemManager.enchant(Enchantment.LURE, 1)
         )
         if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") {
             fish.add(FoodManager().makeItem("${ChatColor.RED}タコ", 38))

@@ -25,14 +25,14 @@ class Anvil {
     }
     private fun fillGUI(gui: Inventory) {
         for (i in 0 until gui.size) {
-            gui.setItem(i, com.github.Ringoame196.Items.Item().make(Material.RED_STAINED_GLASS_PANE, " "))
+            gui.setItem(i, com.github.Ringoame196.Items.ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
     }
     private fun InstallationAir(gui: Inventory, slot: Int) {
-        gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.AIR, " "))
+        gui.setItem(slot, com.github.Ringoame196.Items.ItemManager().make(Material.AIR, " "))
     }
     private fun InstallationCompositeButton(gui: Inventory, slot: Int) {
-        gui.setItem(slot, com.github.Ringoame196.Items.Item().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
+        gui.setItem(slot, com.github.Ringoame196.Items.ItemManager().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
     }
     fun click(player: Player, item: ItemStack, e: InventoryClickEvent) {
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)

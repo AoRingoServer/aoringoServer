@@ -4,7 +4,7 @@ import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -24,7 +24,7 @@ class Fryer {
         if (!cook.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
             return
         }
-        Item().reduceMainItem(player)
+        ItemManager().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (foodManager.isExpirationDateHasExpired(player, item)) { return }
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
@@ -41,7 +41,7 @@ class Fryer {
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
                 if (c == 0) {
                     val dropLocation = block.location.clone().add(0.5, 1.0, 0.5)
-                    Item().drop(dropLocation, cookData.fly(item) ?: return)
+                    ItemManager().drop(dropLocation, cookData.fly(item) ?: return)
                     timer.remove()
                     block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
                     this.cancel()

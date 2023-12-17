@@ -1,8 +1,7 @@
 package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.Application
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -12,8 +11,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 
-class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") : Application {
-    override fun getcustomModelData(): Int {
+class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") :
+    Application {
+    override fun getCustomModelData(): Int {
         return 5
     }
     override fun openGUI(player: Player, plugin: Plugin) {
@@ -52,8 +52,8 @@ class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", p
         val highRatingSlot = 4
         val lowRatingSlot = 6
         gui.setItem(targetPlayerHeadSlot, target)
-        gui.setItem(highRatingSlot, Item().make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価"))
-        gui.setItem(lowRatingSlot, Item().make(Material.STONE_BUTTON, "${ChatColor.RED}低評価"))
+        gui.setItem(highRatingSlot, ItemManager().make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価"))
+        gui.setItem(lowRatingSlot, ItemManager().make(Material.STONE_BUTTON, "${ChatColor.RED}低評価"))
         player.openInventory(gui)
     }
     fun void(target: ItemStack, button: String, player: Player) {

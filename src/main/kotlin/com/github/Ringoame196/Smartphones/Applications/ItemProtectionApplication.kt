@@ -1,8 +1,8 @@
 package com.github.Ringoame196.Smartphone.APKs
 
-import com.github.Ringoame196.Application
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
+import com.github.Ringoame196.Smartphones.Applications.Application
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -12,16 +12,16 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
 class ItemProtectionApplication : Application {
-    override fun getcustomModelData(): Int {
+    override fun getCustomModelData(): Int {
         return 3
     }
     override fun openGUI(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}アイテム保護")
         for (i in 0 until gui.size) {
-            gui.setItem(i, Item().make(Material.RED_STAINED_GLASS_PANE, " "))
+            gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(3, Item().make(Material.AIR, "",))
-        gui.setItem(6, Item().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
+        gui.setItem(3, ItemManager().make(Material.AIR, "",))
+        gui.setItem(6, ItemManager().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
         player.openInventory(gui)
     }
     fun isPlayerProtection(item: ItemStack, player: Player): Boolean {

@@ -3,7 +3,7 @@ package com.github.Ringoame196.Shop
 import com.github.Ringoame196.Account
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyUseCase
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -48,10 +48,10 @@ class Fshop(private val shop: ItemFrame) : Account {
     fun makeBuyGUI(goods: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
         val price = acquisitionPrice()
-        val item = Item()
-        gui.setItem(0, item.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
+        val itemManager = ItemManager()
+        gui.setItem(0, itemManager.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
         gui.setItem(3, goods)
-        gui.setItem(4, item.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
+        gui.setItem(4, itemManager.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
         return gui
     }
     fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack) {

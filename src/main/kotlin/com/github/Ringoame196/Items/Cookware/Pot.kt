@@ -4,7 +4,7 @@ import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -61,7 +61,7 @@ class Pot {
                     barrel.customName = null
                     barrel.update()
                     val dropLocation = block.location.clone().add(0.5, 1.0, 0.5)
-                    Item().drop(dropLocation, item)
+                    ItemManager().drop(dropLocation, item)
                     armorStand.remove()
                     block.world.playSound(block.location, Sound.BLOCK_ANVIL_USE, 1f, 1f)
                     this.cancel()

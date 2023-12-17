@@ -1,16 +1,16 @@
 package com.github.Ringoame196.Smartphones
 
-import com.github.Ringoame196.ApplicationManager
-import com.github.Ringoame196.Application
 import com.github.Ringoame196.Admin
+import com.github.Ringoame196.ApplicationManager
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
+import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
 import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
 import com.github.Ringoame196.Smartphones.Applications.HealthCcareApplication
@@ -53,8 +53,8 @@ class Smartphone {
         val apkCount = minOf(smartphoneSlots.size, playerHaveAPKList.size)
         for (i in 0 until apkCount) {
             val apkName = playerHaveAPKList[i]
-            val customModelData = apkList[apkName]?.customModelData ?: 0
-            gui.setItem(smartphoneSlots[i], Item().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
+            val customModelData = apkList[apkName]?.getCustomModelData() ?: 0
+            gui.setItem(smartphoneSlots[i], ItemManager().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
         }
         return gui
     }
@@ -135,10 +135,10 @@ class Smartphone {
             }
             "${ChatColor.GREEN}情報" -> {
                 val gui = player.openInventory.topInventory
-                gui.setItem(2, Item().make(Material.MAP, "${ChatColor.YELLOW}保護情報",))
-                gui.setItem(4, Item().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
-                gui.setItem(6, Item().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除"))
-                gui.setItem(8, Item().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行"))
+                gui.setItem(2, ItemManager().make(Material.MAP, "${ChatColor.YELLOW}保護情報",))
+                gui.setItem(4, ItemManager().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
+                gui.setItem(6, ItemManager().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除"))
+                gui.setItem(8, ItemManager().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行"))
             }
             "${ChatColor.YELLOW}保護情報" -> {
                 player.closeInventory()
@@ -175,7 +175,7 @@ class Smartphone {
     fun createProtectionGUI(player: Player, name: String): Inventory {
         val price = LandPurchase().calculatePrice(player)
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
-        gui.setItem(4, Item().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
+        gui.setItem(4, ItemManager().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
         return gui
     }
     fun protection(player: org.bukkit.entity.Player, item: ItemStack, name: String) {

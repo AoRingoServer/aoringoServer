@@ -3,7 +3,7 @@ package com.github.Ringoame196.Items.Cookware
 import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.ItemFrame
@@ -13,7 +13,7 @@ class FryBatter {
     private val foodManager = FoodManager()
     private val cook = Cook()
     private val cookData = CookData()
-    private val itemClass = Item()
+    private val itemManagerClass = ItemManager()
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand
         if (foodManager.isExpirationDateHasExpired(player, entity.item)) { return }
@@ -21,7 +21,7 @@ class FryBatter {
         if (!cook.isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
             return
         }
-        itemClass.reduceMainItem(player)
+        itemManagerClass.reduceMainItem(player)
         player.inventory.addItem(dressingItem)
         val particleLocation = entity.location.add(0.0, 1.0, 0.0)
         entity.world.spawnParticle(Particle.EXPLOSION_HUGE, particleLocation, 1)

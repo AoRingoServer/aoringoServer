@@ -8,7 +8,7 @@ import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.PlayerAccount
@@ -126,8 +126,8 @@ class AoringoPlayer(val player: Player) {
         permission("worldguard.region.claim", judgement, plugin)
     }
     fun fastJoin() {
-        player.inventory.addItem(Item().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
-        player.inventory.addItem(Item().make(material = Material.NETHER_STAR, name = "職業スター"))
+        player.inventory.addItem(ItemManager().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
+        player.inventory.addItem(ItemManager().make(material = Material.NETHER_STAR, name = "職業スター"))
         player.scoreboardTags.add("member")
         Scoreboard().set("money", player.uniqueId.toString(), 30000)
     }
@@ -168,7 +168,7 @@ class AoringoPlayer(val player: Player) {
                 permission("enderchest.size.$level", true, plugin)
                 player.sendMessage("${ChatColor.AQUA}エンダーチェスト容量UP")
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-                Item().reduceMainItem(player)
+                ItemManager().reduceMainItem(player)
             }
         }
     }
@@ -249,7 +249,7 @@ class AoringoPlayer(val player: Player) {
             } else {
                 block.world.dropItem(
                     block.location,
-                    Item().make(
+                    ItemManager().make(
                         item.type,
                         vegetablesName,
                         FoodManager().makeExpirationDate(14)

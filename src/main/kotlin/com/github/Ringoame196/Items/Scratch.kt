@@ -1,7 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -16,7 +16,7 @@ class Scratch {
     fun createGUI(title: String): Inventory {
         val gui = Bukkit.createInventory(null, 27, title)
         for (i in 0..26) {
-            gui.setItem(i, Item().make(material = Material.PAPER, name = " ", customModelData = 6))
+            gui.setItem(i, ItemManager().make(material = Material.PAPER, name = " ", customModelData = 6))
         }
         paper(gui, 3)
         paper(gui, 12)
@@ -25,7 +25,7 @@ class Scratch {
     }
     private fun paper(gui: Inventory, c: Int) {
         for (i in 0..2) {
-            gui.setItem(i + c, Item().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData = 7))
+            gui.setItem(i + c, ItemManager().make(material = Material.PAPER, name = "${ChatColor.RED}削る", customModelData = 7))
         }
     }
     fun click(itemList: MutableList<Material>): ItemStack {

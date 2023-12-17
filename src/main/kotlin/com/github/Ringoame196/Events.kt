@@ -1,18 +1,18 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.Block
-import com.github.Ringoame196.Items.Cookware.ChoppingBoard
-import com.github.Ringoame196.Items.Cookware.FryBatter
-import com.github.Ringoame196.Items.Cookware.Fryer
-import com.github.Ringoame196.Items.Cookware.GasBurner
-import com.github.Ringoame196.Items.Cookware.Pot
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
+import com.github.Ringoame196.Items.Cookware.ChoppingBoard
+import com.github.Ringoame196.Items.Cookware.FryBatter
+import com.github.Ringoame196.Items.Cookware.Fryer
+import com.github.Ringoame196.Items.Cookware.GasBurner
+import com.github.Ringoame196.Items.Cookware.Pot
 import com.github.Ringoame196.Items.FoodManager
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
@@ -134,7 +134,7 @@ class Events(private val plugin: Plugin) : Listener {
                 when (barrel.customName) {
                     "admingift" -> {
                         e.isCancelled = true
-                        Item().giveBarrelGift(player, barrel, "admingift")
+                        ItemManager().giveBarrelGift(player, barrel, "admingift")
                     }
                 }
             }
@@ -147,14 +147,14 @@ class Events(private val plugin: Plugin) : Listener {
                 val upBlock = block?.location?.clone()?.add(0.0, 1.0, 0.0)?.block
                 if (upBlock?.type != Material.AIR) { return }
                 ChoppingBoard().summonChoppingBoard(block)
-                Item().reduceMainItem(player)
+                ItemManager().reduceMainItem(player)
             }
             "${ChatColor.YELLOW}おたま" -> {
                 if (block?.type != Material.BARREL) { return }
                 if (downBlock?.type != Material.CAMPFIRE) { return }
                 e.isCancelled = true
                 Pot().boil(block, player, plugin)
-                Item().breakLadle(player)
+                ItemManager().breakLadle(player)
             }
             "${ChatColor.YELLOW}カゴ" -> {
                 e.isCancelled = true
@@ -163,7 +163,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}スマートフォン" -> player.openInventory(Smartphone().createGUI(plugin, player))
             "${ChatColor.RED}リンゴスクラッチ", "${ChatColor.YELLOW}金リンゴスクラッチ" -> {
-                Item().reduceMainItem(player)
+                ItemManager().reduceMainItem(player)
                 player.openInventory(Scratch().createGUI(itemName))
             }
             "${ChatColor.RED}会社情報本" -> {
@@ -193,8 +193,8 @@ class Events(private val plugin: Plugin) : Listener {
             }
             beeNest.honeyLevel = 0
             e.clickedBlock!!.blockData = beeNest
-            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(14),))
-            Item().reduceMainItem(player)
+            player.inventory.addItem(ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(14),))
+            ItemManager().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
             item.itemMeta?.customModelData.let {
@@ -280,7 +280,7 @@ class Events(private val plugin: Plugin) : Listener {
                 }
                 player.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
                 Cook().mix(player, block.state as Barrel)
-                Item().breakHandle(itemFrame, aoringoPlayer)
+                ItemManager().breakHandle(itemFrame, aoringoPlayer)
             }
             "${ChatColor.RED}ポスト" -> {
                 e.isCancelled = true
@@ -337,7 +337,7 @@ class Events(private val plugin: Plugin) : Listener {
             entity.remove()
             entity.world.dropItem(
                 entity.location,
-                Item().make(material = Material.HEAVY_WEIGHTED_PRESSURE_PLATE, name = "まな板")
+                ItemManager().make(material = Material.HEAVY_WEIGHTED_PRESSURE_PLATE, name = "まな板")
             )
         }
     }
@@ -499,7 +499,7 @@ class Events(private val plugin: Plugin) : Listener {
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
             val scratchItem = Scratch().click(itemList)
             e.currentItem = scratchItem
-            if (Scratch().countItem(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
+            if (Scratch().countItem(gui, ItemManager().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) <= 6) {
                 Scratch().result(Scratch().countItem(gui, scratchItem) == 3, player, 10000)
             }
         } else if (title == "${ChatColor.YELLOW}金リンゴスクラッチ" && e.clickedInventory != player.inventory) {
@@ -512,7 +512,7 @@ class Events(private val plugin: Plugin) : Listener {
             )
             val scratchItem = Scratch().click(itemList)
             e.currentItem = scratchItem
-            if (Scratch().countItem(gui, Item().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
+            if (Scratch().countItem(gui, ItemManager().make(Material.PAPER, "${ChatColor.RED}削る", customModelData = 7)) == 0) {
                 Scratch().result(Scratch().countItem(gui, scratchItem) == 9, player, 1000000)
             }
         }
@@ -573,14 +573,14 @@ class Events(private val plugin: Plugin) : Listener {
         val displayName = item.itemMeta?.displayName ?: ""
         val aoringoPlayer = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
-        val itemClass = Item()
+        val itemManagerClass = ItemManager()
         val job = JobManager()
         if (type == Material.FERMENTED_SPIDER_EYE) {
-            e.currentItem = itemClass.make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
+            e.currentItem = itemManagerClass.make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (displayName.contains("包丁")) {
             e.currentItem = Cook().knifeSharpness(item)
         } else if (displayName.contains("契約書")) {
-            e.currentItem = itemClass.copyBlock(item, player)
+            e.currentItem = itemManagerClass.copyBlock(item, player)
         } else if (ngItem.contains(type)) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("このアイテムをクラフトすることは禁止されています")
@@ -668,11 +668,11 @@ class Events(private val plugin: Plugin) : Listener {
         if ((itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
             return
         }
+        ItemManager().reduceOneItem(player, item)
         e.isCancelled = true
         player.foodLevel = foodManager.calculateFoodLevel(player, item)
         player.saturation = hiddenFoodLevel // 隠し満腹度
         foodManager.increaseStatus(player, item)
-        Item().reduceOneItem(player, item)
     }
 
     @EventHandler
@@ -690,7 +690,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                Item().make(material = Material.EGG, name = "卵", lore = FoodManager().makeExpirationDate(term))
+                ItemManager().make(material = Material.EGG, name = "卵", lore = FoodManager().makeExpirationDate(term))
             )
         }
     }

@@ -18,7 +18,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
 
-class Item {
+class ItemManager {
     fun make(material: Material, name: String = "", lore: String = "", customModelData: Int = 0, amount: Int = 1): ItemStack {
         val item = ItemStack(material)
         val meta = item.itemMeta
@@ -145,7 +145,7 @@ class Item {
         if (Random.nextInt(0, 100) != 0) {
             return
         }
-        Item().reduceMainItem(player)
+        ItemManager().reduceMainItem(player)
         com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("おたまがぶっ壊れた")
     }
     fun breakHandle(itemFrame: ItemFrame, playerClass: com.github.Ringoame196.Entity.AoringoPlayer) {
@@ -171,6 +171,6 @@ class Item {
     fun reduceOneItem(player: Player, item: ItemStack) {
         val reduceItem = item.clone()
         reduceItem.amount = 1
-        player.inventory.remove(reduceItem)
+        player.inventory.removeItem(reduceItem)
     }
 }

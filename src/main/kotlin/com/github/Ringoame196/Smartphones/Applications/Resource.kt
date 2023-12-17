@@ -1,6 +1,6 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -11,9 +11,9 @@ import org.bukkit.inventory.Inventory
 class Resource {
     fun createSelectTpGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.GREEN}資源テレポート")
-        gui.setItem(1, Item().make(material = Material.CHEST, name = "${ChatColor.GOLD}ロビー"))
-        gui.setItem(4, Item().make(material = Material.GRASS_BLOCK, name = "${ChatColor.GREEN}オーバーワールド"))
-        gui.setItem(7, Item().make(material = Material.NETHERRACK, name = "${ChatColor.RED}ネザー"))
+        gui.setItem(1, ItemManager().make(material = Material.CHEST, name = "${ChatColor.GOLD}ロビー"))
+        gui.setItem(4, ItemManager().make(material = Material.GRASS_BLOCK, name = "${ChatColor.GREEN}オーバーワールド"))
+        gui.setItem(7, ItemManager().make(material = Material.NETHERRACK, name = "${ChatColor.RED}ネザー"))
         return gui
     }
     fun guiClick(player: Player, itemName: String) {

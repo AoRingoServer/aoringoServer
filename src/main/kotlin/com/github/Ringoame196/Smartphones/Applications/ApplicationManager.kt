@@ -1,7 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Item
+import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -45,7 +45,7 @@ class ApplicationManager {
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
     fun uninstall(player: org.bukkit.entity.Player, itemName: String, customModelData: Int, plugin: Plugin) {
-        player.inventory.addItem(Item().make(Material.GREEN_CONCRETE, "[アプリケーション]$itemName", "", customModelData, 1))
+        player.inventory.addItem(ItemManager().make(Material.GREEN_CONCRETE, "[アプリケーション]$itemName", "", customModelData, 1))
         Yml().removeToList(plugin, "playerData", player.uniqueId.toString(), "apkList", itemName)
         player.sendMessage("${ChatColor.RED}[スマートフォン]${itemName}${ChatColor.RED}をアンインストールしました")
         player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
