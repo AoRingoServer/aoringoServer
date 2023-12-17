@@ -40,9 +40,9 @@ class Pot {
         posCooking(plugin, block, finishFood, player)
     }
     private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
-        val armorStand = cookArmorStand.summonMarker(block.location.clone().add(0.5, 1.0, 0.5), "", cook.armorStandTag)
-        val level = Scoreboard().getValue("cookingLevel", player.uniqueId.toString())
-        var c = 30 - (level * 2)
+        val summonLocation = block.location.clone().add(0.5,1.0,0.5)
+        val armorStand = cookArmorStand.summonMarker(summonLocation, "", cook.armorStandTag)
+        var c = cook.calculateCookTime(30,player)
         val barrel = block.state as Barrel
         barrel.customName = "${ChatColor.RED}オープン禁止"
         barrel.update()
@@ -51,7 +51,8 @@ class Pot {
                 c--
                 armorStand.customName = "${ChatColor.YELLOW}${c}秒"
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
-                if (block.location.block.type != Material.BARREL || block.location.clone().add(0.0, -1.0, 0.0).block.type != Material.CAMPFIRE) {
+                val downBlock = block.location.clone().add(0.0,-1.0,0.0).block
+                if (block.location.block.type != Material.BARREL || downBlock.type != Material.CAMPFIRE) {
                     armorStand.remove()
                     this.cancel()
                 }
@@ -59,7 +60,8 @@ class Pot {
                 if (c == 0) {
                     barrel.customName = null
                     barrel.update()
-                    Item().drop(block.location.clone().add(0.5, 1.0, 0.5), item)
+                    val dropLocation = block.location.clone().add(0.5, 1.0, 0.5)
+                    Item().drop(dropLocation, item)
                     armorStand.remove()
                     block.world.playSound(block.location, Sound.BLOCK_ANVIL_USE, 1f, 1f)
                     this.cancel()
