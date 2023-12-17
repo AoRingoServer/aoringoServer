@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
-import com.github.Ringoame196.Cook
+import com.github.Ringoame196.CookManager
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.FoodManager
@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class Pot {
     private val cookData = CookData()
-    private val cook = Cook()
+    private val cookManager = CookManager()
     private val foodManager = FoodManager()
     private val cookArmorStand = ArmorStand()
     fun boil(block: Block, player: Player, plugin: Plugin) {
@@ -30,7 +30,7 @@ class Pot {
             if (foodManager.isExpirationDateHasExpired(player, item)) { return }
         }
         val finishFood = cookData.pot(ingredients) ?: return
-        if (!cook.isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
+        if (!cookManager.isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
             return
         }
         for (item in barrel.inventory) {
@@ -41,8 +41,8 @@ class Pot {
     }
     private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
-        val armorStand = cookArmorStand.summonMarker(summonLocation, "", cook.armorStandTag)
-        var c = cook.calculateCookTime(30, player)
+        val armorStand = cookArmorStand.summonMarker(summonLocation, "", cookManager.armorStandTag)
+        var c = cookManager.calculateCookTime(30, player)
         val barrel = block.state as Barrel
         barrel.customName = "${ChatColor.RED}オープン禁止"
         barrel.update()

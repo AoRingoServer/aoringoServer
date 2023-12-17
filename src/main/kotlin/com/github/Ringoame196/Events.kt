@@ -279,7 +279,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 player.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
-                Cook().mix(player, block.state as Barrel)
+                CookManager().mix(player, block.state as Barrel)
                 ItemManager().breakHandle(itemFrame, aoringoPlayer)
             }
             "${ChatColor.RED}ポスト" -> {
@@ -578,7 +578,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = itemManagerClass.make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (displayName.contains("包丁")) {
-            e.currentItem = Cook().knifeSharpness(item)
+            e.currentItem = CookManager().knifeSharpness(item)
         } else if (displayName.contains("契約書")) {
             e.currentItem = itemManagerClass.copyBlock(item, player)
         } else if (ngItem.contains(type)) {

@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
-import com.github.Ringoame196.Cook
+import com.github.Ringoame196.CookManager
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.ItemFrame
@@ -16,10 +16,10 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
 class GasBurner {
-    private val cook = Cook()
+    private val cookManager = CookManager()
     private val itemFrame = ItemFrame()
     private val foodManager = FoodManager()
-    private val armorStandTag = cook.armorStandTag
+    private val armorStandTag = cookManager.armorStandTag
     private val cookData = CookData()
     private val armorStand = ArmorStand()
     fun summonIronPlate(block: Block) {
@@ -29,7 +29,7 @@ class GasBurner {
     }
     fun bakingFoods(plugin: Plugin, player: Player, ironPlate: org.bukkit.entity.ItemFrame, smoker: Smoker) {
         var c = 0
-        val completeTime = cook.calculateCookTime(10, player)
+        val completeTime = cookManager.calculateCookTime(10, player)
         itemFrame.changeTransparency(ironPlate)
         val display = armorStand.summonMarker(ironPlate.location, "", armorStandTag)
         val world = ironPlate.world
@@ -68,7 +68,7 @@ class GasBurner {
     private fun completeBaking(item: ItemStack, player: Player, ironPlate: org.bukkit.entity.ItemFrame) {
         val bakeItem = cookData.bake(item) ?: return
         val world = player.world
-        if (!cook.isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
+        if (!cookManager.isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
             return
         }
         ironPlate.setItem(bakeItem)

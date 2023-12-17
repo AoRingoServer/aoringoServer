@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
-import com.github.Ringoame196.Cook
+import com.github.Ringoame196.CookManager
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.Material
@@ -14,7 +14,7 @@ import kotlin.random.Random
 class ChoppingBoard {
     private val foodManager = FoodManager()
     private val cookData = CookData()
-    private val cook = Cook()
+    private val cookManager = CookManager()
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.itemMeta?.customModelData != 1) { return }
@@ -27,7 +27,7 @@ class ChoppingBoard {
         }
         val cutItem = cookData.cut(item) ?: return
         val ingredientName = cutItem.itemMeta?.displayName
-        if (!cook.isCookLevel(ingredientName?:return, player)) {
+        if (!cookManager.isCookLevel(ingredientName?:return, player)) {
             return
         }
         val usedKnife = reduceDurability(playerItem)

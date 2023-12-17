@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
-import com.github.Ringoame196.Cook
+import com.github.Ringoame196.CookManager
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
@@ -11,14 +11,14 @@ import org.bukkit.entity.Player
 
 class FryBatter {
     private val foodManager = FoodManager()
-    private val cook = Cook()
+    private val cookManager = CookManager()
     private val cookData = CookData()
     private val itemManagerClass = ItemManager()
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand
         if (foodManager.isExpirationDateHasExpired(player, entity.item)) { return }
         val dressingItem = cookData.dressing(item) ?: return
-        if (!cook.isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
+        if (!cookManager.isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
             return
         }
         itemManagerClass.reduceMainItem(player)

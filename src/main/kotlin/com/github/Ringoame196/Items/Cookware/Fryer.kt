@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
-import com.github.Ringoame196.Cook
+import com.github.Ringoame196.CookManager
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.FoodManager
@@ -16,20 +16,20 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class Fryer {
     private val cookData = CookData()
-    private val cook = Cook()
+    private val cookManager = CookManager()
     private val foodManager = FoodManager()
     private val cookArmorStand = ArmorStand()
     fun deepFry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
         val fryItem = cookData.fly(item) ?: return
-        if (!cook.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
+        if (!cookManager.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
             return
         }
         ItemManager().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (foodManager.isExpirationDateHasExpired(player, item)) { return }
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
-        val timer = cookArmorStand.summonMarker(summonLocation, " ", cook.armorStandTag)
-        var c = cook.calculateCookTime(15, player)
+        val timer = cookArmorStand.summonMarker(summonLocation, " ", cookManager.armorStandTag)
+        var c = cookManager.calculateCookTime(15, player)
         object : BukkitRunnable() {
             override fun run() {
                 if (block.location.block.type != Material.LAVA_CAULDRON) {
