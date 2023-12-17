@@ -2,6 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Cook.ChoppingBoard
+import com.github.Ringoame196.Cook.Clothing
 import com.github.Ringoame196.Cook.Cook
 import com.github.Ringoame196.Cook.GasBurner
 import com.github.Ringoame196.Data.Company
@@ -275,7 +276,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 itemFrame.setItem(ItemStack(Material.AIR))
-                Cook().dressing(player, itemFrame)
+                Clothing().dressing(player, entity)
             }
             "${ChatColor.YELLOW}混ぜハンドル" -> {
                 if (block.type != Material.BARREL) { return }
