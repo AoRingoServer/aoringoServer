@@ -11,7 +11,7 @@ import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
@@ -132,13 +132,6 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 when (barrel.customName) {
-                    "クエスト" -> {
-                        e.isCancelled = true
-                        when (Scoreboard().getValue("mission", player.name)) {
-                            0 -> Mission().set(player, barrel)
-                            else -> Mission().check(player, barrel)
-                        }
-                    }
                     "admingift" -> {
                         e.isCancelled = true
                         Item().giveBarrelGift(player, barrel, "admingift")
@@ -200,7 +193,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             beeNest.honeyLevel = 0
             e.clickedBlock!!.blockData = beeNest
-            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", Food().makeExpirationDate(14),))
+            player.inventory.addItem(Item().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(14),))
             Item().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
@@ -368,7 +361,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             return
         }
-        when (gui.title) {
+        when (gui.title) { // インスタンスできるかも？
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)
             "${ChatColor.BLUE}職業選択" -> {
                 e.isCancelled = true
@@ -399,13 +392,6 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 e.isCancelled = true
-            }
-
-            "${ChatColor.GOLD}クエスト" -> {
-                e.isCancelled = true
-                if (itemName == "${ChatColor.RED}辞退") {
-                    Mission().reset(player)
-                }
             }
             "${ChatColor.BLUE}Fショップ" -> {
                 e.isCancelled = true
@@ -673,19 +659,19 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val item = e.item
         val itemType = item.type
-        val food = Food()
+        val foodManager = FoodManager()
         val hiddenFoodLevel = 20.0f
 
-        if (food.isExpirationDateHasExpired(player, item)) {
-            food.giveDiarrheaEffect(player)
+        if (foodManager.isExpirationDateHasExpired(player, item)) {
+            foodManager.giveDiarrheaEffect(player)
         }
         if ((itemType == Material.PUFFERFISH || itemType == Material.SPIDER_EYE || itemType == Material.MILK_BUCKET) && !item.hasItemMeta()) {
             return
         }
         e.isCancelled = true
-        player.foodLevel = food.calculateFoodLevel(player, item)
+        player.foodLevel = foodManager.calculateFoodLevel(player, item)
         player.saturation = hiddenFoodLevel // 隠し満腹度
-        food.increaseStatus(player, item)
+        foodManager.increaseStatus(player, item)
         Item().reduceOneItem(player, item)
     }
 
@@ -693,7 +679,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onEntityDeath(e: EntityDeathEvent) {
         val entity = e.entity
         val dropITem = ItemData().getEntityDropItem(entity.type) ?: return
-        Food().dropReplacement(e, dropITem.material, Food().makeItem(dropITem.displayName, dropITem.customModelData))
+        FoodManager().dropReplacement(e, dropITem.material, FoodManager().makeItem(dropITem.displayName, dropITem.customModelData))
     }
 
     @EventHandler
@@ -704,7 +690,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                Item().make(material = Material.EGG, name = "卵", lore = Food().makeExpirationDate(term))
+                Item().make(material = Material.EGG, name = "卵", lore = FoodManager().makeExpirationDate(term))
             )
         }
     }

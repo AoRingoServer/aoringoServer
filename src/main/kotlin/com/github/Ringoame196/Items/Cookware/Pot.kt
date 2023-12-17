@@ -3,7 +3,7 @@ package com.github.Ringoame196.Items.Cookware
 import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable
 class Pot {
     private val cookData = CookData()
     private val cook = Cook()
-    private val food = Food()
+    private val foodManager = FoodManager()
     private val cookArmorStand = ArmorStand()
     fun boil(block: Block, player: Player, plugin: Plugin) {
         val barrel = block.state as Barrel
@@ -27,7 +27,7 @@ class Pot {
         for (item in barrel.inventory) {
             item ?: continue
             ingredients.add(item.itemMeta?.displayName ?: continue)
-            if (food.isExpirationDateHasExpired(player, item)) { return }
+            if (foodManager.isExpirationDateHasExpired(player, item)) { return }
         }
         val finishFood = cookData.pot(ingredients) ?: return
         if (!cook.isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {

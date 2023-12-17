@@ -3,7 +3,7 @@ package com.github.Ringoame196.Items.Cookware
 import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable
 class Fryer {
     private val cookData = CookData()
     private val cook = Cook()
-    private val food = Food()
+    private val foodManager = FoodManager()
     private val cookArmorStand = ArmorStand()
     fun deepFry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
         val fryItem = cookData.fly(item) ?: return
@@ -26,7 +26,7 @@ class Fryer {
         }
         Item().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-        if (food.isExpirationDateHasExpired(player, item)) { return }
+        if (foodManager.isExpirationDateHasExpired(player, item)) { return }
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
         val timer = cookArmorStand.summonMarker(summonLocation, " ", cook.armorStandTag)
         var c = cook.calculateCookTime(15, player)

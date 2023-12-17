@@ -7,7 +7,7 @@ import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
@@ -252,7 +252,7 @@ class AoringoPlayer(val player: Player) {
                     Item().make(
                         item.type,
                         vegetablesName,
-                        Food().makeExpirationDate(14)
+                        FoodManager().makeExpirationDate(14)
                     )
                 )
             }

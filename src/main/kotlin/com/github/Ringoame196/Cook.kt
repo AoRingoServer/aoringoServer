@@ -2,7 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {
+class Cook(val foodManager: FoodManager = FoodManager(), val cookData: CookData = CookData(), private val cookArmorStand: ArmorStand = ArmorStand()) {
     val armorStandTag = "cookGame"
     private val itemFrame = com.github.Ringoame196.Entity.ItemFrame()
     fun acquisitionCookLevel(uuid: String): Int {
@@ -43,7 +43,7 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
         for (i in 0 until barrel.inventory.size) {
             val item = barrel.inventory.getItem(i) ?: continue
             recipe.add(item.itemMeta?.displayName ?: continue)
-            if (food.isExpirationDateHasExpired(player, item)) {
+            if (foodManager.isExpirationDateHasExpired(player, item)) {
                 expiration = true
             }
         }

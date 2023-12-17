@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Data
 
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -92,7 +92,7 @@ class CookData {
             rawYakitori.toSet() -> food("${ChatColor.RED}生焼き鳥", 99)
             octopusNigiri.toSet() -> food("${ChatColor.RED}タコの握り", 73)
             squidNigiri.toSet() -> food("イカの握り", 72)
-            wort.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GREEN}麦汁", Food().makeExpirationDate(0), 2, 1)
+            wort.toSet() -> Item().make(Material.MILK_BUCKET, "${ChatColor.GREEN}麦汁", FoodManager().makeExpirationDate(0), 2, 1)
             curryrRice.toSet() -> food("${ChatColor.YELLOW}[完成]カレーライス", 44)
             curryrUdon.toSet() -> food("${ChatColor.YELLOW}[完成]カレーうどん", 61)
             else -> null

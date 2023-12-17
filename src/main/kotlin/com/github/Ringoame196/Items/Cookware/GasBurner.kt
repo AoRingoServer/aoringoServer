@@ -4,7 +4,7 @@ import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.ItemFrame
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -18,7 +18,7 @@ import org.bukkit.scheduler.BukkitRunnable
 class GasBurner {
     private val cook = Cook()
     private val itemFrame = ItemFrame()
-    private val food = Food()
+    private val foodManager = FoodManager()
     private val armorStandTag = cook.armorStandTag
     private val cookData = CookData()
     private val armorStand = ArmorStand()
@@ -35,7 +35,7 @@ class GasBurner {
         val world = ironPlate.world
         val burnedTime = completeTime * 2
         val item = ironPlate.item
-        if (food.isExpirationDateHasExpired(player, item)) {
+        if (foodManager.isExpirationDateHasExpired(player, item)) {
             display.remove()
             return
         }

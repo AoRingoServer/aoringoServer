@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Job
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.Item
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
@@ -20,7 +20,7 @@ class JobManager {
     private val jobList = mutableListOf("無職", "${ChatColor.YELLOW}料理人", "${ChatColor.GOLD}ハンター", "${ChatColor.GRAY}鍛冶屋")
     private val jobScoreboardName = "job"
     private val scoreboard = Scoreboard()
-    private val food = Food()
+    private val foodManager = FoodManager()
     private val item = Item()
     fun setJob(player: Player, id: Int) {
         scoreboard.set(jobScoreboardName, player.uniqueId.toString(), id)
@@ -127,29 +127,29 @@ class JobManager {
     )
     fun giveVegetables(location: Location) {
         val vegetables = mutableListOf(
-            food.makeItem("${ChatColor.GREEN}キュウリ", 1),
-            food.makeItem("${ChatColor.GOLD}キャベツ", 2),
-            food.makeItem("${ChatColor.GOLD}スパイス", 3),
-            food.makeItem("稲", 4),
-            food.makeItem("${ChatColor.DARK_PURPLE}なす", 5),
-            food.makeItem("${ChatColor.GOLD}たまねぎ", 6),
-            food.makeItem("${ChatColor.RED}トマト", 7),
+            foodManager.makeItem("${ChatColor.GREEN}キュウリ", 1),
+            foodManager.makeItem("${ChatColor.GOLD}キャベツ", 2),
+            foodManager.makeItem("${ChatColor.GOLD}スパイス", 3),
+            foodManager.makeItem("稲", 4),
+            foodManager.makeItem("${ChatColor.DARK_PURPLE}なす", 5),
+            foodManager.makeItem("${ChatColor.GOLD}たまねぎ", 6),
+            foodManager.makeItem("${ChatColor.RED}トマト", 7),
         )
         location.world?.dropItem(location, vegetables[Random.nextInt(0, vegetables.size)])
     }
     fun givefish(player: Player): ItemStack {
         val fish = mutableListOf(
-            food.makeItem("${ChatColor.RED}マグロ", 31),
-            food.makeItem("${ChatColor.GOLD}サーモン", 32),
+            foodManager.makeItem("${ChatColor.RED}マグロ", 31),
+            foodManager.makeItem("${ChatColor.GOLD}サーモン", 32),
             item.make(Material.EXPERIENCE_BOTTLE, "${ChatColor.GREEN}経験値瓶", ""),
             item.enchant(Enchantment.LURE, 1)
         )
         if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") {
-            fish.add(Food().makeItem("${ChatColor.RED}タコ", 38))
-            fish.add(Food().makeItem("イカ", 35))
-            fish.add(Food().makeItem("${ChatColor.AQUA}エビ", 28))
+            fish.add(FoodManager().makeItem("${ChatColor.RED}タコ", 38))
+            fish.add(FoodManager().makeItem("イカ", 35))
+            fish.add(FoodManager().makeItem("${ChatColor.AQUA}エビ", 28))
             fish.add(ItemStack(Material.LEATHER))
-            fish.add(Food().makeItem("${ChatColor.BLACK}海苔", 37))
+            fish.add(FoodManager().makeItem("${ChatColor.BLACK}海苔", 37))
         }
         if (JobManager().get(player) == "${ChatColor.GOLD}ハンター" || Random.nextInt(0, 10) == 0) {
             return fish.get(Random.nextInt(0, fish.size))

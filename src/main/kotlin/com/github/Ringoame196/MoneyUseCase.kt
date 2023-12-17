@@ -8,6 +8,7 @@ import org.bukkit.Material
 import java.util.UUID
 
 class MoneyUseCase {
+
     private val moneyManager = MoneyManager()
     fun getMoneyFromAdmin(aoringoPlayer: AoringoPlayer, amount: Int) {
         val sender = aoringoPlayer.player

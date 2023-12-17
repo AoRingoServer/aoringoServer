@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
-class Food {
+class FoodManager {
     private fun returnFoodHasLevel(item: ItemStack): Int {
         val itemName = item.itemMeta?.displayName
         return when (itemName) {

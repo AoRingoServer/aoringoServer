@@ -2,7 +2,7 @@ package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.Cook
 import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Items.Food
+import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Block
@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
 class ChoppingBoard {
-    private val food = Food()
+    private val foodManager = FoodManager()
     private val cookData = CookData()
     private val cook = Cook()
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
@@ -22,7 +22,7 @@ class ChoppingBoard {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
             return
         }
-        if (food.isExpirationDateHasExpired(player, entity.item)) {
+        if (foodManager.isExpirationDateHasExpired(player, entity.item)) {
             return
         }
         val cutItem = cookData.cut(item) ?: return
