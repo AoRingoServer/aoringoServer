@@ -144,26 +144,6 @@ class Cook(val food: Food = Food(), val cookData: CookData = CookData(), private
             }
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
-    fun findArmorStandsInRadius(location: Location, radius: Double): List<org.bukkit.entity.ArmorStand> {
-        val world: World? = location.world?.name?.let { Bukkit.getWorld(it) }
-
-        val armorStandsInRange = mutableListOf<org.bukkit.entity.ArmorStand>()
-
-        if (world != null) {
-            for (entity in world.entities) {
-                if (entity is org.bukkit.entity.ArmorStand) {
-                    val entityLocation = entity.location
-                    val distance = location.distance(entityLocation)
-
-                    if (distance <= radius) {
-                        armorStandsInRange.add(entity)
-                    }
-                }
-            }
-        }
-
-        return armorStandsInRange
-    }
     fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
