@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.SkullMeta
 import org.bukkit.plugin.Plugin
 
-class PlayerRatingAPK(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") :
+class PlayerRatingApplication(private val voidScoreboardName: String = "playerRating", private val voidJudgmentScoreboardName: String = "evaluationVote") :
     Application {
     override fun getCustomModelData(): Int {
         return 5

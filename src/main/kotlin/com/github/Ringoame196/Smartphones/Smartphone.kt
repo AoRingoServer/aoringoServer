@@ -14,9 +14,9 @@ import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
 import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
 import com.github.Ringoame196.Smartphones.Applications.HealthCcareApplication
-import com.github.Ringoame196.Smartphones.Applications.LandProtectionAPK
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplication
 import com.github.Ringoame196.Smartphones.Applications.OPApplication
-import com.github.Ringoame196.Smartphones.Applications.PlayerRatingAPK
+import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Applications.TeleportApplication
 import com.github.Ringoame196.Yml
@@ -36,8 +36,8 @@ class Smartphone {
         "${ChatColor.GREEN}所持金変換" to ConversionMoneyApplication(),
         "${ChatColor.RED}アイテム保護" to ItemProtectionApplication(),
         "${ChatColor.GREEN}テレポート" to TeleportApplication(),
-        "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingAPK(),
-        "${ChatColor.GREEN}土地保護" to LandProtectionAPK(),
+        "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingApplication(),
+        "${ChatColor.GREEN}土地保護" to LandProtectionApplication(),
         "${ChatColor.YELLOW}OP用" to OPApplication(),
         "${ChatColor.YELLOW}アプリ並べ替え" to SortApplication(),
         "${ChatColor.AQUA}ヘルスケア" to HealthCcareApplication()

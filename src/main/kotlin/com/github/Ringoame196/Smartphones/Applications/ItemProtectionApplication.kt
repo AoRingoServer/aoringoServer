@@ -3,15 +3,18 @@ package com.github.Ringoame196.Smartphone.APKs
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Smartphones.Applications.Application
+import com.github.Ringoame196.Smartphones.Applications.ClosingApplication
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
+import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class ItemProtectionApplication : Application {
+class ItemProtectionApplication : Application,ClosingApplication {
     override fun getCustomModelData(): Int {
         return 3
     }
@@ -23,6 +26,11 @@ class ItemProtectionApplication : Application {
         gui.setItem(3, ItemManager().make(Material.AIR, "",))
         gui.setItem(6, ItemManager().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
         player.openInventory(gui)
+    }
+
+    override fun close(player: Player, gui: InventoryView, plugin: Plugin) {
+        val containsItemSlot = 3
+        player.inventory.addItem(gui.getItem(containsItemSlot) ?: return)
     }
     fun isPlayerProtection(item: ItemStack, player: Player): Boolean {
         if (item.itemMeta?.lore == null) {

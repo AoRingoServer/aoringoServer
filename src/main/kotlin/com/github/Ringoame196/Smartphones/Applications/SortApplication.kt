@@ -7,9 +7,10 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
+import org.bukkit.inventory.InventoryView
 import org.bukkit.plugin.Plugin
 
-class SortApplication : Application {
+class SortApplication : Application,ClosingApplication {
     override fun getCustomModelData(): Int {
         return 8
     }
@@ -23,5 +24,9 @@ class SortApplication : Application {
             val customModelData = apkLIst[apkName]?.getCustomModelData() ?: 0
             gui.addItem(ItemManager().make(Material.GREEN_CONCRETE, "[アプリケーション]$apkName", customModelData = customModelData))
         }
+    }
+
+    override fun close(player: Player, gui: InventoryView, plugin: Plugin) {
+        ApplicationManager().saveToYmlFile(player, gui, plugin)
     }
 }

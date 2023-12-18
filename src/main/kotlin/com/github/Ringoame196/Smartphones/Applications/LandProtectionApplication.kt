@@ -8,7 +8,7 @@ import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class LandProtectionAPK : Application {
+class LandProtectionApplication : Application {
     override fun getCustomModelData(): Int {
         return 6
     }

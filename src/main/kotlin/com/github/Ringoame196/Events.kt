@@ -17,7 +17,9 @@ import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.Applications.PlayerRatingAPK
+import com.github.Ringoame196.Smartphones.Applications.ClosingApplication
+import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
+import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -435,15 +437,15 @@ class Events(private val plugin: Plugin) : Listener {
             }
 
             "${ChatColor.BLUE}プレイヤー評価" -> {
-                val playerRatingAPK = PlayerRatingAPK()
+                val playerRatingApplication = PlayerRatingApplication()
                 e.isCancelled = true
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 if (item.type == Material.PLAYER_HEAD) {
                     if (itemName != player.name) {
-                        playerRatingAPK.voidGUI(player, item)
+                        playerRatingApplication.voidGUI(player, item)
                     }
                 } else if (item.type == Material.STONE_BUTTON) {
-                    playerRatingAPK.void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
+                    playerRatingApplication.void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
                 }
             }
 
@@ -600,6 +602,10 @@ class Events(private val plugin: Plugin) : Listener {
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
+        val application = mapOf<String,ClosingApplication>(
+            "${ChatColor.YELLOW}アイテム保護" to ItemProtectionApplication(),
+            "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication()
+        )
         when (gui.title) {
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().returnItemFromPlayer(gui, player)
             "${ChatColor.RED}エンチャント" -> {
@@ -613,9 +619,8 @@ class Events(private val plugin: Plugin) : Listener {
                 Cage().clone(player, gui)
                 player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
             }
-            "${ChatColor.YELLOW}アイテム保護" -> player.inventory.addItem(gui.getItem(3) ?: return)
-            "${ChatColor.BLUE}スマートフォン(並び替え)" -> ApplicationManager().saveToYmlFile(player, gui, plugin)
         }
+        application[gui.title]?.close(player,gui,plugin)?:return
     }
 
     @EventHandler

@@ -6,7 +6,7 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.HumanEntity
-import org.bukkit.inventory.InventoryView
+import org.bukkit.inventory.Inventory
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
@@ -50,7 +50,7 @@ class ApplicationManager {
         player.sendMessage("${ChatColor.RED}[スマートフォン]${itemName}${ChatColor.RED}をアンインストールしました")
         player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }
-    fun saveToYmlFile(player: HumanEntity, gui: InventoryView, plugin: Plugin) {
+    fun saveToYmlFile(player: HumanEntity, gui: Inventory, plugin: Plugin) {
         val apkList = mutableListOf<String>()
         var c = 1
         for (apk in gui.topInventory) {
