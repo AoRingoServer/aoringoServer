@@ -10,7 +10,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.InventoryView
 import org.bukkit.plugin.Plugin
 
-class SortApplication : Application,ClosingApplication {
+class SortApplication : Application, ClosingApplication {
     override fun getCustomModelData(): Int {
         return 8
     }

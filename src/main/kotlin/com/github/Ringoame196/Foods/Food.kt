@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Foods
 
-interface Food{
+interface Food {
     fun recoveryFoodGauge()
-    fun getFoodLevel():Int
+    fun getFoodLevel(): Int
 }

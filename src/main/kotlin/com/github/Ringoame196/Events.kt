@@ -602,7 +602,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
-        val application = mapOf<String,ClosingApplication>(
+        val application = mapOf<String, ClosingApplication>(
             "${ChatColor.YELLOW}アイテム保護" to ItemProtectionApplication(),
             "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication()
         )
@@ -620,7 +620,7 @@ class Events(private val plugin: Plugin) : Listener {
                 player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
             }
         }
-        application[gui.title]?.close(player,gui,plugin)?:return
+        application[gui.title]?.close(player, gui, plugin) ?: return
     }
 
     @EventHandler
