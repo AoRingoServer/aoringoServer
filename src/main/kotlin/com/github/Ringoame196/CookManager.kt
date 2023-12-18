@@ -12,7 +12,6 @@ import kotlin.random.Random
 
 class CookManager(private val foodManager: FoodManager = FoodManager(), private val cookData: CookData = CookData()) {
     val armorStandTag = "cookGame"
-    private val itemFrame = com.github.Ringoame196.Entity.ItemFrame()
     fun acquisitionCookLevel(uuid: String): Int {
         val scoreboardName = "cookingLevel"
         return Scoreboard().getValue(scoreboardName, uuid)
