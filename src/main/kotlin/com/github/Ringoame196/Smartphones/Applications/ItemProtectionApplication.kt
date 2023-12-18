@@ -23,8 +23,10 @@ class ItemProtectionApplication : Application,ClosingApplication {
         for (i in 0 until gui.size) {
             gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
-        gui.setItem(3, ItemManager().make(Material.AIR, "",))
-        gui.setItem(6, ItemManager().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
+        val putItemSlot = 3
+        val buttonSlot = 6
+        gui.setItem(putItemSlot, ItemManager().make(Material.AIR, "",))
+        gui.setItem(buttonSlot, ItemManager().make(Material.ANVIL, "${ChatColor.RED}ロック/解除"))
         player.openInventory(gui)
     }
 
