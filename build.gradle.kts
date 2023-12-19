@@ -12,6 +12,7 @@ plugins {
     id("dev.s7a.gradle.minecraft.server") version "1.2.0"
     id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jmailen.kotlinter") version "3.8.0"
+    id("org.hidetake.ssh") version "2.10.0"
 }
 
 val gitVersion: Closure<String> by extra

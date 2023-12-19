@@ -772,6 +772,7 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
         val player = e.player
+        player.sendMessage("a")
         val aoringoPlayer = AoringoPlayer(player)
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
