@@ -36,7 +36,7 @@ class FoodManager {
     fun increaseStatus(player: Player, food: ItemStack) {
         val aoringoPlayer = AoringoPlayer(player)
         val foodName = food.itemMeta?.displayName
-        val powerUpFood = mapOf<String,PowerUpFood>(
+        val powerUpFood = mapOf<String, PowerUpFood>(
             "${ChatColor.YELLOW}力のプロテイン" to ForceProtein(),
             "${ChatColor.RED}ハートのハーブ" to HeartHerb()
         )
