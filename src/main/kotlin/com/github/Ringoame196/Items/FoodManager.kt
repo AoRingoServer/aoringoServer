@@ -1,6 +1,9 @@
 package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.Foods.ForceProtein
+import com.github.Ringoame196.Foods.HeartHerb
+import com.github.Ringoame196.Foods.PowerUpFood
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -33,10 +36,11 @@ class FoodManager {
     fun increaseStatus(player: Player, food: ItemStack) {
         val aoringoPlayer = AoringoPlayer(player)
         val foodName = food.itemMeta?.displayName
-        when (foodName) {
-            "${ChatColor.YELLOW}力のプロテイン" -> aoringoPlayer.addPower()
-            "${ChatColor.RED}ハートのハーブ" -> aoringoPlayer.addMaxHP()
-        }
+        val powerUpFood = mapOf<String,PowerUpFood>(
+            "${ChatColor.YELLOW}力のプロテイン" to ForceProtein(),
+            "${ChatColor.RED}ハートのハーブ" to HeartHerb()
+        )
+        powerUpFood[foodName]?.powerUp(aoringoPlayer)
     }
     fun makeItem(name: String, customModelData: Int): ItemStack {
         val item = ItemStack(Material.MELON_SLICE)
