@@ -133,8 +133,7 @@ class LandPurchase {
     }
     private fun countSelectBlocks(player: Player): Int {
         val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
-
-        val region: Region = session.getSelection(BukkitAdapter.adapt(player.world))
+        val region: Region = session.getSelection(BukkitAdapter.adapt(player.world)) ?: return 0
         if (region !is CuboidRegion) {
             return 0
         }

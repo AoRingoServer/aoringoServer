@@ -14,11 +14,10 @@ class LandProtectionApplication : Application {
     }
     override fun openGUI(player: Player, plugin: Plugin) {
         val itemManager = ItemManager()
-        val landPurchase = LandPurchase()
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}WorldGuardGUI")
         gui.setItem(
             2,
-            itemManager.make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成", "${landPurchase.calculatePrice(player)}円")
+            itemManager.make(Material.GOLDEN_AXE, "${ChatColor.YELLOW}保護作成")
         )
         gui.setItem(4, itemManager.make(Material.MAP, "${ChatColor.GREEN}情報"))
         gui.setItem(6, itemManager.make(Material.CHEST, "${ChatColor.AQUA}保護一覧"))
