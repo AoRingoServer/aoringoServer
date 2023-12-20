@@ -15,6 +15,14 @@ import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplicatio
 import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
 import com.github.Ringoame196.Smartphones.Applications.HealthCcareApplication
 import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplication
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.AddMember
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.Delete
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.DeletionMember
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.GetWoodenAxe
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.Information
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionCreationButton
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionInformation
+import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionListButton
 import com.github.Ringoame196.Smartphones.Applications.OPApplication
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
@@ -114,63 +122,27 @@ class Smartphone {
             "${ChatColor.GREEN}テストワールド" -> player.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: return)
         }
     }
-    fun wgClick(item: ItemStack, plugin: Plugin, player: org.bukkit.entity.Player, shift: Boolean) {
-        val playerClass = com.github.Ringoame196.Entity.AoringoPlayer(player)
+    fun wgClick(item: ItemStack, plugin: Plugin, player: Player, shift: Boolean) {
+        val playerClass = AoringoPlayer(player)
+        val worldGuard = WorldGuard()
         if (player.world.name != "Home" && !player.isOp) {
             playerClass.sendErrorMessage("保護は生活ワールドのみ使用可能です")
             player.closeInventory()
             return
         }
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-        when (item.itemMeta?.displayName) {
-            "${ChatColor.GOLD}木の斧ゲット" -> player.inventory.addItem(ItemStack(Material.WOODEN_AXE))
-            "${ChatColor.AQUA}保護一覧" -> {
-                player.closeInventory()
-                LandPurchase().listRegionsInWorld(player)
-            }
-            "${ChatColor.YELLOW}保護作成" -> {
-                player.closeInventory()
-                player.addScoreboardTag("rg")
-                player.sendMessage("${ChatColor.AQUA}[土地保護]保護名を入力してください")
-            }
-            "${ChatColor.GREEN}情報" -> {
-                val gui = player.openInventory.topInventory
-                gui.setItem(2, ItemManager().make(Material.MAP, "${ChatColor.YELLOW}保護情報",))
-                gui.setItem(4, ItemManager().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
-                gui.setItem(6, ItemManager().make(Material.PLAYER_HEAD, "${ChatColor.RED}メンバー削除"))
-                gui.setItem(8, ItemManager().make(Material.REDSTONE_BLOCK, "${ChatColor.RED}削除", "${ChatColor.DARK_RED}シフトで実行"))
-            }
-            "${ChatColor.YELLOW}保護情報" -> {
-                player.closeInventory()
-                player.sendMessage("${ChatColor.YELLOW}-----保護情報-----")
-                player.sendMessage("${ChatColor.GOLD}保護名:${WorldGuard().getName(player.location)}")
-                player.sendMessage("${ChatColor.YELLOW}オーナー:" + if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) == true) { "${ChatColor.GOLD}あなたはオーナーです" } else { "${ChatColor.RED}あなたはオーナーではありません" })
-                player.sendMessage("${ChatColor.AQUA}メンバー:" + if (WorldGuard().getMemberOfRegion(player.location)?.contains(player.uniqueId) == true) { "${ChatColor.GOLD}あなたはメンバーです" } else { "${ChatColor.RED}あなたはメンバーではありません" })
-            }
-            "${ChatColor.AQUA}メンバー追加" -> {
-                if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
-                    return
-                }
-                LandPurchase().addMemberGUI(player, WorldGuard().getName(player.location))
-            }
-            "${ChatColor.RED}メンバー削除" -> {
-                if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
-                    return
-                }
-                LandPurchase().removeMemberGUI(player, WorldGuard().getName(player.location) ?: return)
-            }
-            "${ChatColor.RED}削除" -> {
-                if (WorldGuard().getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {
-                    playerClass.sendErrorMessage("自分の保護土地内で実行してください")
-                    return
-                }
-                if (!shift) { return }
-                WorldGuard().delete(player, WorldGuard().getName(player.location) ?: return)
-                player.sendMessage("${ChatColor.RED}保護を削除しました")
-            }
-        }
+        val clickItems = mapOf<String,com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.LandProtectionApplicationButton>(
+            "${ChatColor.GOLD}木の斧ゲット" to GetWoodenAxe(),
+            "${ChatColor.AQUA}保護一覧" to ProtectionListButton(),
+            "${ChatColor.YELLOW}保護作成" to ProtectionCreationButton(),
+            "${ChatColor.GREEN}情報" to Information(),
+            "${ChatColor.YELLOW}保護情報" to ProtectionInformation(),
+            "${ChatColor.AQUA}メンバー追加" to AddMember(),
+            "${ChatColor.RED}メンバー削除" to DeletionMember(),
+            "${ChatColor.RED}削除" to Delete()
+        )
+        val name = item.itemMeta?.displayName
+        clickItems[name]?.click(player,shift)?:return
     }
     fun createProtectionGUI(player: Player, name: String): Inventory {
         val price = LandPurchase().calculatePrice(player)
