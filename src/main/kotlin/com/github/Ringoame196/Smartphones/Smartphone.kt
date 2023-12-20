@@ -131,7 +131,7 @@ class Smartphone {
             return
         }
         player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-        val clickItems = mapOf<String,com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.LandProtectionApplicationButton>(
+        val clickItems = mapOf<String, com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.LandProtectionApplicationButton>(
             "${ChatColor.GOLD}木の斧ゲット" to GetWoodenAxe(),
             "${ChatColor.AQUA}保護一覧" to ProtectionListButton(),
             "${ChatColor.YELLOW}保護作成" to ProtectionCreationButton(),
@@ -142,7 +142,7 @@ class Smartphone {
             "${ChatColor.RED}削除" to Delete()
         )
         val name = item.itemMeta?.displayName
-        clickItems[name]?.click(player,shift)?:return
+        clickItems[name]?.click(player, shift) ?: return
     }
     fun createProtectionGUI(player: Player, name: String): Inventory {
         val price = LandPurchase().calculatePrice(player)

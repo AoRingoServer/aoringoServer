@@ -5,8 +5,8 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 
-class Delete:LandProtectionApplicationButton {
-    override fun click(player: Player,shift:Boolean) {
+class Delete : LandProtectionApplicationButton {
+    override fun click(player: Player, shift: Boolean) {
         val worldGuard = WorldGuard()
         val aoringoPlayer = AoringoPlayer(player)
         if (worldGuard.getOwnerOfRegion(player.location)?.contains(player.uniqueId) != true) {

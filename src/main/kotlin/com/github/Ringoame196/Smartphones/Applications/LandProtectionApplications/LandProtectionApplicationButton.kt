@@ -3,5 +3,5 @@ package com.github.Ringoame196.Smartphones.Applications.LandProtectionApplicatio
 import org.bukkit.entity.Player
 
 interface LandProtectionApplicationButton {
-    fun click(player: Player,shift:Boolean)
+    fun click(player: Player, shift: Boolean)
 }

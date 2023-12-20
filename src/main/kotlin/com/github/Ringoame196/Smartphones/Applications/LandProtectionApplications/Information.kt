@@ -5,8 +5,8 @@ import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
-class Information:LandProtectionApplicationButton {
-    override fun click(player: Player,shift:Boolean) {
+class Information : LandProtectionApplicationButton {
+    override fun click(player: Player, shift: Boolean) {
         val gui = player.openInventory.topInventory
         gui.setItem(2, ItemManager().make(Material.MAP, "${ChatColor.YELLOW}保護情報",))
         gui.setItem(4, ItemManager().make(Material.PLAYER_HEAD, "${ChatColor.AQUA}メンバー追加"))
