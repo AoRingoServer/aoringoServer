@@ -6,6 +6,7 @@ import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyManager
+import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
@@ -81,6 +82,7 @@ class Smartphone {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             moneyItem(player, money, item)
+            MoneyUseCase().reduceMoney(AoringoPlayer(player), money)
         }
     }
     private fun getWorldSpawnLocation(worldName: String): Location? {
