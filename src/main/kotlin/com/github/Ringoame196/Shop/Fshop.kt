@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Shop
 
-import com.github.Ringoame196.Account
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
@@ -15,10 +14,10 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class Fshop(private val shop: ItemFrame) : Account {
+class Fshop(private val shop: ItemFrame) {
     private val shopInfo: String = shop.customName ?: throw RuntimeException("ショップ情報を取得できませんでした")
     private val moneyUseCase = MoneyUseCase()
-    override fun getAccountID(): String {
+    fun getAccountID(): String {
         return acquisitionAccountName()
     }
     fun isOwner(player: Player): Boolean {
@@ -66,7 +65,8 @@ class Fshop(private val shop: ItemFrame) : Account {
             return
         }
         sender.inventory.addItem(item)
-        moneyUseCase.tradeMoney(aoringoPlayer, this, price)
+        val account = ShopCoordinationAccount(this)
+        moneyUseCase.tradeMoney(aoringoPlayer, account, price)
         sender.sendMessage("${ChatColor.GREEN}購入しました")
         sender.playSound(sender, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         replenishment()
