@@ -27,9 +27,9 @@ class MoneyUseCase {
     }
     fun reduceMoney(aoringoPlayer: AoringoPlayer, amount: Int) {
         if (moneyManager.reduceMoney(aoringoPlayer.playerAccount, amount)) {
-            aoringoPlayer.sendErrorMessage("所持金が足りません")
-        } else {
             aoringoPlayer.sendActionBar("${ChatColor.RED}-$amount")
+        } else {
+            aoringoPlayer.sendErrorMessage("所持金が足りません")
         }
     }
     fun displayMoney(aoringoPlayer: AoringoPlayer) {
