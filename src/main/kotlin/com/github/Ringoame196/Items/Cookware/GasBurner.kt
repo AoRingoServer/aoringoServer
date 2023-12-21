@@ -52,6 +52,7 @@ class GasBurner {
                     completeBaking(ingredient, player, ironPlate)
                 } else if (c == burnedTime || ingredient.type == Material.AIR) {
                     singeFoods(ironPlate)
+                    ironPlate.setItem(ItemStack(Material.AIR))
                     display.remove()
                     this.cancel()
                 }
@@ -61,7 +62,7 @@ class GasBurner {
     private fun singeFoods(ironPlate: org.bukkit.entity.ItemFrame) {
         val world = ironPlate.world
         val item = ironPlate.item
-        if (item.type != Material.AIR) { return }
+        if (item.type == Material.AIR) { return }
         ironPlate.setItem(ItemStack(Material.AIR))
         world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
     }
