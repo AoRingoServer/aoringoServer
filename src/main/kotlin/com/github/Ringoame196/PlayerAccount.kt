@@ -1,9 +1,9 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Entity.AoringoPlayer
+import org.bukkit.OfflinePlayer
 
-class PlayerAccount(private val player: AoringoPlayer) : Account {
+class PlayerAccount(private val player: OfflinePlayer) : Account {
     override fun getAccountID(): String {
-        return player.player.uniqueId.toString()
+        return player.uniqueId.toString()
     }
 }

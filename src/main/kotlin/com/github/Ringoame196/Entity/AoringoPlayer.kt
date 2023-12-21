@@ -33,7 +33,7 @@ import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 
 class AoringoPlayer(val player: Player) {
-    val playerAccount = PlayerAccount(this)
+    val playerAccount = PlayerAccount(player)
     val moneyUseCase = MoneyUseCase()
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null

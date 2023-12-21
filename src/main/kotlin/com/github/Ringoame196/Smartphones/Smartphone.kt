@@ -124,7 +124,6 @@ class Smartphone {
     }
     fun wgClick(item: ItemStack, plugin: Plugin, player: Player, shift: Boolean) {
         val playerClass = AoringoPlayer(player)
-        val worldGuard = WorldGuard()
         if (player.world.name != "Home" && !player.isOp) {
             playerClass.sendErrorMessage("保護は生活ワールドのみ使用可能です")
             player.closeInventory()

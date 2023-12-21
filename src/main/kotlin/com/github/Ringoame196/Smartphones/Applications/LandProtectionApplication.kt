@@ -1,7 +1,6 @@
 package com.github.Ringoame196.Smartphones.Applications
 
 import com.github.Ringoame196.Items.ItemManager
-import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
