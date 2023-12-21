@@ -372,6 +372,9 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.BLUE}ヘルスケア" -> {
                 e.isCancelled = true
             }
+            "${ChatColor.BLUE}ATM" -> {
+                e.isCancelled = true
+            }
             "${ChatColor.RED}エンチャント" -> {
                 val book = gui.getItem(4) ?: return
                 if (book.type != Material.BOOK) { return }
