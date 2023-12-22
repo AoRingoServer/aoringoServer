@@ -36,7 +36,8 @@ class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(player)
     val moneyUseCase = MoneyUseCase()
     data class PlayerData(
-        var titleMoneyBossbar: BossBar? = null
+        var titleMoneyBossbar: BossBar? = null,
+        var chatSettingItem:String? = null
     )
     fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()
@@ -199,7 +200,6 @@ class AoringoPlayer(val player: Player) {
         player.openInventory(Smartphone().createProtectionGUI(player, name))
     }
     fun namingConservationLand(plugin: Plugin, name: String) {
-        player.removeScoreboardTag("rg")
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable

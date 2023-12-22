@@ -3,6 +3,7 @@ package com.github.Ringoame196
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
+import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
@@ -17,6 +18,7 @@ import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
+import com.github.Ringoame196.Smartphones.Applications.ATMApplication
 import com.github.Ringoame196.Smartphones.Applications.ClosingApplication
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
@@ -374,6 +376,17 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.BLUE}ATM" -> {
                 e.isCancelled = true
+                player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+                val atm = ATMApplication()
+                when (itemName) {
+                    "${ChatColor.GREEN}送金" -> player.openInventory(atm.createRemittanceMenuGUI())
+                    "${ChatColor.AQUA}プレイヤー" -> {
+                        player.closeInventory()
+                        player.sendMessage("${ChatColor.GOLD}[送金]送金したいプレイヤーの名前を入力してください")
+                        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem = "remittancePlayer"
+                    }
+                    "${ChatColor.YELLOW}会社" -> aoringoPlayer.sendErrorMessage("現在会社への送金はできません")
+                }
             }
             "${ChatColor.RED}エンチャント" -> {
                 val book = gui.getItem(4) ?: return
@@ -800,11 +813,13 @@ class Events(private val plugin: Plugin) : Listener {
         val message = e.message
         val aoringoPlayer = AoringoPlayer(player)
         val playerItem = player.inventory.itemInMainHand
-        if (player.scoreboardTags.contains("rg")) {
-            e.isCancelled = true
-            aoringoPlayer.namingConservationLand(plugin, message)
-            return
+        when(PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem){
+            "rg" -> {
+                e.isCancelled = true
+                aoringoPlayer.namingConservationLand(plugin, message)
+            }
         }
+        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem = null
         if (message.contains("@")) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
