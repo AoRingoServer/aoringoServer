@@ -37,7 +37,7 @@ class AoringoPlayer(val player: Player) {
     val moneyUseCase = MoneyUseCase()
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
-        var chatSettingItem:String? = null
+        var chatSettingItem: String? = null
     )
     fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()

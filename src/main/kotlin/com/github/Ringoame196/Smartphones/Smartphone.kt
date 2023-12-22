@@ -11,7 +11,6 @@ import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.Applications.ATMApplication
 import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
 import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
@@ -51,7 +50,6 @@ class Smartphone {
         "${ChatColor.YELLOW}OP用" to OPApplication(),
         "${ChatColor.YELLOW}アプリ並べ替え" to SortApplication(),
         "${ChatColor.AQUA}ヘルスケア" to HealthCcareApplication(),
-        "${ChatColor.GREEN}ATM" to ATMApplication()
     )
     fun createGUI(plugin: Plugin, player: Player): Inventory {
         val gui = Bukkit.createInventory(null, 27, "${ChatColor.BLUE}スマートフォン")
