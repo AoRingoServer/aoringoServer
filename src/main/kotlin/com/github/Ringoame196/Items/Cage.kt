@@ -9,6 +9,13 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
 class Cage {
+    private val materialToIdMap = mapOf<Int, Material>(
+        0 to Material.MELON_SLICE,
+        1 to Material.WHEAT,
+        2 to Material.CARROT,
+        3 to Material.POTATO
+    )
+    private val idToMaterialMap = materialToIdMap.entries.associate { (key, value) -> value to key }
     fun createGUi(item: ItemStack): Inventory {
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}カゴ")
         if (item.itemMeta?.lore != null) {
@@ -39,17 +46,7 @@ class Cage {
         return item
     }
     private fun acquisitionMaterial(number: Int): Material {
-        val materials = listOf(
-            Material.MELON_SLICE,
-            Material.WHEAT,
-            Material.CARROT,
-            Material.POTATO
-        )
-        try {
-            return materials[number]
-        } catch (e: IndexOutOfBoundsException) {
-            throw RuntimeException("Materialが見つかりませんでした")
-        }
+        return materialToIdMap[number] ?: throw RuntimeException("Materialが見つかりませんでした")
     }
     fun clone(player: HumanEntity, gui: InventoryView) {
         val lore = mutableListOf<String>()
@@ -79,13 +76,7 @@ class Cage {
         cage.itemMeta = meta
         player.inventory.setItemInMainHand(cage)
     }
-    private fun compressionMaterial(material: Material): Int {
-        return when (material) {
-            Material.MELON_SLICE -> 0
-            Material.WHEAT -> 1
-            Material.CARROT -> 2
-            Material.POTATO -> 3
-            else -> throw RuntimeException("未登録のアイテムを追加しようとしました")
-        }
+    private fun compressionMaterial(material: Material): Int? {
+        return idToMaterialMap[material]
     }
 }
