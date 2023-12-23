@@ -93,6 +93,7 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK) { return }
+        if (e.action == Action.LEFT_CLICK_AIR) { return }
         if (item != playerItem && item.type != Material.AIR) { return }
         when (block?.type) {
             Material.OAK_SIGN -> {
@@ -185,6 +186,13 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}契約書[契約待ち]" -> {
                 player.sendMessage("${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]")
+            }
+            "${ChatColor.YELLOW}送金申込書[未記入]" -> {
+                player.sendMessage("${ChatColor.YELLOW}[送金申し込み書メニュー]")
+                player.sendMessage("${ChatColor.AQUA}!送金 プレイヤー [送金先のプレイヤー名]")
+                player.sendMessage("${ChatColor.AQUA}!送金 口座 [口座名]")
+                player.sendMessage("${ChatColor.AQUA}!送金 金額 [値段]")
+                player.sendMessage("${ChatColor.YELLOW}上のメッセージを本を持った状態でチャットしてください")
             }
         }
         if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
