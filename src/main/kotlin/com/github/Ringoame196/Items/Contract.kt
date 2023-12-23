@@ -22,7 +22,6 @@ class Contract {
     }
     fun returnMoney(player: Player) {
         val aoringoPlayer = AoringoPlayer(player)
-        val playerAccount = aoringoPlayer.playerAccount
         val item = player.inventory.itemInMainHand
         val bookMessage = item.itemMeta as BookMeta
         if (!bookMessage.getPage(1).contains("UUID：${player.uniqueId}")) {
