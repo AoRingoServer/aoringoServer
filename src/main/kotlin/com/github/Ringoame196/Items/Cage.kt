@@ -67,11 +67,14 @@ class Cage {
 
         val cage = player.inventory.itemInMainHand
         val meta = cage.itemMeta
+        val airStatus = 0
+        val thingsStatus = 1
+        val status = lore.size == 0
         meta?.lore = lore
-        if (lore.size == 0) {
-            meta?.setCustomModelData(1)
+        if (status) {
+            meta?.setCustomModelData(airStatus)
         } else {
-            meta?.setCustomModelData(2)
+            meta?.setCustomModelData(thingsStatus)
         }
         cage.itemMeta = meta
         player.inventory.setItemInMainHand(cage)
