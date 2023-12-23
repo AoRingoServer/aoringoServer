@@ -15,13 +15,9 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class GasBurner {
-    private val cookManager = CookManager()
+class GasBurner(private val cookManager:CookManager = CookManager()) {
     private val itemFrame = ItemFrame()
-    private val foodManager = FoodManager()
     private val armorStandTag = cookManager.armorStandTag
-    private val cookData = CookData()
-    private val armorStand = ArmorStand()
     fun summonIronPlate(block: Block) {
         val location = block.location.clone().add(0.0, 1.0, 0.0)
         val ironPlate = itemFrame.summonItemFrame(location)
@@ -31,11 +27,11 @@ class GasBurner {
         var c = 0
         val completeTime = cookManager.calculateCookTime(10, player)
         itemFrame.changeTransparency(ironPlate)
-        val display = armorStand.summonMarker(ironPlate.location, "", armorStandTag)
+        val display = cookManager.cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
         val world = ironPlate.world
         val burnedTime = completeTime * 2
         val item = ironPlate.item
-        if (foodManager.isExpirationDateHasExpired(player, item)) {
+        if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) {
             display.remove()
             return
         }
@@ -67,7 +63,7 @@ class GasBurner {
         world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
     }
     private fun completeBaking(item: ItemStack, player: Player, ironPlate: org.bukkit.entity.ItemFrame) {
-        val bakeItem = cookData.bake(item) ?: return
+        val bakeItem = cookManager.cookData.bake(item) ?: return
         val world = player.world
         if (!cookManager.isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
             return

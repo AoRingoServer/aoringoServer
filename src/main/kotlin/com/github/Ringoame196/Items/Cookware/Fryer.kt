@@ -14,21 +14,17 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class Fryer {
-    private val cookData = CookData()
-    private val cookManager = CookManager()
-    private val foodManager = FoodManager()
-    private val cookArmorStand = ArmorStand()
+class Fryer(private val cookManager:CookManager = CookManager()) {
     fun deepFry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
-        val fryItem = cookData.fly(item) ?: return
+        val fryItem = cookManager.cookData.fly(item) ?: return
         if (!cookManager.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
             return
         }
         ItemManager().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
-        if (foodManager.isExpirationDateHasExpired(player, item)) { return }
+        if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) { return }
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
-        val timer = cookArmorStand.summonMarker(summonLocation, " ", cookManager.armorStandTag)
+        val timer = cookManager.cookArmorStand.summonMarker(summonLocation, " ", cookManager.armorStandTag)
         var c = cookManager.calculateCookTime(15, player)
         object : BukkitRunnable() {
             override fun run() {
@@ -41,7 +37,7 @@ class Fryer {
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
                 if (c == 0) {
                     val dropLocation = block.location.clone().add(0.5, 1.0, 0.5)
-                    ItemManager().drop(dropLocation, cookData.fly(item) ?: return)
+                    ItemManager().drop(dropLocation, cookManager.cookData.fly(item) ?: return)
                     timer.remove()
                     block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
                     this.cancel()

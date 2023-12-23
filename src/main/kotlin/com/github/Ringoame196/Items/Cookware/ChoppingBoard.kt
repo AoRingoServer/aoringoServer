@@ -11,10 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-class ChoppingBoard {
-    private val foodManager = FoodManager()
-    private val cookData = CookData()
-    private val cookManager = CookManager()
+class ChoppingBoard(private val cookManager:CookManager = CookManager()) {
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.itemMeta?.customModelData != 1) { return }
@@ -22,10 +19,10 @@ class ChoppingBoard {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
             return
         }
-        if (foodManager.isExpirationDateHasExpired(player, entity.item)) {
+        if (cookManager.foodManager.isExpirationDateHasExpired(player, entity.item)) {
             return
         }
-        val cutItem = cookData.cut(item) ?: return
+        val cutItem = cookManager.cookData.cut(item) ?: return
         val ingredientName = cutItem.itemMeta?.displayName
         if (!cookManager.isCookLevel(ingredientName?:return, player)) {
             return

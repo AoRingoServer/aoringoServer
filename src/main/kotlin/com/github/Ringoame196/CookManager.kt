@@ -1,6 +1,7 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.CookData
+import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -10,7 +11,10 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-class CookManager(private val foodManager: FoodManager = FoodManager(), private val cookData: CookData = CookData()) {
+class CookManager() {
+    val cookData = CookData()
+    val foodManager = FoodManager()
+    val cookArmorStand = ArmorStand()
     val armorStandTag = "cookGame"
     fun acquisitionCookLevel(uuid: String): Int {
         val scoreboardName = "cookingLevel"

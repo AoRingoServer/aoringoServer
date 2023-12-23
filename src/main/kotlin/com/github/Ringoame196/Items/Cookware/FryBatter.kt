@@ -9,15 +9,12 @@ import org.bukkit.Sound
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 
-class FryBatter {
-    private val foodManager = FoodManager()
-    private val cookManager = CookManager()
-    private val cookData = CookData()
+class FryBatter(private val cookManager:CookManager = CookManager()) {
     private val itemManagerClass = ItemManager()
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand
-        if (foodManager.isExpirationDateHasExpired(player, entity.item)) { return }
-        val dressingItem = cookData.dressing(item) ?: return
+        if (cookManager.foodManager.isExpirationDateHasExpired(player, entity.item)) { return }
+        val dressingItem = cookManager.cookData.dressing(item) ?: return
         if (!cookManager.isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
             return
         }

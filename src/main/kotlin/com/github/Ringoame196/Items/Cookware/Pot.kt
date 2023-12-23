@@ -15,11 +15,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class Pot {
-    private val cookData = CookData()
-    private val cookManager = CookManager()
-    private val foodManager = FoodManager()
-    private val cookArmorStand = ArmorStand()
+class Pot(private val cookManager:CookManager = CookManager()) {
     fun boil(block: Block, player: Player, plugin: Plugin) {
         val barrel = block.state as Barrel
         if (barrel.customName != null) { return }
@@ -27,9 +23,9 @@ class Pot {
         for (item in barrel.inventory) {
             item ?: continue
             ingredients.add(item.itemMeta?.displayName ?: continue)
-            if (foodManager.isExpirationDateHasExpired(player, item)) { return }
+            if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) { return }
         }
-        val finishFood = cookData.pot(ingredients) ?: return
+        val finishFood = cookManager.cookData.pot(ingredients) ?: return
         if (!cookManager.isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
             return
         }
@@ -41,7 +37,7 @@ class Pot {
     }
     private fun posCooking(plugin: Plugin, block: Block, item: ItemStack, player: Player) {
         val summonLocation = block.location.clone().add(0.5, 1.0, 0.5)
-        val armorStand = cookArmorStand.summonMarker(summonLocation, "", cookManager.armorStandTag)
+        val armorStand = cookManager.cookArmorStand.summonMarker(summonLocation, "", cookManager.armorStandTag)
         var c = cookManager.calculateCookTime(30, player)
         val barrel = block.state as Barrel
         barrel.customName = "${ChatColor.RED}オープン禁止"
