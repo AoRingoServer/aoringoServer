@@ -189,8 +189,8 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}送金申込書[未記入]" -> {
                 player.sendMessage("${ChatColor.YELLOW}[送金申し込み書メニュー]")
-                player.sendMessage("${ChatColor.AQUA}!送金 プレイヤー [送金先のプレイヤー名]")
-                player.sendMessage("${ChatColor.AQUA}!送金 口座 [口座名]")
+                player.sendMessage("${ChatColor.AQUA}!送金 プレイヤー [送金先のプレイヤー名](※プレイヤーに送金する場合)")
+                player.sendMessage("${ChatColor.AQUA}!送金 口座 [口座名](※プレイヤー以外に送金する場合)")
                 player.sendMessage("${ChatColor.AQUA}!送金 金額 [値段]")
                 player.sendMessage("${ChatColor.YELLOW}上のメッセージを本を持った状態でチャットしてください")
             }
