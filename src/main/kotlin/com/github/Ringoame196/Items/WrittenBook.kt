@@ -21,4 +21,8 @@ class WrittenBook(private val writtenBook: ItemStack) {
         }
         return lineMap
     }
+    fun edit(page: Int, text: String) {
+        meta.setPage(page, text)
+        writtenBook.setItemMeta(meta)
+    }
 }
