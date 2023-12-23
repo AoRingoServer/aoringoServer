@@ -1,9 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.CookManager
-import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -15,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class Pot(private val cookManager:CookManager = CookManager()) {
+class Pot(private val cookManager: CookManager = CookManager()) {
     fun boil(block: Block, player: Player, plugin: Plugin) {
         val barrel = block.state as Barrel
         if (barrel.customName != null) { return }

@@ -1,9 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.CookManager
-import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -14,7 +11,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class Fryer(private val cookManager:CookManager = CookManager()) {
+class Fryer(private val cookManager: CookManager = CookManager()) {
     fun deepFry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
         val fryItem = cookManager.cookData.fly(item) ?: return
         if (!cookManager.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {

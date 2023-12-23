@@ -1,15 +1,13 @@
 package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.CookManager
-import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 
-class FryBatter(private val cookManager:CookManager = CookManager()) {
+class FryBatter(private val cookManager: CookManager = CookManager()) {
     private val itemManagerClass = ItemManager()
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand

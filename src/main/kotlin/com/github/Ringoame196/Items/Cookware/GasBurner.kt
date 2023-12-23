@@ -1,10 +1,7 @@
 package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.CookManager
-import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Entity.ItemFrame
-import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -15,7 +12,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 
-class GasBurner(private val cookManager:CookManager = CookManager()) {
+class GasBurner(private val cookManager: CookManager = CookManager()) {
     private val itemFrame = ItemFrame()
     private val armorStandTag = cookManager.armorStandTag
     fun summonIronPlate(block: Block) {

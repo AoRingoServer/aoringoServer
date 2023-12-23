@@ -1,8 +1,6 @@
 package com.github.Ringoame196.Items.Cookware
 
 import com.github.Ringoame196.CookManager
-import com.github.Ringoame196.Data.CookData
-import com.github.Ringoame196.Items.FoodManager
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Block
@@ -11,7 +9,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
 
-class ChoppingBoard(private val cookManager:CookManager = CookManager()) {
+class ChoppingBoard(private val cookManager: CookManager = CookManager()) {
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.itemMeta?.customModelData != 1) { return }
