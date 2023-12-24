@@ -28,4 +28,8 @@ class WrittenBook(private val writtenBook: ItemStack) {
         writtenBook.setItemMeta(meta)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
+    fun changeItemName(player: Player, newItemName: String) {
+        meta.setDisplayName(newItemName)
+        writtenBook.setItemMeta(meta)
+    }
 }

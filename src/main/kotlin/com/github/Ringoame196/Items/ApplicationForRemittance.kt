@@ -2,6 +2,7 @@ package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -22,14 +23,27 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
             return
         }
         writtenBook.edit(aoringoPlayer.player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$acquisitionPlayerUUID"))
+        finalize()
     }
     fun remittanceAccountRegistration(targetAccount: String) {
         writtenBook.edit(player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$targetAccount"))
+        finalize()
     }
     fun registrationAmount(price: UInt) {
         writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：$price 円"))
+        finalize()
     }
     fun registerMyAccount() {
         writtenBook.edit(player, 1, pageText.replace("お客様口座：[記入]", "お客様口座：${player.uniqueId}"))
+        finalize()
+    }
+    private fun finalize() {
+        if (!isFinished()) { return }
+        writtenBook.changeItemName(player, "${ChatColor.YELLOW}送金申込書")
+    }
+    private fun isFinished(): Boolean {
+        val playerItem = player.inventory.itemInMainHand
+        val newPageText = WrittenBook(playerItem).getCharactersPage(1)
+        return !newPageText.contains("[記入]")
     }
 }
