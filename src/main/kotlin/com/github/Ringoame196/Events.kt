@@ -834,7 +834,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
         } else if (message.contains("!送金")) {
             val writtenBook = WrittenBook(playerItem)
-            val applicationForRemittance = ApplicationForRemittance(player,playerItem)
+            val applicationForRemittance = ApplicationForRemittance(player, playerItem)
             e.isCancelled = true
             if (playerItem.itemMeta?.displayName != "${ChatColor.YELLOW}送金申込書[未記入]") { return }
             if (playerItem.amount != 1) {
