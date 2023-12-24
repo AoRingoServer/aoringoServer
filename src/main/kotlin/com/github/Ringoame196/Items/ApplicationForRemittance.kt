@@ -46,4 +46,8 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
         val newPageText = WrittenBook(playerItem).getCharactersPage(1)
         return !newPageText.contains("[記入]")
     }
+    fun acquisitionRemittanceInfo() {
+    }
+    private fun remittance() {
+    }
 }

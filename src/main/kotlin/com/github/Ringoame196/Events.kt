@@ -197,6 +197,12 @@ class Events(private val plugin: Plugin) : Listener {
                 player.sendMessage("${ChatColor.AQUA}!送金 口座登録")
                 player.sendMessage("${ChatColor.YELLOW}上のメッセージを本を持った状態でチャットしてください")
             }
+            "${ChatColor.YELLOW}送金申込書" -> {
+                if (player.isSneaking) {
+                } else {
+                    player.sendMessage("${ChatColor.YELLOW}シフト クリックで送金")
+                }
+            }
         }
         if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
             if (item.type != Material.GLASS_BOTTLE) { return }
