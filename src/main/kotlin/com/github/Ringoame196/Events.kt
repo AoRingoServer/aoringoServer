@@ -849,8 +849,12 @@ class Events(private val plugin: Plugin) : Listener {
                 val targetAccount = subCommand.replace("口座 ", "")
                 applicationForRemittance.remittanceAccountRegistration(targetAccount)
             } else if (subCommand.contains("金額 ")) {
-                val price = subCommand.replace("金額 ", "").toInt()
-                applicationForRemittance.registrationAmount(price)
+                try {
+                    val price = subCommand.replace("金額 ", "").toUInt()
+                    applicationForRemittance.registrationAmount(price)
+                } catch (e: NumberFormatException) {
+                    aoringoPlayer.sendErrorMessage("数字を入力してください")
+                }
             } else if (subCommand == "口座登録") {
                 applicationForRemittance.registerMyAccount()
             }

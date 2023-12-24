@@ -26,7 +26,7 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
     fun remittanceAccountRegistration(targetAccount: String) {
         writtenBook.edit(player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$targetAccount"))
     }
-    fun registrationAmount(price: Int) {
+    fun registrationAmount(price: UInt) {
         writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：$price 円"))
     }
     fun registerMyAccount() {
