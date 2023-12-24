@@ -7,6 +7,7 @@ import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
+import com.github.Ringoame196.Items.ApplicationForRemittance
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
 import com.github.Ringoame196.Items.Cookware.Fryer
@@ -833,6 +834,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
         } else if (message.contains("!送金")) {
             val writtenBook = WrittenBook(playerItem)
+            val applicationForRemittance = ApplicationForRemittance(player,playerItem)
             e.isCancelled = true
             if (playerItem.itemMeta?.displayName != "${ChatColor.YELLOW}送金申込書[未記入]") { return }
             if (playerItem.amount != 1) {
@@ -842,25 +844,15 @@ class Events(private val plugin: Plugin) : Listener {
             val subCommand = message.replace("!送金 ", "")
             if (subCommand.contains("プレイヤー ")) {
                 val targetPlayerName = subCommand.replace("プレイヤー ", "")
-                val targetPlayer = Bukkit.getOfflinePlayer(targetPlayerName)
-                val targetPlayerUUID = targetPlayer.uniqueId
-                if (Bukkit.getPlayer(targetPlayerUUID)?.name != targetPlayerName) {
-                    aoringoPlayer.sendErrorMessage("指定したプレイヤーが見つかりませんでした")
-                    return
-                }
-                val pageText = writtenBook.getCharactersPage(1)
-                writtenBook.edit(player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$targetPlayerUUID"))
+                applicationForRemittance.registeredRemittanceRecipientPlayer(targetPlayerName)
             } else if (subCommand.contains("口座 ")) {
                 val targetAccount = subCommand.replace("口座 ", "")
-                val pageText = writtenBook.getCharactersPage(1)
-                writtenBook.edit(player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$targetAccount"))
+                applicationForRemittance.remittanceAccountRegistration(targetAccount)
             } else if (subCommand.contains("金額 ")) {
-                val price = subCommand.replace("金額 ", "")
-                val pageText = writtenBook.getCharactersPage(1)
-                writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：$price 円"))
+                val price = subCommand.replace("金額 ", "").toInt()
+                applicationForRemittance.registrationAmount(price)
             } else if (subCommand == "口座登録") {
-                val pageText = writtenBook.getCharactersPage(1)
-                writtenBook.edit(player, 1, pageText.replace("お客様口座：[記入]", "お客様口座：${player.uniqueId}"))
+                applicationForRemittance.registerMyAccount()
             }
         }
     }
