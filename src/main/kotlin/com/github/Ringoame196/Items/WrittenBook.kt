@@ -1,5 +1,7 @@
 package com.github.Ringoame196.Items
 
+import org.bukkit.Sound
+import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 
@@ -21,8 +23,9 @@ class WrittenBook(private val writtenBook: ItemStack) {
         }
         return lineMap
     }
-    fun edit(page: Int, text: String) {
+    fun edit(player: Player, page: Int, text: String) {
         meta.setPage(page, text)
         writtenBook.setItemMeta(meta)
+        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
 }
