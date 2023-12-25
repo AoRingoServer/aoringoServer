@@ -17,8 +17,8 @@ class WrittenBook(private val writtenBook: ItemStack) {
         for (line in lines) {
             if (!line.contains(punctuationMark)) { continue }
             val punctuationIndex = line.indexOf(punctuationMark)
-            val key = line.substring(0, punctuationIndex - 1)
-            val contents = line.substring(punctuationIndex)
+            val key = line.substring(0, punctuationIndex)
+            val contents = line.substring(punctuationIndex + 1)
             lineMap[key] = contents
         }
         return lineMap
@@ -28,7 +28,7 @@ class WrittenBook(private val writtenBook: ItemStack) {
         writtenBook.setItemMeta(meta)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun changeItemName(player: Player, newItemName: String) {
+    fun changeItemName(newItemName: String) {
         meta.setDisplayName(newItemName)
         writtenBook.setItemMeta(meta)
     }

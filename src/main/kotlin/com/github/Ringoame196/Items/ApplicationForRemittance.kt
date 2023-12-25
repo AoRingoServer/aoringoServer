@@ -1,8 +1,11 @@
 package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.JointAccount
+import com.github.Ringoame196.MoneyManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -30,7 +33,7 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
         finalize()
     }
     fun registrationAmount(price: UInt) {
-        writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：$price 円"))
+        writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：${price}円"))
         finalize()
     }
     fun registerMyAccount() {
@@ -39,15 +42,21 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
     }
     private fun finalize() {
         if (!isFinished()) { return }
-        writtenBook.changeItemName(player, "${ChatColor.YELLOW}送金申込書")
+        writtenBook.changeItemName("${ChatColor.YELLOW}送金申込書")
     }
     private fun isFinished(): Boolean {
         val playerItem = player.inventory.itemInMainHand
         val newPageText = WrittenBook(playerItem).getCharactersPage(1)
         return !newPageText.contains("[記入]")
     }
-    fun acquisitionRemittanceInfo() {
-    }
-    private fun remittance() {
+    fun remittance() {
+        val pageText = writtenBook.getCharactersPage(1)
+        val remittanceAccount = writtenBook.conversionMap(pageText)["送金先口座"] ?: return
+        val reduceAccount = writtenBook.conversionMap(pageText)["お客様口座"] ?: return
+        val price = writtenBook.conversionMap(pageText)["送金金額"]?.replace("円", "")?.toInt()
+        MoneyManager().tradeMoney(JointAccount(remittanceAccount), JointAccount(reduceAccount), price ?: return)
+        player.sendMessage("${ChatColor.AQUA}[送金]$price 円送金しました")
+        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
+        ItemManager().reduceMainItem(player)
     }
 }
