@@ -30,9 +30,10 @@ class MoneyManager {
     fun canGetMoneyFromAdmin(adminAccount: Admin, amount: Int): Boolean {
         return getMoney(adminAccount) > amount
     }
-    fun tradeMoney(receiveAccount: Account, giveAccount: Account, amount: Int) {
-        if (getMoney(giveAccount) < amount) { return }
+    fun tradeMoney(receiveAccount: Account, giveAccount: Account, amount: Int): Boolean {
+        if (getMoney(giveAccount) < amount) { return false }
         reduceMoney(giveAccount, amount)
         addMoney(receiveAccount, amount)
+        return true
     }
 }

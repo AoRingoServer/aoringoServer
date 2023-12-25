@@ -54,7 +54,10 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
         val remittanceAccount = writtenBook.conversionMap(pageText)["送金先口座"] ?: return
         val reduceAccount = writtenBook.conversionMap(pageText)["お客様口座"] ?: return
         val price = writtenBook.conversionMap(pageText)["送金金額"]?.replace("円", "")?.toInt()
-        MoneyManager().tradeMoney(JointAccount(remittanceAccount), JointAccount(reduceAccount), price ?: return)
+        if (!MoneyManager().tradeMoney(JointAccount(remittanceAccount), JointAccount(reduceAccount), price ?: return)) {
+            aoringoPlayer.sendErrorMessage("所持金が足りません")
+            return
+        }
         player.sendMessage("${ChatColor.AQUA}[送金]$price 円送金しました")
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         ItemManager().reduceMainItem(player)
