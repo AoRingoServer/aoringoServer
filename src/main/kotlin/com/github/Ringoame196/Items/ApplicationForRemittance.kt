@@ -61,7 +61,7 @@ class ApplicationForRemittance(private val player: Player, private val book: Ite
         sendRemittance(price)
         ItemManager().reduceMainItem(player)
     }
-    private fun sendRemittance(price:Int){
+    private fun sendRemittance(price: Int) {
         player.sendMessage("${ChatColor.AQUA}[送金]$price 円送金しました")
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
