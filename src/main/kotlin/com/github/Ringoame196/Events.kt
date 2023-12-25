@@ -199,6 +199,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             "${ChatColor.YELLOW}送金申込書" -> {
                 if (player.isSneaking) {
+                    e.isCancelled = true
                     ApplicationForRemittance(player, playerItem).remittance()
                 } else {
                     player.sendMessage("${ChatColor.YELLOW}シフト クリックで送金")
