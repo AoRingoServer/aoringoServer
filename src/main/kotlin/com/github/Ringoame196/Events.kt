@@ -359,7 +359,7 @@ class Events(private val plugin: Plugin) : Listener {
             entity.remove()
             entity.world.dropItem(
                 entity.location,
-                ItemManager().make(material = Material.HEAVY_WEIGHTED_PRESSURE_PLATE, name = "まな板")
+                ItemManager().make(Material.HEAVY_WEIGHTED_PRESSURE_PLATE, "まな板")
             )
         }
     }
@@ -546,8 +546,9 @@ class Events(private val plugin: Plugin) : Listener {
         val block = e.block
         val worldName = player.world.name
         val aoringoPlayer = AoringoPlayer(player)
+        val jobManager = JobManager()
         if (player.gameMode == GameMode.CREATIVE) { return }
-        if (worldName == "shop" || worldName == "world") {
+        if (worldName == "shop" || worldName == "world" ||worldName == "event") {
             return
         }
         if (worldName == "dungeon") {
@@ -560,17 +561,17 @@ class Events(private val plugin: Plugin) : Listener {
                 }
             }
         } else if (block.type.toString().contains("ORE")) {
-            if (JobManager().get(player) == "${ChatColor.GOLD}ハンター") { return }
+            if (jobManager.get(player) == "${ChatColor.GOLD}ハンター") { return }
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}ハンター以外は鉱石を掘ることができません")
         }
         when (block.type) {
             Material.GRASS, Material.TALL_GRASS -> {
                 if (WorldGuard().getOwnerOfRegion(player.location) != null) { return }
-                if (JobManager().get(player) != "${ChatColor.GOLD}ハンター") { return }
+                if (jobManager.get(player) != "${ChatColor.GOLD}ハンター") { return }
                 val probability = 3
                 if (Random.nextInt(0, probability) != 0) { return }
-                JobManager().giveVegetables(block.location)
+                jobManager.giveVegetables(block.location)
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
@@ -596,7 +597,7 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val ngItem = mutableListOf(Material.HOPPER, Material.TNT)
         val itemManagerClass = ItemManager()
-        val job = JobManager()
+        val jobManager = JobManager()
         if (type == Material.FERMENTED_SPIDER_EYE) {
             e.currentItem = itemManagerClass.make(Material.FERMENTED_SPIDER_EYE, "${ChatColor.GOLD}発酵した蜘蛛の目")
         } else if (displayName.contains("包丁")) {
@@ -609,10 +610,10 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (type == Material.WRITTEN_BOOK && displayName.contains("${ChatColor.RED}契約本@")) {
             e.currentItem = Contract().copyBlock(item, player)
         }
-        if (job.get(player) == "${ChatColor.GRAY}鍛冶屋") {
+        if (jobManager.get(player) == "${ChatColor.GRAY}鍛冶屋") {
             return
         }
-        if (job.tool.contains(type)) {
+        if (jobManager.tool.contains(type)) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外はツールをクラフトすることができません")
         }
@@ -795,13 +796,13 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
+        val supportedWorld = mapOf(
+            Material.IRON_BLOCK to player.openInventory(Resource().createSelectTpGUI()),
+            Material.QUARTZ_BLOCK to aoringoPlayer.teleporterWorld("shop"),
+            Material.GOLD_BLOCK to aoringoPlayer.teleporterWorld("Home")
+        )
         if (downBlock.type == Material.COMMAND_BLOCK) {
-            when (block.type) {
-                Material.IRON_BLOCK -> player.openInventory(Resource().createSelectTpGUI())
-                Material.QUARTZ_BLOCK -> aoringoPlayer.teleporterWorld("shop")
-                Material.GOLD_BLOCK -> aoringoPlayer.teleporterWorld("Home")
-                else -> {}
-            }
+            supportedWorld[block.type]
         }
     }
 
