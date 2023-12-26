@@ -550,7 +550,7 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val jobManager = JobManager()
         if (player.gameMode == GameMode.CREATIVE) { return }
-        if (worldName == "shop" || worldName == "world" || worldName == "event") {
+        if (worldName == "shop" || worldName == "world") {
             return
         }
         if (worldName == "dungeon") {
