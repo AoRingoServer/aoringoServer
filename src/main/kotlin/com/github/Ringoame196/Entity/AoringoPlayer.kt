@@ -127,8 +127,6 @@ class AoringoPlayer(val player: Player) {
         permission("worldguard.region.claim", judgement, plugin)
     }
     fun fastJoin() {
-        player.inventory.addItem(ItemManager().make(material = Material.ENCHANTED_BOOK, name = "${ChatColor.YELLOW}スマートフォン", customModelData = 1))
-        player.inventory.addItem(ItemManager().make(material = Material.NETHER_STAR, name = "職業スター"))
         player.scoreboardTags.add("member")
         Scoreboard().set("money", player.uniqueId.toString(), 30000)
     }
