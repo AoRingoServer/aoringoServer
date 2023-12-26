@@ -34,12 +34,13 @@ class MoneyUseCase {
     }
     fun displayMoney(aoringoPlayer: AoringoPlayer) {
         val playerUUID = UUID.fromString(aoringoPlayer.playerAccount.getAccountID())
-        val bossbar = PluginData.DataManager.playerDataMap.getOrPut(playerUUID) { AoringoPlayer.PlayerData() }.titleMoneyBossbar
+        var bossbar = PluginData.DataManager.playerDataMap.getOrPut(playerUUID) { AoringoPlayer.PlayerData() }.titleMoneyBossbar
         if (bossbar == null) {
-            aoringoPlayer.createBossbar(bossbarTitle(aoringoPlayer.playerAccount))
+            bossbar = aoringoPlayer.createBossbar(bossbarTitle(aoringoPlayer.playerAccount))
         } else {
             bossbar.setTitle(bossbarTitle(aoringoPlayer.playerAccount))
         }
+        bossbar?.addPlayer(aoringoPlayer.player)
     }
     fun setMoney(account: Account, total: Int) {
         moneyManager.setMoney(account, total)

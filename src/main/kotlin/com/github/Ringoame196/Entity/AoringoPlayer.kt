@@ -174,10 +174,11 @@ class AoringoPlayer(val player: Player) {
         }
     }
 
-    fun createBossbar(title: String) {
+    fun createBossbar(title: String): BossBar {
         val bossbar = Bukkit.createBossBar(title, BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
+        return bossbar
     }
     fun makeShop(sign: Sign) {
         val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
