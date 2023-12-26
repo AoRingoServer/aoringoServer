@@ -484,7 +484,7 @@ class Events(private val plugin: Plugin) : Listener {
         }
         if (title.contains("@土地購入")) {
             e.isCancelled = true
-            LandPurchase().buy(player, item ?: return, gui.title, plugin)
+            LandPurchase().buy(player, item, gui.title, plugin)
         } else if (title.contains("@土地設定")) {
             e.isCancelled = true
             val name = title.replace("${ChatColor.BLUE}", "").replace("@土地設定", "")

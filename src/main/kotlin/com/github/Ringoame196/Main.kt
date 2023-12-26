@@ -36,7 +36,8 @@ class Main : JavaPlugin() {
 
     override fun onDisable() {
         for (player in Bukkit.getOnlinePlayers()) {
-            PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.titleMoneyBossbar?.removeAll()
+            val bossbar = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.titleMoneyBossbar ?: continue
+            bossbar.removeAll()
         }
         super.onDisable()
     }
