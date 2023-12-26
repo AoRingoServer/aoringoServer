@@ -829,7 +829,6 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
         } else if (message.contains("!契約")) {
-            val writtenBook = WrittenBook(playerItem)
             e.isCancelled = true
             if (playerItem.amount != 1) {
                 aoringoPlayer.sendErrorMessage("アイテムを1つのみ持ってください")
@@ -842,7 +841,6 @@ class Events(private val plugin: Plugin) : Listener {
                 "${ChatColor.YELLOW}契約書[契約待ち]" -> aoringoPlayer.createContractBook(contractMoney)
             }
         } else if (message.contains("!送金")) {
-            val writtenBook = WrittenBook(playerItem)
             val applicationForRemittance = ApplicationForRemittance(player, playerItem)
             e.isCancelled = true
             if (playerItem.itemMeta?.displayName != "${ChatColor.YELLOW}送金申込書[未記入]") { return }
