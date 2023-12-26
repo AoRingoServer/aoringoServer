@@ -797,12 +797,12 @@ class Events(private val plugin: Plugin) : Listener {
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
         val supportedWorld = mapOf(
-            Material.IRON_BLOCK to player.openInventory(Resource().createSelectTpGUI()),
-            Material.QUARTZ_BLOCK to aoringoPlayer.teleporterWorld("shop"),
-            Material.GOLD_BLOCK to aoringoPlayer.teleporterWorld("Home")
+            Material.IRON_BLOCK to { player.openInventory(Resource().createSelectTpGUI()) },
+            Material.QUARTZ_BLOCK to { aoringoPlayer.teleporterWorld("shop") },
+            Material.GOLD_BLOCK to { aoringoPlayer.teleporterWorld("Home") }
         )
         if (downBlock.type == Material.COMMAND_BLOCK) {
-            supportedWorld[block.type]
+            supportedWorld[block.type]?.invoke()
         }
     }
 
