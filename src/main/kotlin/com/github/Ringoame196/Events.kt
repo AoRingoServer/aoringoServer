@@ -1,5 +1,6 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Blocks.BeeNest
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
@@ -15,7 +16,6 @@ import com.github.Ringoame196.Items.Cookware.GasBurner
 import com.github.Ringoame196.Items.Cookware.Pot
 import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
-import com.github.Ringoame196.Items.WrittenBook
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
@@ -94,8 +94,7 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item.itemMeta?.displayName ?: ""
         val block = e.clickedBlock
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
-        if (e.action == Action.LEFT_CLICK_BLOCK) { return }
-        if (e.action == Action.LEFT_CLICK_AIR) { return }
+        if (e.action == Action.LEFT_CLICK_BLOCK || e.action == Action.LEFT_CLICK_AIR) { return }
         if (item != playerItem && item.type != Material.AIR) { return }
         when (block?.type) {
             Material.OAK_SIGN -> {
@@ -183,6 +182,7 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
                 aoringoPlayer.upDataEnderChestLevel(plugin)
             }
+            // コマンド一覧をymlに書いて呼び出した方がいい？
             "${ChatColor.YELLOW}契約書[未記入]" -> {
                 player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")
             }
@@ -210,12 +210,14 @@ class Events(private val plugin: Plugin) : Listener {
             if (item.type != Material.GLASS_BOTTLE) { return }
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
-            if (beeNest.honeyLevel != 5 || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
+            val beeNestClass = BeeNest(beeNest)
+            if (!beeNestClass.isMax() || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
                 return
             }
-            beeNest.honeyLevel = 0
-            e.clickedBlock!!.blockData = beeNest
-            player.inventory.addItem(ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(14),))
+            beeNestClass.emptyBeeNest(e.clickedBlock ?: return)
+            val expiryDate = 14
+            val honeyBottle = ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(expiryDate))
+            player.inventory.addItem(honeyBottle)
             ItemManager().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
