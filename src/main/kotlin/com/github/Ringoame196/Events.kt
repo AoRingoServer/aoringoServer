@@ -212,7 +212,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             val beeNestClass = BeeNest(beeNest)
-            if (!beeNestClass.isMax()){ return }
+            if (!beeNestClass.isMax()) { return }
             if (player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) { return }
             beeNestClass.emptyBeeNest(e.clickedBlock ?: return)
             val expiryDate = 14

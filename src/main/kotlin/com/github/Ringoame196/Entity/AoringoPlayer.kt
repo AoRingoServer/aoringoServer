@@ -267,7 +267,7 @@ class AoringoPlayer(val player: Player) {
             20L
         ) // 20Lは1秒を表す（1秒 = 20ticks）
     }
-    fun sendTeleportDungeonMessage(){
+    fun sendTeleportDungeonMessage() {
         ItemManager().reduceMainItem(player)
         player.sendTitle("${ChatColor.YELLOW}ダンジョン", "")
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)

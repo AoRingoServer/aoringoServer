@@ -16,7 +16,7 @@ class Scratch {
     fun createGUI(title: String): Inventory {
         val gui = Bukkit.createInventory(null, 27, title)
         for (i in 0..26) {
-            gui.setItem(i, ItemManager().make(Material.PAPER,customModelData = 6))
+            gui.setItem(i, ItemManager().make(Material.PAPER, customModelData = 6))
         }
         paper(gui, 3)
         paper(gui, 12)

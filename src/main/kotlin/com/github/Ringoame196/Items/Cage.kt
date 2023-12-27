@@ -1,6 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.GUIs.GUI
 import com.github.Ringoame196.GUIs.closingGUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
