@@ -1,14 +1,49 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.GUIs.GUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.Sound
 import org.bukkit.entity.HumanEntity
+import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
-class Cage {
+class Cage:GUI {
+    override fun close(gui: InventoryView, player: Player) {
+        val lore = mutableListOf<String>()
+
+        for (item in gui.topInventory) {
+            item ?: continue
+            val meta = item.itemMeta
+            val material = compressionMaterial(item.type)
+            val itemLore = listOf(
+                meta?.displayName ?: "",
+                meta?.lore?.get(0) ?: "",
+                (meta?.customModelData ?: 0).toString(),
+                item.amount.toString(),
+                material.toString()
+            )
+            lore.add(itemLore.joinToString(","))
+        }
+
+        val cage = player.inventory.itemInMainHand
+        val meta = cage.itemMeta
+        val airStatus = 0
+        val thingsStatus = 1
+        val status = lore.size == 0
+        meta?.lore = lore
+        if (status) {
+            meta?.setCustomModelData(airStatus)
+        } else {
+            meta?.setCustomModelData(thingsStatus)
+        }
+        cage.itemMeta = meta
+        player.inventory.setItemInMainHand(cage)
+        player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
+    }
     private val materialToIdMap = mapOf<Int, Material>(
         0 to Material.MELON_SLICE,
         1 to Material.WHEAT,

@@ -2,6 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Blocks.BeeNest
 import com.github.Ringoame196.Blocks.Block
+import com.github.Ringoame196.Blocks.EnchantingTable
 import com.github.Ringoame196.Data.Company
 import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.PluginData
@@ -9,6 +10,7 @@ import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Foods.FoodManager
+import com.github.Ringoame196.GUIs.GUI
 import com.github.Ringoame196.Items.ApplicationForRemittance
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
@@ -240,8 +242,11 @@ class Events(private val plugin: Plugin) : Listener {
             ApplicationManager().install(player, itemName, plugin)
             e.isCancelled = true
         } else if (item.type == Material.ENDER_EYE) {
+            if (player.world.name == "dungeon") {
+                if (itemName != "${ChatColor.GOLD}エンダーアイ[ダンジョン仕様]") { e.isCancelled = true }
+                return
+            }
             e.isCancelled = true
-            if (player.world.name == "dungeon") { return }
             if (!player.isSneaking) {
                 aoringoPlayer.sendErrorMessage("シフトクリックするとダンジョンへ移動することができます")
                 return
@@ -641,21 +646,13 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.YELLOW}アイテム保護" to ItemProtectionApplication(),
             "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication()
         )
-        when (gui.title) {
-            "${ChatColor.YELLOW}カスタム金床" -> Anvil().returnItemFromPlayer(gui, player)
-            "${ChatColor.RED}エンチャント" -> {
-                val item = gui.getItem(4) ?: return
-                if (item.type != Material.ENCHANTED_BOOK) {
-                    player.inventory.addItem(item)
-                }
-            }
-
-            "${ChatColor.BLUE}カゴ" -> {
-                Cage().clone(player, gui)
-                player.playSound(player, Sound.BLOCK_CHEST_CLOSE, 1f, 1f)
-            }
-        }
-        application[gui.title]?.close(player, gui, plugin) ?: return
+        val guiMap = mapOf<String,GUI>(
+            "${ChatColor.YELLOW}カスタム金床" to Anvil(),
+            "${ChatColor.RED}エンチャント" to EnchantingTable(),
+            "${ChatColor.BLUE}カゴ" to Cage()
+        )
+        guiMap[gui.title]?.close(gui,player)
+        application[gui.title]?.close(player, gui, plugin)
     }
 
     @EventHandler
@@ -730,7 +727,7 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             e.itemDrop.world.dropItem(
                 e.itemDrop.location,
-                ItemManager().make(material = Material.EGG, name = "卵", lore = FoodManager().makeExpirationDate(term))
+                ItemManager().make(Material.EGG, "卵", FoodManager().makeExpirationDate(term))
             )
         }
     }
@@ -790,10 +787,10 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val world = player.world
         val worldName = world.name
+        AoringoPlayer(player).reduceFoodLevel(plugin)
         if (worldName == "Survival" || worldName == "dungeon") {
             e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
         }
-        AoringoPlayer(player).reduceFoodLevel(plugin)
     }
 
     @EventHandler
