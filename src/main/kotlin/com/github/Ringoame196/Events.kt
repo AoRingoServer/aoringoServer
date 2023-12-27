@@ -212,9 +212,8 @@ class Events(private val plugin: Plugin) : Listener {
             e.isCancelled = true
             val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
             val beeNestClass = BeeNest(beeNest)
-            if (!beeNestClass.isMax() || player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) {
-                return
-            }
+            if (!beeNestClass.isMax()){ return }
+            if (player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) { return }
             beeNestClass.emptyBeeNest(e.clickedBlock ?: return)
             val expiryDate = 14
             val honeyBottle = ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(expiryDate))
@@ -251,10 +250,7 @@ class Events(private val plugin: Plugin) : Listener {
                 return
             }
             aoringoPlayer.teleporterWorld("dungeon")
-            ItemManager().reduceMainItem(player)
-            player.sendTitle("${ChatColor.YELLOW}ダンジョン", "")
-            player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-            player.sendMessage("${ChatColor.GOLD}ダンジョンへ移動しました")
+            aoringoPlayer.sendTeleportDungeonMessage()
         }
     }
 
