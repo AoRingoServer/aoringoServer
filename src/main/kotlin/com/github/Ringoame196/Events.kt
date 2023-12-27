@@ -248,6 +248,8 @@ class Events(private val plugin: Plugin) : Listener {
             }
             aoringoPlayer.teleporterWorld("dungeon")
             ItemManager().reduceMainItem(player)
+            player.sendTitle("${ChatColor.YELLOW}ダンジョン", "")
+            player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
             player.sendMessage("${ChatColor.GOLD}ダンジョンへ移動しました")
         }
     }
