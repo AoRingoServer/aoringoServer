@@ -10,9 +10,10 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 
 class Cage : GUI {
-    override fun close(gui: InventoryView, player: Player) {
+    override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         val lore = mutableListOf<String>()
 
         for (item in gui.topInventory) {
