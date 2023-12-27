@@ -37,16 +37,17 @@ class Yml {
             println("Error while saving data: ${e.message}")
         }
     }
-    fun getList(plugin: Plugin, path: String, fileName: String, key: String): MutableList<String>? {
+    fun getYml(plugin: Plugin, path: String, fileName: String): YamlConfiguration {
         val playerDataFolder = File(plugin.dataFolder, path)
         if (!playerDataFolder.exists()) {
             playerDataFolder.mkdirs()
         }
-
         val filePath = File(playerDataFolder, "$fileName.yml")
-        val yamlConfiguration = YamlConfiguration.loadConfiguration(filePath)
-
-        return yamlConfiguration.getStringList(key) ?: mutableListOf()
+        return YamlConfiguration.loadConfiguration(filePath)
+    }
+    fun getList(plugin: Plugin, path: String, fileName: String, key: String): MutableList<String>? {
+        val yamlConfiguration = getYml(plugin, path, fileName)
+        return yamlConfiguration.getStringList(key)
     }
     fun removeToList(plugin: Plugin, path: String, fileName: String, key: String, item: String) {
         val playerDataFolder = File(plugin.dataFolder, path)

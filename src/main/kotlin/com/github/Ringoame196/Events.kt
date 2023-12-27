@@ -450,7 +450,7 @@ class Events(private val plugin: Plugin) : Listener {
 
             "${ChatColor.GREEN}資源テレポート" -> {
                 e.isCancelled = true
-                Resource().guiClick(player, item.itemMeta?.displayName ?: return)
+                Resource(plugin).guiClick(player, item.itemMeta?.displayName ?: return)
             }
 
             "${ChatColor.YELLOW}アイテム保護" -> {
@@ -770,7 +770,7 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerChangedWorld(e: PlayerChangedWorldEvent) {
         val player = e.player
         val aoringoPlayer = AoringoPlayer(player)
-        aoringoPlayer.setTab()
+        aoringoPlayer.setTab(plugin)
         aoringoPlayer.setProtectionPermission(plugin)
     }
 
@@ -801,7 +801,7 @@ class Events(private val plugin: Plugin) : Listener {
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
         val supportedWorld = mapOf(
-            Material.IRON_BLOCK to { player.openInventory(Resource().createSelectTpGUI()) },
+            Material.IRON_BLOCK to { player.openInventory(Resource(plugin).createSelectTpGUI()) },
             Material.QUARTZ_BLOCK to { aoringoPlayer.teleporterWorld("shop") },
             Material.GOLD_BLOCK to { aoringoPlayer.teleporterWorld("Home") }
         )

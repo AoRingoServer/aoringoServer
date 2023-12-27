@@ -16,6 +16,7 @@ import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Smartphone
+import com.github.Ringoame196.Worlds.WorldManager
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
@@ -43,25 +44,32 @@ class AoringoPlayer(val player: Player) {
         val scoreboardClass = Scoreboard()
         setJobName()
         setProtectionPermission(plugin)
-        setTab()
+        setTab(plugin)
         player.maxHealth = 20.0 + scoreboardClass.getValue("status_HP", player.uniqueId.toString()).toDouble()
         ResourcePack(plugin).adaptation(player)
         if (player.world.name == "Survival") {
-            player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
+            teleporterWorld("world")
         }
         changePermission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
         moneyUseCase.displayMoney(this)
         if (player.isOp) {
-            player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
-            player.setPlayerListName("${ChatColor.YELLOW}[運営]" + player.playerListName)
+            setOperatorName()
         }
     }
-    fun setJobName() {
-        val jobID = Scoreboard().getValue("job", player.uniqueId.toString())
-        val jobColor = mutableListOf("", "${ChatColor.DARK_PURPLE}", "${ChatColor.DARK_RED}", "${ChatColor.GRAY}")
-        val jobPrefix = jobColor[jobID]
-        player.setDisplayName("$jobPrefix${player.displayName}@${JobManager().get(player)}")
-        player.setPlayerListName("$jobPrefix${player.playerListName}")
+    private fun setOperatorName() {
+        val prefix = "${ChatColor.YELLOW}[運営]"
+        player.setDisplayName("$prefix${player.displayName}")
+        player.setPlayerListName("$prefix${player.playerListName}")
+    }
+    private fun setJobName() {
+        val jobColor = mapOf<String, String>(
+            "${ChatColor.YELLOW}料理人" to "${ChatColor.DARK_PURPLE}",
+            "${ChatColor.GOLD}ハンター" to "${ChatColor.DARK_RED}",
+            "${ChatColor.GRAY}鍛冶屋" to "${ChatColor.GRAY}"
+        )
+        val jobName = JobManager().get(player)
+        player.setDisplayName("${jobColor[jobName]}${player.displayName}@$jobName")
+        player.setPlayerListName("${jobColor[jobName]}${player.playerListName}")
     }
     private fun levelupMessage(player: Player, message: String) {
         player.sendMessage(message)
@@ -104,17 +112,11 @@ class AoringoPlayer(val player: Player) {
         permissions.setPermission(permission, allow)
         player.recalculatePermissions()
     }
-    fun setTab() {
+    fun setTab(plugin: Plugin) {
         player.playerListHeader = "${ChatColor.AQUA}青りんごサーバー"
-        player.playerListFooter = "${ChatColor.YELLOW}" + when (player.world.name) {
-            "world" -> "ロビーワールド"
-            "Survival" -> "資源ワールド"
-            "Nether" -> "ネザー"
-            "shop" -> "ショップ"
-            "event" -> "イベントワールド"
-            "Home" -> "建築ワールド"
-            else -> "${ChatColor.RED}未設定"
-        }
+        val worldManager = WorldManager(plugin)
+        val worldName = player.location.world?.name ?: "world"
+        player.playerListFooter = "${ChatColor.YELLOW}" + worldManager.getWorldName(worldName)
     }
     fun setProtectionPermission(plugin: Plugin) {
         if (player.isOp) { return }
