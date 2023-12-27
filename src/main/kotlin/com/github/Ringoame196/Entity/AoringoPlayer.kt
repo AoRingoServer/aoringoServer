@@ -49,7 +49,7 @@ class AoringoPlayer(val player: Player) {
         if (player.world.name == "Survival") {
             player.teleport(Bukkit.getWorld("world")?.spawnLocation ?: return)
         }
-        permission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
+        changePermission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
         moneyUseCase.displayMoney(this)
         if (player.isOp) {
             player.setDisplayName("${ChatColor.YELLOW}[運営]" + player.displayName)
@@ -99,8 +99,8 @@ class AoringoPlayer(val player: Player) {
 
         return playersInRadius
     }
-    fun permission(permission: String, allow: Boolean, plugin: Plugin) {
-        val permissions = player.addAttachment(plugin) // "plugin" はプラグインのインスタンスを指します
+    fun changePermission(permission: String, allow: Boolean, plugin: Plugin) {
+        val permissions = player.addAttachment(plugin)
         permissions.setPermission(permission, allow)
         player.recalculatePermissions()
     }
@@ -123,8 +123,8 @@ class AoringoPlayer(val player: Player) {
             "Home" -> true
             else -> false
         }
-        permission("blocklocker.protect", judgement, plugin)
-        permission("worldguard.region.claim", judgement, plugin)
+        changePermission("blocklocker.protect", judgement, plugin)
+        changePermission("worldguard.region.claim", judgement, plugin)
     }
     fun fastJoin() {
         player.scoreboardTags.add("member")
@@ -164,7 +164,7 @@ class AoringoPlayer(val player: Player) {
             6 -> sendErrorMessage("これ以上拡張することはできません")
             else -> {
                 Scoreboard().set("haveEnderChest", player.uniqueId.toString(), level + 1)
-                permission("enderchest.size.$level", true, plugin)
+                changePermission("enderchest.size.$level", true, plugin)
                 player.sendMessage("${ChatColor.AQUA}エンダーチェスト容量UP")
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                 ItemManager().reduceMainItem(player)
