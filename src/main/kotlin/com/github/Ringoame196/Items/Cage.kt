@@ -1,6 +1,6 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.GUIs.GUI
+import com.github.Ringoame196.GUIs.closingGUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -12,7 +12,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class Cage : GUI {
+class Cage : closingGUI {
     override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         val lore = mutableListOf<String>()
 

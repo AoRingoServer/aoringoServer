@@ -10,7 +10,7 @@ import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Foods.FoodManager
-import com.github.Ringoame196.GUIs.GUI
+import com.github.Ringoame196.GUIs.closingGUI
 import com.github.Ringoame196.Items.ApplicationForRemittance
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
@@ -641,14 +641,14 @@ class Events(private val plugin: Plugin) : Listener {
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
-        val guiMap = mapOf<String, GUI>(
+        val closingGuiMap = mapOf<String, closingGUI>(
             "${ChatColor.YELLOW}アイテム保護" to ItemProtectionApplication(),
             "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication(),
             "${ChatColor.YELLOW}カスタム金床" to Anvil(),
             "${ChatColor.RED}エンチャント" to EnchantingTable(),
             "${ChatColor.BLUE}カゴ" to Cage()
         )
-        guiMap[gui.title]?.close(gui, player, plugin)
+        closingGuiMap[gui.title]?.close(gui, player, plugin)
     }
 
     @EventHandler

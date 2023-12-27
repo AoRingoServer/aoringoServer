@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Smartphone.APKs
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.GUIs.GUI
+import com.github.Ringoame196.GUIs.closingGUI
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Smartphones.Applications.Application
 import org.bukkit.Bukkit
@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class ItemProtectionApplication : Application, GUI {
+class ItemProtectionApplication : Application, closingGUI {
     override fun getCustomModelData(): Int {
         return 3
     }
