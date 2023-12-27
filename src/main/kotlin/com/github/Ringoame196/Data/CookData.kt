@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Data
 
-import com.github.Ringoame196.Items.FoodManager
+import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material

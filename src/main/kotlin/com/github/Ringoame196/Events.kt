@@ -8,13 +8,13 @@ import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
+import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ApplicationForRemittance
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
 import com.github.Ringoame196.Items.Cookware.Fryer
 import com.github.Ringoame196.Items.Cookware.GasBurner
 import com.github.Ringoame196.Items.Cookware.Pot
-import com.github.Ringoame196.Items.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
@@ -239,6 +239,16 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (itemName.contains("[アプリケーション]")) {
             ApplicationManager().install(player, itemName, plugin)
             e.isCancelled = true
+        } else if (item.type == Material.ENDER_EYE) {
+            e.isCancelled = true
+            if (player.world.name == "dungeon") { return }
+            if (!player.isSneaking) {
+                aoringoPlayer.sendErrorMessage("シフトクリックするとダンジョンへ移動することができます")
+                return
+            }
+            aoringoPlayer.teleporterWorld("dungeon")
+            ItemManager().reduceMainItem(player)
+            player.sendMessage("${ChatColor.GOLD}ダンジョンへ移動しました")
         }
     }
 
@@ -777,7 +787,8 @@ class Events(private val plugin: Plugin) : Listener {
     fun onPlayerRespawn(e: PlayerRespawnEvent) {
         val player = e.player
         val world = player.world
-        if (world.name == "Survival") {
+        val worldName = world.name
+        if (worldName == "Survival" || worldName == "dungeon") {
             e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
         }
         AoringoPlayer(player).reduceFoodLevel(plugin)

@@ -2,7 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Data.CookData
 import com.github.Ringoame196.Entity.ArmorStand
-import com.github.Ringoame196.Items.FoodManager
+import com.github.Ringoame196.Foods.FoodManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound

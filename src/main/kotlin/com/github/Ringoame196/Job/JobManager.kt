@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Job
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Items.FoodManager
+import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit

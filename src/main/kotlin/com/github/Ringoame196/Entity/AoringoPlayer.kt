@@ -7,7 +7,7 @@ import com.github.Ringoame196.Data.ItemData
 import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
-import com.github.Ringoame196.Items.FoodManager
+import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
