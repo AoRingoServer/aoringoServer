@@ -1,6 +1,7 @@
 package com.github.Ringoame196.Smartphones.Applications
 
 import com.github.Ringoame196.ApplicationManager
+import com.github.Ringoame196.GUIs.GUI
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
@@ -10,7 +11,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.InventoryView
 import org.bukkit.plugin.Plugin
 
-class SortApplication : Application, ClosingApplication {
+class SortApplication : Application, GUI {
     override fun getCustomModelData(): Int {
         return 8
     }
@@ -26,7 +27,7 @@ class SortApplication : Application, ClosingApplication {
         }
     }
 
-    override fun close(player: Player, gui: InventoryView, plugin: Plugin) {
+    override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         ApplicationManager().saveToYmlFile(player, gui, plugin)
     }
 }

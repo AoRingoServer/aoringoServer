@@ -22,7 +22,6 @@ import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.Applications.ClosingApplication
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Smartphone
@@ -642,17 +641,14 @@ class Events(private val plugin: Plugin) : Listener {
     fun onInventoryClose(e: InventoryCloseEvent) {
         val player = e.player as org.bukkit.entity.Player
         val gui = e.view
-        val application = mapOf<String, ClosingApplication>(
+        val guiMap = mapOf<String, GUI>(
             "${ChatColor.YELLOW}アイテム保護" to ItemProtectionApplication(),
-            "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication()
-        )
-        val guiMap = mapOf<String,GUI>(
+            "${ChatColor.BLUE}スマートフォン(並び替え)" to SortApplication(),
             "${ChatColor.YELLOW}カスタム金床" to Anvil(),
             "${ChatColor.RED}エンチャント" to EnchantingTable(),
             "${ChatColor.BLUE}カゴ" to Cage()
         )
-        guiMap[gui.title]?.close(gui,player)
-        application[gui.title]?.close(player, gui, plugin)
+        guiMap[gui.title]?.close(gui, player, plugin)
     }
 
     @EventHandler

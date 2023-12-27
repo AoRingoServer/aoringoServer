@@ -1,9 +1,9 @@
 package com.github.Ringoame196.Smartphone.APKs
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.GUIs.GUI
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Smartphones.Applications.Application
-import com.github.Ringoame196.Smartphones.Applications.ClosingApplication
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -13,7 +13,7 @@ import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 
-class ItemProtectionApplication : Application, ClosingApplication {
+class ItemProtectionApplication : Application, GUI {
     override fun getCustomModelData(): Int {
         return 3
     }
@@ -29,7 +29,7 @@ class ItemProtectionApplication : Application, ClosingApplication {
         player.openInventory(gui)
     }
 
-    override fun close(player: Player, gui: InventoryView, plugin: Plugin) {
+    override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         val containsItemSlot = 3
         player.inventory.addItem(gui.getItem(containsItemSlot) ?: return)
     }

@@ -11,7 +11,7 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 
-class Cage:GUI {
+class Cage : GUI {
     override fun close(gui: InventoryView, player: Player) {
         val lore = mutableListOf<String>()
 

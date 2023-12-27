@@ -11,9 +11,10 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.plugin.Plugin
 
-class Anvil:GUI {
-    override fun close(gui: InventoryView,player: Player) {
+class Anvil : GUI {
+    override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         Anvil().returnItemFromPlayer(gui, player)
     }
     fun makeGUI(): Inventory {
