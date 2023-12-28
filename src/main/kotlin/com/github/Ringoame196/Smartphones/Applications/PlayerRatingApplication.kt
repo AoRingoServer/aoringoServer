@@ -45,11 +45,11 @@ class PlayerRatingApplication : Application {
         val targetPlayer = getPlayer(targetPlayerName)
         val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
         if (targetPlayer == null) {
-            aoringoPlayer.sendErrorMessage("プレイヤーが見つかりませんでした")
+            aoringoPlayer.sendErrorMessage("オンラインのプレイヤーのみ評価できます")
             return
         }
         if (targetPlayer == player) {
-            aoringoPlayer.sendErrorMessage("自分へ投票することは出来ません")
+            aoringoPlayer.sendErrorMessage("自分を評価することは出来ません")
             return
         }
         val targetPlayerHead = playerHead(targetPlayer)
