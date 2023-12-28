@@ -43,7 +43,6 @@ class PlayerRatingApplication : Application {
     fun voidGUI(plugin: Plugin, player: Player, targetPlayerName: String) {
         val aoringoPlayer = AoringoPlayer(player)
         val targetPlayer = getPlayer(targetPlayerName)
-        val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
         if (targetPlayer == null) {
             aoringoPlayer.sendErrorMessage("オンラインのプレイヤーのみ評価できます")
             return
@@ -53,13 +52,18 @@ class PlayerRatingApplication : Application {
             return
         }
         val targetPlayerHead = playerHead(targetPlayer)
-        val gui = makeVoidGUI(targetPlayerHead, pollingTimes == 0)
+        val gui = makeVoidGUI(targetPlayerHead, isCanVoid(player))
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable {
                 player.openInventory(gui)
             }
         )
+    }
+    private fun isCanVoid(player: Player): Boolean {
+        val notPolledCount = 0
+        val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
+        return pollingTimes == notPolledCount
     }
     private fun makeVoidGUI(targetPlayerHead: ItemStack, canVoid: Boolean): Inventory {
         val itemManager = ItemManager()
