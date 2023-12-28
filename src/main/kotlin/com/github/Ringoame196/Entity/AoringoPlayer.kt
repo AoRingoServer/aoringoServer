@@ -62,14 +62,15 @@ class AoringoPlayer(val player: Player) {
         player.setPlayerListName("$prefix${player.playerListName}")
     }
     private fun setJobName() {
-        val jobColor = mapOf<String, String>(
+        val jobColors = mapOf<String, String>(
             "${ChatColor.YELLOW}料理人" to "${ChatColor.DARK_PURPLE}",
             "${ChatColor.GOLD}ハンター" to "${ChatColor.DARK_RED}",
             "${ChatColor.GRAY}鍛冶屋" to "${ChatColor.GRAY}"
         )
         val jobName = JobManager().get(player)
-        player.setDisplayName("${jobColor[jobName]}${player.displayName}@$jobName")
-        player.setPlayerListName("${jobColor[jobName]}${player.playerListName}")
+        val jobColor = jobColors[jobName] ?: ""
+        player.setDisplayName("$jobColor${player.displayName}@$jobName")
+        player.setPlayerListName("$jobColor${player.playerListName}")
     }
     private fun levelupMessage(player: Player, message: String) {
         player.sendMessage(message)

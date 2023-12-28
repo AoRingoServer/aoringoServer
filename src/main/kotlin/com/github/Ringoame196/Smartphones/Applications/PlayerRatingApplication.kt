@@ -38,16 +38,12 @@ class PlayerRatingApplication : Application {
         return Scoreboard().getValue(voidScoreboardName, targetUUID)
     }
     private fun getPlayer(targetPlayerName: String): Player? {
-        return Bukkit.getPlayer(targetPlayerName)
+        return Bukkit.getPlayer(targetPlayerName.replace("@", ""))
     }
     fun voidGUI(plugin: Plugin, player: Player, targetPlayerName: String) {
         val aoringoPlayer = AoringoPlayer(player)
         val targetPlayer = getPlayer(targetPlayerName)
         val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
-        if (pollingTimes != 0) {
-            aoringoPlayer.sendErrorMessage("評価は1日1回です")
-            return
-        }
         if (targetPlayer == null) {
             aoringoPlayer.sendErrorMessage("プレイヤーが見つかりませんでした")
             return
@@ -57,7 +53,7 @@ class PlayerRatingApplication : Application {
             return
         }
         val targetPlayerHead = playerHead(targetPlayer)
-        val gui = makeVoidGUI(targetPlayerHead)
+        val gui = makeVoidGUI(targetPlayerHead, pollingTimes == 0)
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable {
@@ -65,15 +61,16 @@ class PlayerRatingApplication : Application {
             }
         )
     }
-    private fun makeVoidGUI(targetPlayerHead: ItemStack): Inventory {
+    private fun makeVoidGUI(targetPlayerHead: ItemStack, canVoid: Boolean): Inventory {
         val itemManager = ItemManager()
         val guiSize = 9
         val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.BLUE}プレイヤー評価")
         val targetPlayerHeadSlot = 2
         val highRatingSlot = 4
         val lowRatingSlot = 6
-        val highEvaluation = itemManager.make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価")
-        val lowEvaluation = itemManager.make(Material.STONE_BUTTON, "${ChatColor.RED}低評価")
+        val noVoidItem = itemManager.make(Material.BARRIER, "${ChatColor.RED}クリック禁止", "評価は1日1回までです")
+        val highEvaluation = if (canVoid) { itemManager.make(Material.STONE_BUTTON, "${ChatColor.GREEN}高評価") } else { noVoidItem }
+        val lowEvaluation = if (canVoid) { itemManager.make(Material.STONE_BUTTON, "${ChatColor.RED}低評価") } else { noVoidItem }
         gui.setItem(targetPlayerHeadSlot, targetPlayerHead)
         gui.setItem(highRatingSlot, highEvaluation)
         gui.setItem(lowRatingSlot, lowEvaluation)
