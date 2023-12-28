@@ -7,6 +7,7 @@ import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
@@ -24,7 +25,7 @@ class PlayerRatingApplication : Application {
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem = "playerVoid"
         player.sendMessage("${ChatColor.AQUA}投票したいプレイヤーの名前を入力してください")
     }
-    private fun playerHead(target: Player): ItemStack {
+    private fun playerHead(target: OfflinePlayer): ItemStack {
         val item = ItemStack(Material.PLAYER_HEAD)
         val meta = item.itemMeta as SkullMeta
         val evaluation = getRating(target.uniqueId.toString())
@@ -37,17 +38,13 @@ class PlayerRatingApplication : Application {
     private fun getRating(targetUUID: String): Int {
         return Scoreboard().getValue(voidScoreboardName, targetUUID)
     }
-    private fun getPlayer(targetPlayerName: String): Player? {
-        return Bukkit.getPlayer(targetPlayerName.replace("@", ""))
+    private fun getPlayer(targetPlayerName: String): OfflinePlayer {
+        return Bukkit.getOfflinePlayer(targetPlayerName.replace("@", ""))
     }
     fun voidGUI(plugin: Plugin, player: Player, targetPlayerName: String) {
         val aoringoPlayer = AoringoPlayer(player)
         val targetPlayer = getPlayer(targetPlayerName)
         val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
-        if (targetPlayer == null) {
-            aoringoPlayer.sendErrorMessage("オンラインのプレイヤーのみ評価できます")
-            return
-        }
         if (targetPlayer == player) {
             aoringoPlayer.sendErrorMessage("自分を評価することは出来ません")
             return
