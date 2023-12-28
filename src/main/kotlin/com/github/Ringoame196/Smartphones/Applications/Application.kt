@@ -5,5 +5,5 @@ import org.bukkit.plugin.Plugin
 
 interface Application {
     fun getCustomModelData(): Int
-    fun openGUI(player: Player, plugin: Plugin)
+    fun bootApplication(player: Player, plugin: Plugin)
 }

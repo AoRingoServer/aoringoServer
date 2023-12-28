@@ -8,7 +8,7 @@ class EnderChestApplication : Application {
     override fun getCustomModelData(): Int {
         return 1
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable {

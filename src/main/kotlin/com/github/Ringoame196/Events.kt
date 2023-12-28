@@ -474,11 +474,7 @@ class Events(private val plugin: Plugin) : Listener {
                 val playerRatingApplication = PlayerRatingApplication()
                 e.isCancelled = true
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-                if (item.type == Material.PLAYER_HEAD) {
-                    if (itemName != player.name) {
-                        playerRatingApplication.voidGUI(player, item)
-                    }
-                } else if (item.type == Material.STONE_BUTTON) {
+                if (item.type == Material.STONE_BUTTON) {
                     playerRatingApplication.void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
                 }
             }
@@ -826,6 +822,10 @@ class Events(private val plugin: Plugin) : Listener {
             "rg" -> {
                 e.isCancelled = true
                 aoringoPlayer.namingConservationLand(plugin, message)
+            }
+            "playerVoid" -> {
+                e.isCancelled = true
+                PlayerRatingApplication().voidGUI(plugin, player, message)
             }
         }
         PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem = null

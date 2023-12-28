@@ -11,7 +11,7 @@ class OPApplication : Application {
     override fun getCustomModelData(): Int {
         return 7
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val itemManager = ItemManager()
         if (!player.isOp) { return }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}OP用")

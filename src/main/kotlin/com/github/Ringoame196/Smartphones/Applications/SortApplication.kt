@@ -15,7 +15,7 @@ class SortApplication : Application, closingGUI {
     override fun getCustomModelData(): Int {
         return 8
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val applicationManager = ApplicationManager()
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}スマートフォン(並び替え)")
         player.openInventory(gui)

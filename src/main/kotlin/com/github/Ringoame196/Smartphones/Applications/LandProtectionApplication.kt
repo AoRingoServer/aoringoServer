@@ -11,7 +11,7 @@ class LandProtectionApplication : Application {
     override fun getCustomModelData(): Int {
         return 6
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val itemManager = ItemManager()
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}WorldGuardGUI")
         gui.setItem(

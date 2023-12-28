@@ -11,7 +11,7 @@ class ConversionMoneyApplication : Application {
     override fun getCustomModelData(): Int {
         return 2
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val itemManager = ItemManager()
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}スマートフォン")
         gui.setItem(1, itemManager.make(Material.EMERALD, "${ChatColor.GREEN}100円", customModelData = 1))

@@ -76,7 +76,7 @@ class Smartphone {
             player.openInventory(createGUI(plugin, player))
             return
         }
-        apkList[apkName]?.openGUI(player, plugin)
+        apkList[apkName]?.bootApplication(player, plugin)
         teleportWorldFromPlayer(player, apkName)
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }

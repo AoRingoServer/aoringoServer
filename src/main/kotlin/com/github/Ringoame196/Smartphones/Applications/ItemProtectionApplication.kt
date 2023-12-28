@@ -17,7 +17,7 @@ class ItemProtectionApplication : Application, closingGUI {
     override fun getCustomModelData(): Int {
         return 3
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}アイテム保護")
         for (i in 0 until gui.size) {
             gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))

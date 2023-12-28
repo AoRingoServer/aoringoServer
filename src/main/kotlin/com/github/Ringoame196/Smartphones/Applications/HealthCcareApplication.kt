@@ -12,7 +12,7 @@ class HealthCcareApplication : Application {
     override fun getCustomModelData(): Int {
         return 9
     }
-    override fun openGUI(player: Player, plugin: Plugin) {
+    override fun bootApplication(player: Player, plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}ヘルスケア")
         gui.setItem(3, ItemManager().make(Material.MELON_SLICE, "${ChatColor.RED}マックスHP", "${player.maxHealth.toInt()}HP", 92, 1))
         gui.setItem(5, ItemManager().make(Material.MELON_SLICE, "${ChatColor.GREEN}Power", "${Scoreboard().getValue("status_Power",player.uniqueId.toString())}パワー", 91, 1))
