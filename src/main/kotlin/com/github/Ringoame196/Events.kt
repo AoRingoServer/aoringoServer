@@ -818,17 +818,17 @@ class Events(private val plugin: Plugin) : Listener {
         val message = e.message
         val aoringoPlayer = AoringoPlayer(player)
         val playerItem = player.inventory.itemInMainHand
-        when (PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem) {
-            "rg" -> {
-                e.isCancelled = true
-                aoringoPlayer.namingConservationLand(plugin, message)
-            }
-            "playerVoid" -> {
-                e.isCancelled = true
-                PlayerRatingApplication().voidGUI(plugin, player, message)
-            }
+        val playerData = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }
+        val chatSetting = mapOf(
+            "rg" to { aoringoPlayer.namingConservationLand(plugin, message) },
+            "playerVoid" to { PlayerRatingApplication().voidGUI(plugin, player, message) }
+        )
+        if (chatSetting.contains(playerData.chatSettingItem)) {
+            e.isCancelled = true
+            chatSetting[playerData.chatSettingItem]?.invoke()
+            playerData.chatSettingItem = null
+            return
         }
-        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.chatSettingItem = null
         if (message.contains("@")) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
