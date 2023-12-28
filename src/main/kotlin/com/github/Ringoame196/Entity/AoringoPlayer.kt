@@ -3,8 +3,8 @@ package com.github.Ringoame196.Entity
 import com.github.Ringoame196.Anvil
 import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Contract
-import com.github.Ringoame196.Data.ItemData
-import com.github.Ringoame196.Data.PluginData
+import com.github.Ringoame196.ItemData
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Foods.FoodManager

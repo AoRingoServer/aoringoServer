@@ -1,4 +1,4 @@
-package com.github.Ringoame196.Data
+package com.github.Ringoame196
 
 import org.bukkit.ChatColor
 import org.bukkit.Material

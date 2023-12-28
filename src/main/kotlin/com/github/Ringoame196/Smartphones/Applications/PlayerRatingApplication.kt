@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.Data.PluginData
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard

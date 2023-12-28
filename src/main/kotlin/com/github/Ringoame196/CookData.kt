@@ -1,4 +1,4 @@
-package com.github.Ringoame196.Data
+package com.github.Ringoame196
 
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager

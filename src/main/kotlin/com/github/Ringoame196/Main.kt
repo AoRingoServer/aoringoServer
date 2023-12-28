@@ -1,7 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Data.Config
-import com.github.Ringoame196.Data.PluginData
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
