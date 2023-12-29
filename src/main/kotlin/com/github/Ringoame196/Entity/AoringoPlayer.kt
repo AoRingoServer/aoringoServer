@@ -93,21 +93,6 @@ class AoringoPlayer(val player: Player) {
         val actionBarMessage = ChatColor.translateAlternateColorCodes('&', title)
         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent(actionBarMessage))
     }
-    fun getPlayersInRadius(center: Location, radius: Double): List<Player>? {
-        val playersInRadius = mutableListOf<Player>()
-
-        for (player in center.world?.players ?: return null) {
-            val playerLocation = player.location
-            val distance = center.distance(playerLocation)
-
-            if (distance <= radius) {
-                // 半径内にいるプレイヤーをリストに追加
-                playersInRadius.add(player)
-            }
-        }
-
-        return playersInRadius
-    }
     fun changePermission(permission: String, allow: Boolean, plugin: Plugin) {
         val permissions = player.addAttachment(plugin)
         permissions.setPermission(permission, allow)
