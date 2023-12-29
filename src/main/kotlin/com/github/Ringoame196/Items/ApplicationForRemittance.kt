@@ -9,7 +9,7 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
-class ApplicationForRemittance(private val player: Player, private val book: ItemStack) {
+class ApplicationForRemittance(private val player: Player, book: ItemStack) {
     private val aoringoPlayer = AoringoPlayer(player)
     private val writtenBook = WrittenBook(book)
     private val pageText = writtenBook.getCharactersPage(1)
