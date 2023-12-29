@@ -21,7 +21,6 @@ import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
@@ -182,9 +181,9 @@ class AoringoPlayer(val player: Player) {
             sendErrorMessage("保護範囲が含まれています")
         } else if (WorldGuard().getProtection(player.world, name)) {
             sendErrorMessage("同じ名前の保護を設定することは不可能です")
-            return
+        } else {
+            player.openInventory(Smartphone().createProtectionGUI(player, name))
         }
-        player.openInventory(Smartphone().createProtectionGUI(player, name))
     }
     fun namingConservationLand(plugin: Plugin, name: String) {
         Bukkit.getScheduler().runTask(
