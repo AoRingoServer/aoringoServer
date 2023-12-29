@@ -1,8 +1,8 @@
 package com.github.Ringoame196.Smartphones.Applications
 
-import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Scoreboard
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -44,14 +44,12 @@ class PlayerRatingApplication : Application {
     fun voidGUI(plugin: Plugin, player: Player, targetPlayerName: String) {
         val aoringoPlayer = AoringoPlayer(player)
         val targetPlayer = getPlayer(targetPlayerName)
-<<<<<<< HEAD
-        if (targetPlayer == null) {
-            aoringoPlayer.sendErrorMessage("オンラインのプレイヤーのみ評価できます")
+
+        if (!checkAcquisitionPlayer(targetPlayer, targetPlayerName)) {
+            aoringoPlayer.sendErrorMessage("プレイヤーデータが取得できませんでした")
             return
         }
-=======
-        val pollingTimes = Scoreboard().getValue(voidJudgmentScoreboardName, player.name)
->>>>>>> b2fdb5ed83ea2f3200a417730166df0e64d0a372
+
         if (targetPlayer == player) {
             aoringoPlayer.sendErrorMessage("自分を評価することは出来ません")
             return
@@ -64,6 +62,9 @@ class PlayerRatingApplication : Application {
                 player.openInventory(gui)
             }
         )
+    }
+    private fun checkAcquisitionPlayer(acquisitionPlayer: OfflinePlayer, playerName: String): Boolean {
+        return acquisitionPlayer.name == playerName
     }
     private fun isCanVoid(player: Player): Boolean {
         val notPolledCount = 0

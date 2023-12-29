@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications
 
-import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.PluginData
 import org.bukkit.ChatColor
 import org.bukkit.entity.Player
 

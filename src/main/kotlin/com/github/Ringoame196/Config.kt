@@ -1,7 +1,5 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Database
-import com.github.Ringoame196.PluginData
 import org.bukkit.configuration.file.FileConfiguration
 
 class Config(private val dataManager: PluginData.DataManager, private val config: FileConfiguration) {
