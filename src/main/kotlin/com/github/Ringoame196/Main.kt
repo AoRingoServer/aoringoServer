@@ -27,7 +27,7 @@ class Main : JavaPlugin() {
         scoreboard.make("cookLevel", "cookLevel")
         scoreboard.make("playerRating", "playerRating")
 
-        saveDefaultConfig()
+        saveResource("config.yml", true)
         saveResource("World.yml", true)
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
