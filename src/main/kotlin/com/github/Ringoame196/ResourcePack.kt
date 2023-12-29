@@ -9,11 +9,11 @@ import org.bukkit.plugin.Plugin
 import java.io.File
 import java.io.IOException
 
-class ResourcePack(plugin: Plugin) {
+class ResourcePack(val plugin: Plugin) {
     private val configFile = File(plugin.dataFolder, "/config.yml")
+    private val yml = Yml()
     private fun save(key: String, text: String) {
         val yamlConfiguration = YamlConfiguration.loadConfiguration(configFile)
-
         // 既存のデータを上書き
         yamlConfiguration.set(key, text)
 
@@ -24,13 +24,26 @@ class ResourcePack(plugin: Plugin) {
         }
     }
     fun update() {
-        val ymlConfiguration = YamlConfiguration.loadConfiguration(configFile)
-        val url = ymlConfiguration.getString("ResourcePack.URL")
-        val gas = ymlConfiguration.getString("ResourcePack.GET") ?: return
+        val configFIle = yml.getYml(plugin, "", "config")
+        val url = configFIle.getString("ResourcePack.URL")
+        val gas = configFIle.getString("ResourcePack.GET") ?: return
 
-        val newURL = Web().get(gas).toString()
-        if (url == newURL) { return }
-        save("ResourcePack.URL", newURL)
+        Bukkit.getScheduler().runTaskAsynchronously(
+            plugin,
+            Runnable {
+                val newURL = Web().get(gas).toString()
+                Bukkit.getScheduler().runTask(
+                    plugin,
+                    Runnable {
+                        if (url == newURL) { return@Runnable }
+                        save("ResourcePack.URL", newURL)
+                        sendUpdateMessage()
+                    }
+                )
+            }
+        )
+    }
+    private fun sendUpdateMessage() {
         Bukkit.broadcastMessage("${ChatColor.YELLOW}[青りんごサーバー]リソースパックが更新されました")
         Bukkit.broadcastMessage("${ChatColor.YELLOW}[青りんごサーバー]次回参加時に適応されます")
     }
