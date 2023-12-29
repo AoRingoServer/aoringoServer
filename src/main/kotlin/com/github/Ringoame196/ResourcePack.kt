@@ -12,6 +12,7 @@ import java.io.IOException
 class ResourcePack(val plugin: Plugin) {
     private val configFile = File(plugin.dataFolder, "/config.yml")
     private val yml = Yml()
+    private val resourcePackId = "ResourcePack.URL"
     private fun save(key: String, text: String) {
         val yamlConfiguration = YamlConfiguration.loadConfiguration(configFile)
         // 既存のデータを上書き
@@ -24,9 +25,10 @@ class ResourcePack(val plugin: Plugin) {
         }
     }
     fun update() {
+        val gasID = "ResourcePack.GET"
         val configFIle = yml.getYml(plugin, "", "config")
-        val url = configFIle.getString("ResourcePack.URL")
-        val gas = configFIle.getString("ResourcePack.GET") ?: return
+        val url = configFIle.getString(resourcePackId)
+        val gas = configFIle.getString(gasID) ?: return
 
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
@@ -36,7 +38,7 @@ class ResourcePack(val plugin: Plugin) {
                     plugin,
                     Runnable {
                         if (url == newURL) { return@Runnable }
-                        save("ResourcePack.URL", newURL)
+                        save(resourcePackId, newURL)
                         sendUpdateMessage()
                     }
                 )
@@ -48,7 +50,7 @@ class ResourcePack(val plugin: Plugin) {
         Bukkit.broadcastMessage("${ChatColor.YELLOW}[青りんごサーバー]次回参加時に適応されます")
     }
     fun adaptation(player: Player) {
-        val url = YamlConfiguration.loadConfiguration(configFile).getString("ResourcePack.URL") ?: return
+        val url = YamlConfiguration.loadConfiguration(configFile).getString(resourcePackId) ?: return
         player.setResourcePack(url)
     }
 }
