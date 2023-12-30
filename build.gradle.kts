@@ -42,41 +42,45 @@ configure<BukkitPluginDescription> {
     main = "com.github.Ringoame196.Main"
     version = gitVersion()
     apiVersion = "1." + pluginVersion.split(".")[1]
-}
-
-tasks.withType<ShadowJar> {
-    configurations = listOf(shadowImplementation)
-    archiveClassifier.set("")
-    relocate("kotlin", "com.github.Ringoame196.libs.kotlin")
-    relocate("org.intellij.lang.annotations", "com.github.Ringoame196.libs.org.intellij.lang.annotations")
-    relocate("org.jetbrains.annotations", "com.github.Ringoame196.libs.org.jetbrains.annotations")
-}
-
-tasks.named("build") {
-    dependsOn("shadowJar")
-    doFirst {
-        copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into("D:/デスクトップ")
-        }
-    }
-}
-
-task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
-    dependsOn("build")
-    doFirst {
-        copy {
-            from(buildDir.resolve("libs/${project.name}.jar"))
-            into(buildDir.resolve("MinecraftServer/plugins"))
+    commands {
+        register("money") {
+            description = "お金を管理するコマンド"
+            usage = "/money [メニュー] [プレイヤー] [値段]"
         }
     }
 
-    jarUrl.set(JarUrl.Paper(pluginVersion))
-    jarName.set("server.jar")
-    serverDirectory.set(buildDir.resolve("MinecraftServer"))
-    nogui.set(true)
-    agreeEula.set(true)
+    tasks.withType<ShadowJar> {
+        configurations = listOf(shadowImplementation)
+        archiveClassifier.set("")
+        relocate("kotlin", "com.github.Ringoame196.libs.kotlin")
+        relocate("org.intellij.lang.annotations", "com.github.Ringoame196.libs.org.intellij.lang.annotations")
+        relocate("org.jetbrains.annotations", "com.github.Ringoame196.libs.org.jetbrains.annotations")
+    }
+
+    tasks.named("build") {
+        dependsOn("shadowJar")
+        doFirst {
+            copy {
+                from(buildDir.resolve("libs/${project.name}.jar"))
+                into("D:/デスクトップ")
+            }
+        }
+    }
+
+    task<LaunchMinecraftServerTask>("buildAndLaunchServer") {
+        dependsOn("build")
+        doFirst {
+            copy {
+                from(buildDir.resolve("libs/${project.name}.jar"))
+                into(buildDir.resolve("MinecraftServer/plugins"))
+            }
+        }
+
+        jarUrl.set(JarUrl.Paper(pluginVersion))
+        jarName.set("server.jar")
+        serverDirectory.set(buildDir.resolve("MinecraftServer"))
+        nogui.set(true)
+        agreeEula.set(true)
+    }
+    task<SetupTask>("setup")
 }
-
-
-task<SetupTask>("setup")
