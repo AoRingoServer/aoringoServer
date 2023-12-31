@@ -4,6 +4,7 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import java.util.UUID
 
 class MoneyUseCase {
@@ -39,7 +40,7 @@ class MoneyUseCase {
         } else {
             bossbar.setTitle(bossbarTitle(aoringoPlayer.playerAccount))
         }
-        bossbar?.addPlayer(aoringoPlayer.player)
+        bossbar.addPlayer(aoringoPlayer.player)
     }
     fun setMoney(account: Account, total: Int) {
         moneyManager.setMoney(account, total)
@@ -60,5 +61,9 @@ class MoneyUseCase {
         }
         moneyManager.tradeMoney(fromAccount, aoringoPlayer.playerAccount, amount)
         return true
+    }
+    fun showTargetPlayerAccount(targetPlayerName:String, targetAccount: JointAccount, player:Player){
+        val possessionMoney = getMoney(targetAccount)
+        player.sendMessage("${net.md_5.bungee.api.ChatColor.GREEN}[お金] $targetPlayerName の所持金は $possessionMoney 円")
     }
 }

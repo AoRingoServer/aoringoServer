@@ -10,6 +10,7 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
+import kotlin.math.tan
 
 class Money : CommandExecutor, TabCompleter {
     private val playerManager = PlayerManager()
@@ -19,6 +20,11 @@ class Money : CommandExecutor, TabCompleter {
         "送金" to "pay",
         "追加" to "add",
         "設定" to "set"
+    )
+    private val processingMap = mapOf(
+        tabMap["確認"] to {
+
+        }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return false }
@@ -35,18 +41,15 @@ class Money : CommandExecutor, TabCompleter {
         val targetAccount = JointAccount(targetPlayer.uniqueId.toString())
         if (menu == tabMap["確認"]) {
             if (!aoringoPlayer.isOperator()) {
-                aoringoPlayer.sendErrorMessage("このコマンドはオペレーターのみ使用可能です")
+                aoringoPlayer.sendNoOpMessage()
                 return true
             }
-            val possessionMoney = aoringoPlayer.moneyUseCase.getMoney(targetAccount)
-            sender.sendMessage("${ChatColor.GREEN}[お金] ${targetPlayer.name}の所持金は $possessionMoney 円")
+            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name?:return false,targetAccount,sender)
             return true
         }
         if (size == 2) { return false }
-        val price: Int
-        try {
-            price = args[2].toInt()
-        } catch (e: NumberFormatException) {
+        val price = moneyManager.convertingInt(args[2])
+        if (price == null){
             aoringoPlayer.sendErrorMessage("数字を入力してください")
             return false
         }
@@ -57,7 +60,7 @@ class Money : CommandExecutor, TabCompleter {
             }
             tabMap["追加"] -> {
                 if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendErrorMessage("このコマンドはオペレーターのみ使用可能です")
+                    aoringoPlayer.sendNoOpMessage()
                     return true
                 }
                 moneyManager.addMoney(targetAccount, price)
@@ -65,7 +68,7 @@ class Money : CommandExecutor, TabCompleter {
             }
             tabMap["設定"] -> {
                 if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendErrorMessage("このコマンドはオペレーターのみ使用可能です")
+                    aoringoPlayer.sendNoOpMessage()
                     return true
                 }
                 moneyManager.setMoney(targetAccount, price)
