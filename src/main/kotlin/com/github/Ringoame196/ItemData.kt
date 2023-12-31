@@ -15,12 +15,4 @@ class ItemData {
             else -> null
         }
     }
-    fun getVegetablesDisplayName(material: Material): String? {
-        return when (material) {
-            Material.WHEAT -> "${ChatColor.GREEN}小麦"
-            Material.CARROT -> "${ChatColor.GOLD}人参"
-            Material.POTATO -> "${ChatColor.GOLD}じゃがいも"
-            else -> null
-        }
-    }
 }

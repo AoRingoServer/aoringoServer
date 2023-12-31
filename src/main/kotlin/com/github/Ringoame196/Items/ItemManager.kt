@@ -2,6 +2,7 @@ package com.github.Ringoame196.Items
 
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Scoreboard
+import com.github.Ringoame196.Yml
 import org.bukkit.ChatColor
 import org.bukkit.Location
 import org.bukkit.Material
@@ -14,6 +15,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
+import org.bukkit.plugin.Plugin
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.random.Random
@@ -172,5 +174,10 @@ class ItemManager {
         val reduceItem = item.clone()
         reduceItem.amount = 1
         player.inventory.removeItem(reduceItem)
+    }
+    fun acquisitionDropVegetable(plugin: Plugin, breakMaterial: Material): String {
+        val yml = Yml()
+        val data = yml.getYml(plugin, "", "DropVegetable")
+        return data[breakMaterial.toString()].toString()
     }
 }

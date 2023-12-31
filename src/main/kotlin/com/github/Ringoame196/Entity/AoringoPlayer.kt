@@ -6,7 +6,6 @@ import com.github.Ringoame196.Contract
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.Foods.FoodManager
-import com.github.Ringoame196.ItemData
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
@@ -227,9 +226,10 @@ class AoringoPlayer(val player: Player) {
         player.inventory.setItemInMainHand(item)
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
-    fun breakVegetables(block: org.bukkit.block.Block) {
+    fun breakVegetables(block: org.bukkit.block.Block, plugin: Plugin) {
+        val itemManager = ItemManager()
         for (item in block.drops) {
-            val vegetablesName = ItemData().getVegetablesDisplayName(item.type)
+            val vegetablesName = itemManager.acquisitionDropVegetable(plugin, item.type)
             if (vegetablesName == null) {
                 block.world.dropItem(block.location, item)
             } else {

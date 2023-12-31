@@ -580,7 +580,7 @@ class Events(private val plugin: Plugin) : Listener {
             }
             Material.WHEAT, Material.CARROTS, Material.POTATOES -> {
                 e.isCancelled = true
-                aoringoPlayer.breakVegetables(block)
+                aoringoPlayer.breakVegetables(block, plugin)
             }
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
