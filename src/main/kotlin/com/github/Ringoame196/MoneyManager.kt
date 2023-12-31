@@ -36,7 +36,7 @@ class MoneyManager {
         addMoney(receiveAccount, amount)
         return true
     }
-    fun convertingInt(price:String):Int?{
+    fun convertingInt(price: String): Int? {
         try {
             return price.toInt()
         } catch (e: NumberFormatException) {

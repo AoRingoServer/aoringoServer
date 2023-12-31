@@ -263,7 +263,7 @@ class AoringoPlayer(val player: Player) {
     fun isOperator(): Boolean {
         return player.isOp
     }
-    fun sendNoOpMessage(){
+    fun sendNoOpMessage() {
         sendErrorMessage("このコマンドはOPのみ実行可能です")
     }
 }

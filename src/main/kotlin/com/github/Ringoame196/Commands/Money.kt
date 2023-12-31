@@ -10,7 +10,6 @@ import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
-import kotlin.math.tan
 
 class Money : CommandExecutor, TabCompleter {
     private val playerManager = PlayerManager()
@@ -23,7 +22,6 @@ class Money : CommandExecutor, TabCompleter {
     )
     private val processingMap = mapOf(
         tabMap["確認"] to {
-
         }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
@@ -44,12 +42,12 @@ class Money : CommandExecutor, TabCompleter {
                 aoringoPlayer.sendNoOpMessage()
                 return true
             }
-            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name?:return false,targetAccount,sender)
+            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name ?: return false, targetAccount, sender)
             return true
         }
         if (size == 2) { return false }
         val price = moneyManager.convertingInt(args[2])
-        if (price == null){
+        if (price == null) {
             aoringoPlayer.sendErrorMessage("数字を入力してください")
             return false
         }
@@ -80,7 +78,7 @@ class Money : CommandExecutor, TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
         return when (args.size) {
-            1 -> mutableListOf(tabMap["確認"]?:"", tabMap["送金"]?:"", tabMap["追加"]?:"", tabMap["設定"]?:"")
+            1 -> mutableListOf(tabMap["確認"] ?: "", tabMap["送金"] ?: "", tabMap["追加"] ?: "", tabMap["設定"] ?: "")
             2 -> playerManager.acquisitionPlayerNameList()
             3 -> mutableListOf("[値段(数字)]")
             else -> mutableListOf("")
