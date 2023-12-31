@@ -260,4 +260,7 @@ class AoringoPlayer(val player: Player) {
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
         player.sendMessage("${ChatColor.GOLD}ダンジョンへ移動しました")
     }
+    fun isOperator(): Boolean {
+        return player.isOp
+    }
 }

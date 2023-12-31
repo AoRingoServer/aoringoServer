@@ -53,11 +53,12 @@ class MoneyUseCase {
     fun getMoney(account: Account): Int {
         return moneyManager.getMoney(account)
     }
-    fun tradeMoney(aoringoPlayer: AoringoPlayer, fromAccount: Account, amount: Int) {
+    fun tradeMoney(aoringoPlayer: AoringoPlayer, fromAccount: Account, amount: Int): Boolean {
         if (getMoney(aoringoPlayer.playerAccount) < amount) {
             aoringoPlayer.sendErrorMessage("所持金が足りませんでした")
-            return
+            return false
         }
         moneyManager.tradeMoney(fromAccount, aoringoPlayer.playerAccount, amount)
+        return true
     }
 }
