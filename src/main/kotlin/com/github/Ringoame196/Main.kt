@@ -31,7 +31,6 @@ class Main : JavaPlugin() {
 
         saveDefaultConfig()
         saveResource("World.yml", true)
-        saveResource("DropVegetable.yml", true)
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
     }

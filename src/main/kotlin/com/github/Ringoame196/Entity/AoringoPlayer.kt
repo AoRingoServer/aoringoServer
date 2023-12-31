@@ -228,20 +228,21 @@ class AoringoPlayer(val player: Player) {
     }
     fun breakVegetables(block: org.bukkit.block.Block, plugin: Plugin) {
         val itemManager = ItemManager()
+        val vegetablesNameMap = mapOf(
+            Material.WHEAT to "${ChatColor.GREEN}小麦",
+            Material.CARROT to "${ChatColor.GOLD}人参",
+            Material.POTATO to "${ChatColor.GOLD}じゃがいも"
+        )
         for (item in block.drops) {
-            val vegetablesName = itemManager.acquisitionDropVegetable(plugin, item.type)
-            if (vegetablesName == null) {
-                block.world.dropItem(block.location, item)
-            } else {
-                block.world.dropItem(
-                    block.location,
-                    ItemManager().make(
-                        item.type,
-                        vegetablesName,
-                        FoodManager().makeExpirationDate(14)
-                    )
+            val vegetablesName = vegetablesNameMap[item.type] ?: continue
+            block.world.dropItem(
+                block.location,
+                ItemManager().make(
+                    item.type,
+                    vegetablesName,
+                    FoodManager().makeExpirationDate(14)
                 )
-            }
+            )
         }
         block.type = Material.AIR
     }

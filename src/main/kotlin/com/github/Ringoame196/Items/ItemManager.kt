@@ -175,9 +175,4 @@ class ItemManager {
         reduceItem.amount = 1
         player.inventory.removeItem(reduceItem)
     }
-    fun acquisitionDropVegetable(plugin: Plugin, breakMaterial: Material): String {
-        val yml = Yml()
-        val data = yml.getYml(plugin, "", "DropVegetable")
-        return data[breakMaterial.toString()].toString()
-    }
 }
