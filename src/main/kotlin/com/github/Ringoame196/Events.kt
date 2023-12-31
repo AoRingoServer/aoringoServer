@@ -143,6 +143,19 @@ class Events(private val plugin: Plugin) : Listener {
             }
             else -> {}
         }
+        val importantDocumentMessage = mapOf(
+            "${ChatColor.YELLOW}契約書[未記入]" to "${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]",
+            "${ChatColor.YELLOW}契約書[契約待ち]" to "${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]",
+            "${ChatColor.YELLOW}送金申込書[未記入]" to "${ChatColor.YELLOW}[送金申し込み書メニュー]\n" +
+                "${ChatColor.AQUA}!送金 口座 [口座名]" +
+                "${ChatColor.AQUA}!送金 金額 [値段]" +
+                "${ChatColor.AQUA}!送金 口座登録"
+        )
+        if (importantDocumentMessage.contains(itemName)) {
+            e.isCancelled = true
+            player.sendMessage(importantDocumentMessage[itemName])
+            return
+        }
         when (itemName) {
             "職業スター" -> player.openInventory(JobManager().makeSelectGUI())
             "まな板" -> {
@@ -179,20 +192,6 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.YELLOW}エンダーチェスト容量UP" -> {
                 e.isCancelled = true
                 aoringoPlayer.upDataEnderChestLevel(plugin)
-            }
-            // コマンド一覧をymlに書いて呼び出した方がいい？
-            "${ChatColor.YELLOW}契約書[未記入]" -> {
-                player.sendMessage("${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]")
-            }
-            "${ChatColor.YELLOW}契約書[契約待ち]" -> {
-                player.sendMessage("${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]")
-            }
-            "${ChatColor.YELLOW}送金申込書[未記入]" -> {
-                player.sendMessage("${ChatColor.YELLOW}[送金申し込み書メニュー]")
-                player.sendMessage("${ChatColor.AQUA}!送金 口座 [口座名]")
-                player.sendMessage("${ChatColor.AQUA}!送金 金額 [値段]")
-                player.sendMessage("${ChatColor.AQUA}!送金 口座登録")
-                player.sendMessage("${ChatColor.YELLOW}上のメッセージを本を持った状態でチャットしてください")
             }
             "${ChatColor.YELLOW}送金申込書" -> {
                 if (player.isSneaking) {
