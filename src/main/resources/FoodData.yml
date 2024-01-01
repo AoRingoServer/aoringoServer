@@ -1,0 +1,7 @@
+foods:
+  - name: carrot
+    customModelData: 1
+
+  - name: apple
+    customModelData: 2
+
