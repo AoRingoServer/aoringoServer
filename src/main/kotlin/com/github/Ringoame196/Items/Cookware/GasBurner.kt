@@ -40,7 +40,7 @@ class GasBurner(private val cookManager: CookManager = CookManager()) {
                 display.customName = if (c >= 0) {
                     "${ChatColor.YELLOW}完成まで${c}秒"
                 } else {
-                    "${ChatColor.RED}焼きすぎ注意！！${c}秒"
+                    "${ChatColor.RED}焼きすぎ警告！！${c}秒"
                 }
                 smoker.update()
                 if (c == 0) {
