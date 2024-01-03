@@ -1,11 +1,13 @@
 package com.github.Ringoame196.Foods
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.Yml
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import java.text.SimpleDateFormat
@@ -13,20 +15,15 @@ import java.util.Calendar
 import java.util.Date
 
 class FoodManager {
-    private fun returnFoodHasLevel(item: ItemStack): Int {
+    private fun returnFoodHasLevel(item: ItemStack, plugin: Plugin): Int {
         val itemName = item.itemMeta?.displayName
-        return when (itemName) {
-            "おにぎり" -> 6
-            "ステーキ" -> 5
-            "からあげ" -> 2
-            "とんかつ" -> 2
-            "ハンバーグ" -> 4
-            else -> 2
-        }
+        val yml = Yml()
+        val ymlFile = yml.getYml(plugin, "", "FoodData")
+        return ymlFile.getInt("$itemName.recoveryQuantity")
     }
-    fun calculateFoodLevel(player: Player, food: ItemStack): Int {
+    fun calculateFoodLevel(player: Player, food: ItemStack, plugin: Plugin): Int {
         val playerFoodLevel = player.foodLevel
-        val foodHasLevel = returnFoodHasLevel(food)
+        val foodHasLevel = returnFoodHasLevel(food, plugin)
         val totalFoodLevel = playerFoodLevel + foodHasLevel
         return if (totalFoodLevel > 20) { 20 } else { totalFoodLevel }
     }

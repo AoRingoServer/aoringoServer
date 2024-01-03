@@ -690,7 +690,7 @@ class Events(private val plugin: Plugin) : Listener {
         }
         ItemManager().reduceOneItem(player, item)
         e.isCancelled = true
-        player.foodLevel = foodManager.calculateFoodLevel(player, item)
+        player.foodLevel = foodManager.calculateFoodLevel(player, item, plugin)
         player.saturation = hiddenFoodLevel // 隠し満腹度
         foodManager.increaseStatus(player, item)
     }
