@@ -47,22 +47,42 @@ class JobManager {
             titleStar(player)
         }
     }
+    private fun sendDescription(player: Player) {
+        player.sendMessage(
+            "${ChatColor.GOLD}[ハンター]\n" +
+                "他の職業が作成に必要な素材アイテムは主にハンターにしか入手することができない為、かなり重要度の高い職業になっています。\n" +
+                "${ChatColor.YELLOW}[料理人]\n" +
+                "当サーバーでは死亡時など満腹度が大きく減少する場面が多々あります\n" +
+                "\n" +
+                "ハンターから買取った食材を調理し他の職業へ売りお金を稼ぎましょう\n" +
+                "${ChatColor.AQUA}[鍛冶屋]\n" +
+                "ツールや防具など生活にかかせない必要なアイテムを製作できる唯一の職業です。\n" +
+                "\n" +
+                "ハンターから買取った鉱石でアイテムを製作し他職業へ売りお金を稼ぎましょう"
+        )
+    }
     fun change(player: Player, jobName: String) {
-        val item = player.inventory.itemInMainHand
-        item.amount = item.amount - 1
-        for (i in 0 until jobList.size) {
-            if (jobList[i] != jobName) { continue }
-            scoreboard.reduce(jobScoreboardName, get(player), 1)
-            setJob(player, i)
-            scoreboard.add(jobScoreboardName, get(player), 1)
-            prefix(player)
-            player.sendMessage("${jobName}に就職しました")
-            player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
-            player.world.spawnParticle(Particle.EXPLOSION_HUGE, player.location, 1)
-            player.inventory.setItemInMainHand(item)
+        val itemManager = ItemManager()
+        if (jobName == "${ChatColor.RED}職業説明") {
             player.closeInventory()
-            giveMoney(player)
+            sendDescription(player)
+            return
         }
+        val jobIDMap = mapOf(
+            "${ChatColor.YELLOW}料理人" to 1,
+            "${ChatColor.GOLD}ハンター" to 2,
+            "${ChatColor.GRAY}鍛冶屋" to 3
+        )
+        scoreboard.reduce(jobScoreboardName, get(player), 1)
+        setJob(player, jobIDMap[jobName] ?: return)
+        scoreboard.add(jobScoreboardName, get(player), 1)
+        prefix(player)
+        player.sendMessage("${jobName}に就職しました")
+        player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+        player.world.spawnParticle(Particle.EXPLOSION_HUGE, player.location, 1)
+        itemManager.reduceMainItem(player)
+        player.closeInventory()
+        giveMoney(player)
     }
     private fun giveMoney(player: Player) {
         val aoringoPlayer = AoringoPlayer(player)
@@ -83,6 +103,7 @@ class JobManager {
     }
     fun makeSelectGUI(): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}職業選択")
+        gui.setItem(1, itemManager.make(Material.BOOK, "${ChatColor.RED}職業説明", "クリックすると職業の説明が見れます"))
         gui.setItem(2, showPeopleEmployedNumber(Material.IRON_SWORD, "${ChatColor.GOLD}ハンター"))
         gui.setItem(4, showPeopleEmployedNumber(Material.MILK_BUCKET, "${ChatColor.YELLOW}料理人"))
         gui.setItem(6, showPeopleEmployedNumber(Material.ANVIL, "${ChatColor.GRAY}鍛冶屋"))
