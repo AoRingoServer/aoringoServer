@@ -16,10 +16,15 @@ import java.util.Date
 
 class FoodManager {
     private fun returnFoodHasLevel(item: ItemStack, plugin: Plugin): Int {
-        val itemName = item.itemMeta?.displayName
+        val itemName = item.itemMeta?.displayName ?: ""
         val yml = Yml()
-        val ymlFile = yml.getYml(plugin, "", "FoodData")
-        return ymlFile.getInt("$itemName.recoveryQuantity")
+        val file = yml.getYml(plugin, "", "FoodRecoveryData")
+        val recoveryQuantity = file.getInt(itemName)
+        return if (recoveryQuantity == 0) {
+            2
+        } else {
+            recoveryQuantity
+        }
     }
     fun calculateFoodLevel(player: Player, food: ItemStack, plugin: Plugin): Int {
         val playerFoodLevel = player.foodLevel

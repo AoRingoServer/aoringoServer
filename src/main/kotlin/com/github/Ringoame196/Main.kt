@@ -31,7 +31,7 @@ class Main : JavaPlugin() {
 
         saveDefaultConfig()
         saveResource("World.yml", true)
-        saveResource("FoodData.yml", true)
+        saveResource("FoodRecoveryData.yml", true)
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
     }
