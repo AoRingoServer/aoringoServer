@@ -21,12 +21,10 @@ class GasBurner(private val cookManager: CookManager = CookManager()) {
         itemFrame.changeTransparency(ironPlate)
     }
     fun bakingFoods(plugin: Plugin, player: Player, ironPlate: org.bukkit.entity.ItemFrame, smoker: Smoker) {
-        var c = 0
-        val completeTime = cookManager.calculateCookTime(10, player)
+        var c = cookManager.calculateCookTime(10, player)
         itemFrame.changeTransparency(ironPlate)
         val display = cookManager.cookArmorStand.summonMarker(ironPlate.location, "", armorStandTag)
         val world = ironPlate.world
-        val burnedTime = completeTime * 2
         val item = ironPlate.item
         if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) {
             display.remove()
@@ -34,16 +32,20 @@ class GasBurner(private val cookManager: CookManager = CookManager()) {
         }
         object : BukkitRunnable() {
             override fun run() {
-                c++
+                c--
                 val ingredient = ironPlate.item
                 val power: Short = 40
                 world.playSound(ironPlate.location, Sound.BLOCK_FIRE_AMBIENT, 1f, 1f)
                 smoker.burnTime = power
-                display.customName = "${ChatColor.YELLOW}${c}秒"
+                display.customName = if (c >= 0) {
+                    "${ChatColor.YELLOW}完成まで${c}秒"
+                } else {
+                    "${ChatColor.DARK_RED}焼きすぎ注意！！"
+                }
                 smoker.update()
-                if (c == completeTime) {
+                if (c == 0) {
                     completeBaking(ingredient, player, ironPlate)
-                } else if (c == burnedTime || ingredient.type == Material.AIR) {
+                } else if (c == -10 || ingredient.type == Material.AIR) {
                     singeFoods(ironPlate)
                     ironPlate.setItem(ItemStack(Material.AIR))
                     display.remove()
