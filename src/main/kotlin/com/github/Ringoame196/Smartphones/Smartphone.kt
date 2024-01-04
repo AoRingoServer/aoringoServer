@@ -71,7 +71,8 @@ class Smartphone {
             gui.setItem(
                 smartphoneSlots[i],
                 ItemManager().make(
-                    Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", lore,
+                    Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName",
+                    lore,
                     customModelData
                 )
             )
