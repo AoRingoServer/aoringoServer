@@ -45,7 +45,8 @@ class ApplicationManager {
         }.runTaskTimer(plugin, 0L, 20L) // 1秒間隔 (20 ticks) でタスクを実行
     }
     fun uninstall(player: org.bukkit.entity.Player, itemName: String, customModelData: Int, plugin: Plugin) {
-        player.inventory.addItem(ItemManager().make(Material.GREEN_CONCRETE, "[アプリケーション]$itemName", "", customModelData, 1))
+        val application = ItemManager().make(Material.GREEN_CONCRETE, "[アプリケーション]$itemName", "", customModelData, 1)
+        player.inventory.addItem(application)
         Yml().removeToList(plugin, "playerData", player.uniqueId.toString(), "apkList", itemName)
         player.sendMessage("${ChatColor.RED}[スマートフォン]${itemName}${ChatColor.RED}をアンインストールしました")
         player.playSound(player, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
