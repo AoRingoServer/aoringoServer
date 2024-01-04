@@ -39,6 +39,8 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
+import org.yaml.snakeyaml.Yaml
+import java.io.File
 
 class Smartphone {
     val apkList = mapOf<String, Application>(
@@ -63,10 +65,40 @@ class Smartphone {
         val apkCount = minOf(smartphoneSlots.size, playerHaveAPKList.size)
         for (i in 0 until apkCount) {
             val apkName = playerHaveAPKList[i]
-            val customModelData = apkList[apkName]?.getCustomModelData() ?: 0
-            gui.setItem(smartphoneSlots[i], ItemManager().make(Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", customModelData = customModelData))
+            val applicationInfo = getApplicationInfo(apkName, plugin)
+            val customModelData = getCustomModelData(applicationInfo)
+            val lore = applicationInfo?.get("lore").toString()
+            gui.setItem(
+                smartphoneSlots[i],
+                ItemManager().make(
+                    Material.GREEN_CONCRETE, "${ChatColor.YELLOW}[アプリ]$apkName", lore,
+                    customModelData
+                )
+            )
         }
         return gui
+    }
+    private fun getCustomModelData(applicationInfo: Map<String, Any>?): Int {
+        val customModelData = applicationInfo?.get("customModelData")
+        return customModelData?.toString()?.toInt() ?: 0
+    }
+    private fun getApplicationInfo(applicationName: String, plugin: Plugin): Map<String, Any>? {
+        val ymlFile = File(plugin.dataFolder, "Application.yml")
+
+        try {
+            java.io.FileReader(ymlFile).use { fileReader ->
+                val yaml = Yaml()
+                val yamlData = yaml.load(fileReader) as? Map<String, Any>
+
+                // itemNameに対応する値があるか確認
+                if (yamlData != null) {
+                    return yamlData[applicationName] as? Map<String, Any>
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return null
     }
     fun startUpAKS(player: Player, item: ItemStack, plugin: Plugin, shift: Boolean) {
         val itemName = item.itemMeta?.displayName
