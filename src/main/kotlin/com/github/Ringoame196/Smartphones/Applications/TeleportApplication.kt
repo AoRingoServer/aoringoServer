@@ -14,6 +14,7 @@ class TeleportApplication : Application {
     override fun bootApplication(player: Player, plugin: Plugin) {
         val itemManager = ItemManager()
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}スマートフォン")
+        gui.setItem(0, itemManager.make(Material.CRAFTING_TABLE, "${ChatColor.YELLOW}チュートリアル"))
         gui.setItem(1, itemManager.make(Material.CHEST, "${ChatColor.GOLD}ロビー"))
         gui.setItem(3, itemManager.make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド"))
         gui.setItem(5, itemManager.make(Material.DIAMOND_PICKAXE, "${ChatColor.AQUA}資源ワールド"))

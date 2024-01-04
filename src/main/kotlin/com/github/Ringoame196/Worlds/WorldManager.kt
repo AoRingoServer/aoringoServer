@@ -13,7 +13,7 @@ class WorldManager(plugin: Plugin) {
             it.value == targetWorldID
         }?.key ?: "${ChatColor.RED}未登録"
     }
-    fun getWorldID(targetWorldName: String): String {
-        return map[targetWorldName].toString()
+    fun getWorldID(targetWorldName: String): String? {
+        return map[targetWorldName]?.toString()
     }
 }

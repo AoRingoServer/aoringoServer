@@ -34,7 +34,7 @@ class Resource(val plugin: Plugin) {
         val aoringoPlayer = AoringoPlayer(player)
         val worldManager = WorldManager(plugin)
         val worldID = worldManager.getWorldID(itemName)
-        aoringoPlayer.teleporterWorld(worldID)
+        aoringoPlayer.teleporterWorld(worldID ?: return)
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }
 }

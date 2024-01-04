@@ -28,6 +28,7 @@ import com.github.Ringoame196.Smartphones.Applications.OPApplication
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Applications.TeleportApplication
+import com.github.Ringoame196.Worlds.WorldManager
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -77,7 +78,7 @@ class Smartphone {
             return
         }
         apkList[apkName]?.bootApplication(player, plugin)
-        teleportWorldFromPlayer(player, apkName)
+        teleportWorldFromPlayer(player, apkName, plugin)
         if (item.type == Material.EMERALD && (item.itemMeta?.customModelData ?: return) >= 1) {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
@@ -88,15 +89,14 @@ class Smartphone {
     private fun getWorldSpawnLocation(worldName: String): Location? {
         return Bukkit.getWorld(worldName)?.spawnLocation
     }
-    private fun teleportWorldFromPlayer(player: Player, worldName: String) {
-        val worldID = mapOf<String, String>(
-            "${ChatColor.GOLD}ロビー" to "world",
-            "${ChatColor.GREEN}生活ワールド" to "Home",
-            "${ChatColor.AQUA}資源ワールド" to "Survival",
-            "${ChatColor.YELLOW}ショップ" to "shop"
-        )
+    private fun getWorldID(worldName: String, plugin: Plugin): String? {
+        val worldManager = WorldManager(plugin)
+        return worldManager.getWorldID(worldName)
+    }
+    private fun teleportWorldFromPlayer(player: Player, worldName: String, plugin: Plugin) {
+        val worldID = getWorldID(worldName, plugin)
         val playerLocation = player.location
-        val location = getWorldSpawnLocation(worldID[worldName] ?: return)
+        val location = getWorldSpawnLocation(worldID ?: return)
         player.teleport(location ?: playerLocation)
     }
     fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
