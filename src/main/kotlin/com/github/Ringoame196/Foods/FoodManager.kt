@@ -1,6 +1,7 @@
 package com.github.Ringoame196.Foods
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import de.schlichtherle.io.FileReader
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -11,7 +12,6 @@ import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 import org.yaml.snakeyaml.Yaml
 import java.io.File
-import java.io.FileInputStream
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -20,16 +20,20 @@ class FoodManager {
     private fun returnFoodHasLevel(item: ItemStack, plugin: Plugin): Int {
         val itemName = item.itemMeta?.displayName ?: ""
         val ymlFile = File(plugin.dataFolder, "FoodData.yml")
+        val recoveryAmountKey = "recoveryQuantity"
 
         try {
-            FileInputStream(ymlFile).use { fileInputStream ->
+            java.io.FileReader(ymlFile).use { fileReader ->
                 val yaml = Yaml()
-                val yamlData = yaml.load(fileInputStream) as? Map<String, Any>
+                val yamlData = yaml.load(fileReader) as? Map<String, Any>
 
                 // itemNameに対応する値があるか確認
-                if (yamlData != null && yamlData.containsKey(itemName)) {
-                    val recoveryQuantity = yamlData[itemName] as? Int
-                    return recoveryQuantity ?: 2
+                if (yamlData != null) {
+                    val itemData = yamlData[itemName] as? Map<String, Any>
+
+                    if (itemData != null && itemData.containsKey(recoveryAmountKey)) {
+                        return itemData[recoveryAmountKey] as? Int ?: 2
+                    }
                 }
             }
         } catch (e: Exception) {
