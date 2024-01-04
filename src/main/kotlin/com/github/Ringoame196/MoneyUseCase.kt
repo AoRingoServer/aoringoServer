@@ -62,8 +62,8 @@ class MoneyUseCase {
         moneyManager.tradeMoney(fromAccount, aoringoPlayer.playerAccount, amount)
         return true
     }
-    fun showTargetPlayerAccount(targetPlayerName: String, targetAccount: JointAccount, player: Player) {
+    fun showTargetPlayerAccount(targetPlayerName: String, targetAccount: Account, player: Player) {
         val possessionMoney = getMoney(targetAccount)
-        player.sendMessage("${net.md_5.bungee.api.ChatColor.GREEN}[お金] $targetPlayerName の所持金は $possessionMoney 円")
+        player.sendMessage("${net.md_5.bungee.api.ChatColor.GREEN}[お金] ${targetPlayerName}さんの所持金は ${formalCurrency(possessionMoney)}円です。")
     }
 }

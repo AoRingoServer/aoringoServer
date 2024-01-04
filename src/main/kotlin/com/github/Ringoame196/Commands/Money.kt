@@ -29,8 +29,7 @@ class Money : CommandExecutor, TabCompleter {
         val aoringoPlayer = AoringoPlayer(sender)
         val size = args.size
         if (args.isEmpty()) {
-            val possessionMoney = aoringoPlayer.moneyUseCase.getMoney(aoringoPlayer.playerAccount)
-            sender.sendMessage("${ChatColor.GREEN}[お金] あなたの所持金は $possessionMoney 円")
+            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(sender.name, aoringoPlayer.playerAccount, sender)
             return true
         }
         if (size == 1) { return false }
