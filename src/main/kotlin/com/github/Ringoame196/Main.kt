@@ -30,8 +30,8 @@ class Main : JavaPlugin() {
         scoreboard.make("playerRating", "playerRating")
 
         saveDefaultConfig()
-        saveResource("World.yml", true)
-        saveResource("FoodData.yml", true)
+        saveResource("World.yml", false)
+        saveResource("FoodData.yml", false)
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
     }
