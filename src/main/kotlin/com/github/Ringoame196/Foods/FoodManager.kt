@@ -29,10 +29,10 @@ class FoodManager {
 
                 // itemNameに対応する値があるか確認
                 if (yamlData != null) {
-                    val itemData = yamlData[itemName] as? Map<String, Any>
+                    val itemData = yamlData[itemName] as? Map<String, Int>
 
                     if (itemData != null && itemData.containsKey(recoveryAmountKey)) {
-                        return itemData[recoveryAmountKey] as? Int ?: 2
+                        return itemData[recoveryAmountKey] ?: 2
                     }
                 }
             }
