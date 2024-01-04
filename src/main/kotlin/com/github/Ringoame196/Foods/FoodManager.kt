@@ -19,7 +19,7 @@ import java.util.Date
 class FoodManager {
     private fun returnFoodHasLevel(item: ItemStack, plugin: Plugin): Int {
         val itemName = item.itemMeta?.displayName ?: ""
-        val ymlFile = File(plugin.dataFolder, "FoodRecoveryData.yml")
+        val ymlFile = File(plugin.dataFolder, "FoodData.yml")
 
         try {
             FileInputStream(ymlFile).use { fileInputStream ->

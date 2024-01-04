@@ -2,7 +2,9 @@ package com.github.Ringoame196
 
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.Plugin
+import org.yaml.snakeyaml.Yaml
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 
 class Yml {
