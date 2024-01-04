@@ -1,0 +1,33 @@
+"§eエンダーチェスト":
+  customModelData: 1
+  lore: "エンダーチェストを開くことができる"
+"§a所持金変換":
+  customModelData: 2
+  lore: "口座のお金をアイテムに変えれる"
+"§cアイテム保護":
+  customModelData: 3
+  lore: "アイテムをロックすることができる"
+"§aテレポート":
+  customModelData: 4
+  lore: "ワールド移動することができる"
+"§aプレイヤー評価":
+  customModelData: 5
+  lore: "プレイヤーを評価することができる"
+"§土地保護":
+  customModelData: 6
+  lore: "生活ワールドの土地に保護をかけることができる"
+"§eOP用":
+  customModelData: 7
+  lore: "OPのみ使用可能"
+"§eアプリ並び替え":
+  customModelData: 8
+  lore: "ベータ版 インストールしアプリを並び替えれる"
+"§bヘルスケア":
+  customModelData: 9
+  lore: "最大HPなどの情報を見ることができる"
+
+
+
+
+
+
