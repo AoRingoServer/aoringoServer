@@ -17,7 +17,7 @@ class TeleportApplication : Application {
         gui.setItem(0, itemManager.make(Material.CRAFTING_TABLE, "${ChatColor.YELLOW}チュートリアル"))
         gui.setItem(1, itemManager.make(Material.CHEST, "${ChatColor.GOLD}ロビー"))
         gui.setItem(3, itemManager.make(Material.GRASS_BLOCK, "${ChatColor.GREEN}生活ワールド"))
-        gui.setItem(5, itemManager.make(Material.DIAMOND_PICKAXE, "${ChatColor.AQUA}資源ワールド"))
+        gui.setItem(5, itemManager.make(Material.DIAMOND_PICKAXE, "${ChatColor.GREEN}資源ワールド"))
         gui.setItem(7, itemManager.make(Material.QUARTZ_BLOCK, "${ChatColor.YELLOW}ショップ"))
         player.openInventory(gui)
     }
