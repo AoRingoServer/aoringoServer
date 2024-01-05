@@ -13,9 +13,9 @@ import org.bukkit.plugin.Plugin
 
 class Resource(val plugin: Plugin) {
     private val worldNames = mutableListOf<String>(
-        "${ChatColor.GREEN}オーバーワールド1",
-        "${ChatColor.GREEN}オーバーワールド2[閉鎖中]",
-        "${ChatColor.GREEN}オーバーワールド3[閉鎖中]",
+        "${ChatColor.GREEN}資源ワールド",
+        "${ChatColor.YELLOW}pvp有り資源ワールド",
+        "${ChatColor.RED}ハードコア資源ワールド",
         "${ChatColor.RED}ネザー"
     )
     fun createSelectTpGUI(): Inventory {
