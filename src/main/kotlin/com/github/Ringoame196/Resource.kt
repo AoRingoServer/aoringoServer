@@ -2,6 +2,7 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
+import com.github.Ringoame196.Worlds.HardcoreWorld
 import com.github.Ringoame196.Worlds.WorldManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -34,6 +35,12 @@ class Resource(val plugin: Plugin) {
         val aoringoPlayer = AoringoPlayer(player)
         val worldManager = WorldManager(plugin)
         val worldID = worldManager.getWorldID(itemName)
+        if (worldID == "hardcore") {
+            if (HardcoreWorld().isBan(player, plugin)) {
+                aoringoPlayer.sendErrorMessage("あなたはハードコアワールドで死んでBANされたため 移動することができませんでした")
+                return
+            }
+        }
         aoringoPlayer.teleporterWorld(worldID ?: return)
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }

@@ -22,6 +22,7 @@ import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Smartphone
+import com.github.Ringoame196.Worlds.HardcoreWorld
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -771,8 +772,11 @@ class Events(private val plugin: Plugin) : Listener {
         val world = player.world
         val worldName = world.name
         AoringoPlayer(player).reduceFoodLevel(plugin)
-        if (worldName == "Survival" || worldName == "dungeon") {
+        if (worldName == "Survival" || worldName == "dungeon" || worldName == "pvpSurvival") {
             e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
+        } else if (worldName == "hardcore") {
+            e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
+            HardcoreWorld().toBan(player, plugin)
         }
     }
 
