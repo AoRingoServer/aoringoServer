@@ -176,12 +176,14 @@ class AoringoPlayer(val player: Player) {
         sign.update()
     }
     fun makeConservationLand(name: String) {
+        val price = LandPurchase().calculatePrice(player)
+        if (price == 0) { return }
         if (LandPurchase().doesRegionContainProtection(player)) {
             sendErrorMessage("保護範囲が含まれています")
         } else if (WorldGuard().getProtection(player.world, name)) {
             sendErrorMessage("同じ名前の保護を設定することは不可能です")
         } else {
-            player.openInventory(Smartphone().createProtectionGUI(player, name))
+            player.openInventory(Smartphone().createProtectionGUI(player, name, price))
         }
     }
     fun namingConservationLand(plugin: Plugin, name: String) {

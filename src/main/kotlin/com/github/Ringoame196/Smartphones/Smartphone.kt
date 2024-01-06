@@ -10,7 +10,6 @@ import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
-import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
 import com.github.Ringoame196.Smartphones.Applications.EnderChestApplication
@@ -178,8 +177,7 @@ class Smartphone {
         val name = item.itemMeta?.displayName
         clickItems[name]?.click(player, shift) ?: return
     }
-    fun createProtectionGUI(player: Player, name: String): Inventory {
-        val price = LandPurchase().calculatePrice(player)
+    fun createProtectionGUI(player: Player, name: String, price: Int): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}保護設定($name)")
         gui.setItem(4, ItemManager().make(Material.GREEN_WOOL, "${ChatColor.GREEN}作成", "${price}円"))
         return gui

@@ -132,22 +132,27 @@ class LandPurchase {
         return blockCount * if (blockCount <= 256) { 10 } else { 100 }
     }
     private fun countSelectBlocks(player: Player): Int {
-        val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
-        val region: Region = session.getSelection(BukkitAdapter.adapt(player.world)) ?: return 0
-        if (region !is CuboidRegion) {
+        try {
+            val session = WorldEdit.getInstance().sessionManager[BukkitAdapter.adapt(player)]
+            val region: Region = session.getSelection(BukkitAdapter.adapt(player.world)) ?: return 0
+            if (region !is CuboidRegion) {
+                return 0
+            }
+            val maximumPoint = region.maximumPoint
+            val minimumPoint = region.minimumPoint
+
+            // x軸およびz軸の長さを計算
+            val xLength =
+                Math.abs(maximumPoint.blockX - minimumPoint.blockX) + 1
+            val zLength =
+                Math.abs(maximumPoint.blockZ - minimumPoint.blockZ) + 1
+
+            // x軸およびz軸上のブロック数を計算
+            return xLength * zLength
+        } catch (e: IncompleteRegionException) {
+            AoringoPlayer(player).sendErrorMessage("範囲設定が間違っています")
             return 0
         }
-        val maximumPoint = region.maximumPoint
-        val minimumPoint = region.minimumPoint
-
-        // x軸およびz軸の長さを計算
-        val xLength =
-            Math.abs(maximumPoint.blockX - minimumPoint.blockX) + 1
-        val zLength =
-            Math.abs(maximumPoint.blockZ - minimumPoint.blockZ) + 1
-
-        // x軸およびz軸上のブロック数を計算
-        return xLength * zLength
     }
 
     fun doesRegionContainProtection(player: Player): Boolean {
