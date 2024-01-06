@@ -147,12 +147,6 @@ class Smartphone {
                 Bukkit.broadcastMessage("${ChatColor.RED}[ショップ] ショップの購入土地がリセットされました")
             }
             "${ChatColor.YELLOW}リソパ更新" -> ResourcePack(plugin).update()
-            "${ChatColor.GREEN}運営ギフトリセット" -> {
-                if (!Scoreboard().existence("admingift")) { return }
-                Scoreboard().delete("admingift")
-                Scoreboard().make("admingift", "admingift")
-                Bukkit.broadcastMessage("${ChatColor.YELLOW}[青りんごサーバー] 運営ギフトがリセットされました")
-            }
             "${ChatColor.GREEN}テストワールド" -> player.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: return)
         }
     }

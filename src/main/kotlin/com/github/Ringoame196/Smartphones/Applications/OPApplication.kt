@@ -17,7 +17,6 @@ class OPApplication : Application {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}OP用")
         gui.setItem(0, itemManager.make(Material.COMMAND_BLOCK, "${ChatColor.YELLOW}リソパ更新"))
         gui.setItem(2, itemManager.make(Material.WOODEN_AXE, "${ChatColor.RED}ショップ保護リセット"))
-        gui.setItem(4, itemManager.make(Material.DIAMOND, "${ChatColor.GREEN}運営ギフトリセット"))
         gui.setItem(6, itemManager.make(Material.CRAFTING_TABLE, "${ChatColor.GREEN}テストワールド"))
         player.openInventory(gui)
     }
