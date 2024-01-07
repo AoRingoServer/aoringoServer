@@ -727,7 +727,7 @@ class Events(private val plugin: Plugin) : Listener {
         )
 
         when {
-            entity.type == EntityType.ARROW && (world != "Survival" && world != "dungeon") -> e.isCancelled = true
+            entity.type == EntityType.ARROW && (world != "Survival" && world != "dungeon" && world != "dungeonBoss") -> e.isCancelled = true
             ngMobs.contains(entity.type) -> entity.remove()
             entity is Villager && (world == "Survival" || world == "Home") -> entity.remove()
             entity is Wither && (world != "Survival") -> {
