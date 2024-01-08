@@ -1,5 +1,6 @@
-package com.github.Ringoame196
+package com.github.Ringoame196.ActivityBlocks
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.GUIs.closingGUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -7,36 +8,42 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.plugin.Plugin
 
-class Anvil : closingGUI {
+class Anvil : closingGUI, ActivityBlock {
     override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
-        Anvil().returnItemFromPlayer(gui, player)
+        returnItemFromPlayer(gui, player)
     }
-    fun makeGUI(): Inventory {
+
+    override fun clickBlock(e: PlayerInteractEvent, aoringoPlayer: AoringoPlayer) {
+        if (aoringoPlayer.acquisitionJob() != "${ChatColor.GRAY}鍛冶屋") {
+            aoringoPlayer.sendErrorMessage("金床は鍛冶屋以外使用できません")
+            return
+        }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.YELLOW}カスタム金床")
         fillGUI(gui)
         val itemSlotNumber = 2
         val materialSlotNumber = 4
         val compositeButtonSlotNumber = 7
-        InstallationAir(gui, itemSlotNumber)
-        InstallationAir(gui, materialSlotNumber)
-        InstallationCompositeButton(gui, compositeButtonSlotNumber)
-        return gui
+        installationAir(gui, itemSlotNumber)
+        installationAir(gui, materialSlotNumber)
+        installationCompositeButton(gui, compositeButtonSlotNumber)
+        aoringoPlayer.player.openInventory(gui)
     }
     private fun fillGUI(gui: Inventory) {
         for (i in 0 until gui.size) {
             gui.setItem(i, com.github.Ringoame196.Items.ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
         }
     }
-    private fun InstallationAir(gui: Inventory, slot: Int) {
+    private fun installationAir(gui: Inventory, slot: Int) {
         gui.setItem(slot, com.github.Ringoame196.Items.ItemManager().make(Material.AIR, " "))
     }
-    private fun InstallationCompositeButton(gui: Inventory, slot: Int) {
+    private fun installationCompositeButton(gui: Inventory, slot: Int) {
         gui.setItem(slot, com.github.Ringoame196.Items.ItemManager().make(Material.ANVIL, "${ChatColor.YELLOW}合成"))
     }
     fun click(player: Player, item: ItemStack, e: InventoryClickEvent) {
@@ -109,8 +116,8 @@ class Anvil : closingGUI {
         player.inventory.addItem(completedItem)
         val itemSlotNumber = 2
         val materialSlotNumber = 4
-        InstallationAir(gui, itemSlotNumber)
-        InstallationAir(gui, materialSlotNumber)
+        installationAir(gui, itemSlotNumber)
+        installationAir(gui, materialSlotNumber)
     }
     private fun enchantItem(beforeItem: ItemStack, afterItem: ItemStack): ItemStack {
         for ((enchant, level) in beforeItem.itemMeta?.enchants ?: return afterItem) {

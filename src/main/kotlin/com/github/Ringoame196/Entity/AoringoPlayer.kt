@@ -1,7 +1,5 @@
 package com.github.Ringoame196.Entity
 
-import com.github.Ringoame196.Anvil
-import com.github.Ringoame196.Blocks.Block
 import com.github.Ringoame196.Contract
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
@@ -34,6 +32,7 @@ import org.bukkit.plugin.Plugin
 class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(player)
     val moneyUseCase = MoneyUseCase()
+    val jobManager = JobManager()
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var chatSettingItem: String? = null
@@ -73,6 +72,9 @@ class AoringoPlayer(val player: Player) {
     private fun levelupMessage(player: Player, message: String) {
         player.sendMessage(message)
         player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
+    }
+    fun acquisitionJob(): String {
+        return jobManager.get(player)
     }
     fun sendErrorMessage(message: String) {
         player.sendMessage("${ChatColor.RED}$message")
@@ -130,20 +132,6 @@ class AoringoPlayer(val player: Player) {
             )?.spawnLocation ?: return
         )
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
-    }
-    fun useEnchantingTable() {
-        if (player.foodLevel < 10) {
-            sendErrorMessage("満腹度が足りません")
-            return
-        }
-        player.openInventory(Block().makeEnchantGUI())
-    }
-    fun useAnvil() {
-        if (JobManager().get(player) != "${ChatColor.GRAY}鍛冶屋") {
-            sendErrorMessage("金床は鍛冶屋以外使用できません")
-            return
-        }
-        player.openInventory(Anvil().makeGUI())
     }
     fun upDataEnderChestLevel(plugin: Plugin) {
         when (val level = EnderChest().investigateEnderChestSize(player)) {

@@ -1,8 +1,10 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.ActivityBlocks.ActivityBlock
+import com.github.Ringoame196.ActivityBlocks.Anvil
+import com.github.Ringoame196.ActivityBlocks.EnchantingTable
+import com.github.Ringoame196.ActivityBlocks.SmithingTable
 import com.github.Ringoame196.Blocks.BeeNest
-import com.github.Ringoame196.Blocks.Block
-import com.github.Ringoame196.Blocks.EnchantingTable
 import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
@@ -95,6 +97,17 @@ class Events(private val plugin: Plugin) : Listener {
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK || e.action == Action.LEFT_CLICK_AIR) { return }
         if (item != playerItem && item.type != Material.AIR) { return }
+        val activtityBlockMap = mapOf<Material, ActivityBlock>(
+            Material.ANVIL to Anvil(),
+            Material.DAMAGED_ANVIL to Anvil(),
+            Material.ENCHANTING_TABLE to EnchantingTable(),
+            Material.SMITHING_TABLE to SmithingTable(),
+            Material.SMOKER to com.github.Ringoame196.ActivityBlocks.Smoker()
+        )
+        if (activtityBlockMap.contains(block?.type)) {
+            activtityBlockMap[block?.type]?.clickBlock(e, aoringoPlayer)
+            return
+        }
         when (block?.type) {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
@@ -111,24 +124,9 @@ class Events(private val plugin: Plugin) : Listener {
                     "${ChatColor.YELLOW}[土地販売]" -> LandPurchase().buyGUI(player, sign)
                 }
             }
-            Material.ANVIL, Material.DAMAGED_ANVIL -> {
-                if (player.gameMode == GameMode.CREATIVE) { return }
-                e.isCancelled = true
-                aoringoPlayer.useAnvil()
-            }
-            Material.SMITHING_TABLE -> {
-                if (JobManager().get(player) == "${ChatColor.GRAY}鍛冶屋") { return }
-                e.isCancelled = true
-                aoringoPlayer.sendErrorMessage("${ChatColor.RED}鍛冶屋以外は使用することができません")
-            }
-            Material.SMOKER -> e.isCancelled = true
             Material.LAVA_CAULDRON -> {
                 e.isCancelled = true
                 Fryer().deepFry(player, block, item, plugin)
-            }
-            Material.ENCHANTING_TABLE -> {
-                e.isCancelled = true
-                aoringoPlayer.useEnchantingTable()
             }
             Material.BARREL -> {
                 val barrel = block.state as Barrel
@@ -402,7 +400,7 @@ class Events(private val plugin: Plugin) : Listener {
                         if (book.type != Material.BOOK) { return }
                         if (book.hasItemMeta()) { return }
                         if (book.amount != 1) { return }
-                        Block().giveEnchantBook(player, gui, plugin)
+                        EnchantingTable().giveEnchantBook(player, gui, plugin)
                     }
                     else -> e.isCancelled = true
                 }

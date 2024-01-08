@@ -1,5 +1,7 @@
-package com.github.Ringoame196.Blocks
+package com.github.Ringoame196.ActivityBlocks
 
+import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.GUIs.closingGUI
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -7,14 +9,37 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
-import org.bukkit.inventory.Inventory
+import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.InventoryView
 import org.bukkit.inventory.ItemStack
 import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class Block {
+class EnchantingTable : closingGUI, ActivityBlock {
+    override fun clickBlock(e: PlayerInteractEvent, aoringoPlayer: AoringoPlayer) {
+        val guiSize = 9
+        val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.RED}エンチャント")
+        val putInSlot = 4
+        val enchantButtonSlot = 8
+        if (aoringoPlayer.player.foodLevel < 10) {
+            aoringoPlayer.sendErrorMessage("満腹度が足りません")
+            return
+        }
+        for (i in 0 until guiSize) {
+            gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
+        }
+        gui.setItem(enchantButtonSlot, ItemManager().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
+        gui.setItem(putInSlot, ItemStack(Material.AIR))
+        aoringoPlayer.player.openInventory(gui)
+    }
+    override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
+        val item = gui.getItem(4) ?: return
+        if (item.type == Material.ENCHANTED_BOOK) {
+            return
+        }
+        player.inventory.addItem(item)
+    }
     val itemManager = ItemManager()
     val enchantBookList = mutableListOf(
         itemManager.enchant(Enchantment.PROTECTION_ENVIRONMENTAL, 1),
@@ -51,18 +76,6 @@ class Block {
         itemManager.enchant(Enchantment.MULTISHOT, 1),
         itemManager.enchant(Enchantment.SWEEPING_EDGE, 1),
     )
-    fun makeEnchantGUI(): Inventory {
-        val guiSize = 9
-        val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.RED}エンチャント")
-        val putInSlot = 4
-        val enchantButtonSlot = 8
-        for (i in 0 until guiSize) {
-            gui.setItem(i, ItemManager().make(Material.RED_STAINED_GLASS_PANE, " "))
-        }
-        gui.setItem(enchantButtonSlot, ItemManager().make(Material.ENCHANTING_TABLE, "${ChatColor.AQUA}エンチャント"))
-        gui.setItem(putInSlot, ItemStack(Material.AIR))
-        return gui
-    }
     fun giveEnchantBook(player: Player, gui: InventoryView, plugin: Plugin) {
         player.foodLevel -= 10
         val minimumPerformance = 10
