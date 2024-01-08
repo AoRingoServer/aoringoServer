@@ -183,13 +183,6 @@ class Events(private val plugin: Plugin) : Listener {
                 ItemManager().reduceMainItem(player)
                 player.openInventory(Scratch().createGUI(itemName))
             }
-            "${ChatColor.RED}会社情報本" -> {
-                if (!ItemProtectionApplication().isPlayerProtection(item?:return, player)) {
-                    aoringoPlayer.sendErrorMessage("会社情報本を使うには、アイテムを保護を設定する必要があります")
-                } else {
-                    player.openInventory(Company().createGUI())
-                }
-            }
             "${ChatColor.YELLOW}エンダーチェスト容量UP" -> {
                 e.isCancelled = true
                 aoringoPlayer.upDataEnderChestLevel(plugin)
