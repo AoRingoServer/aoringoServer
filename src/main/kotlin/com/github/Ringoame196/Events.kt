@@ -97,21 +97,22 @@ class Events(private val plugin: Plugin) : Listener {
         val downBlock = block?.location?.clone()?.add(0.0, -1.0, 0.0)?.block
         if (e.action == Action.LEFT_CLICK_BLOCK || e.action == Action.LEFT_CLICK_AIR) { return }
         if (item != playerItem && item.type != Material.AIR) { return }
-        val activtityBlockMap = mapOf<Material, ActivityBlock>(
+        val activtitys = mapOf<Material, ActivityBlock>(
             Material.ANVIL to Anvil(),
             Material.DAMAGED_ANVIL to Anvil(),
             Material.ENCHANTING_TABLE to EnchantingTable(),
             Material.SMITHING_TABLE to SmithingTable(),
             Material.SMOKER to com.github.Ringoame196.ActivityBlocks.Smoker()
         )
-        if (activtityBlockMap.contains(block?.type)) {
-            activtityBlockMap[block?.type]?.clickBlock(e, aoringoPlayer)
+        if (activtitys.contains(block?.type)) {
+            activtitys[block?.type]?.clickBlock(e, aoringoPlayer)
             return
         }
         when (block?.type) {
             Material.OAK_SIGN -> {
                 val sign = block.state as Sign
-                when (sign.getLine(0)) {
+                val signTitle = sign.getLine(0)
+                when (signTitle) {
                     "Fshop" -> {
                         e.isCancelled = true
                         aoringoPlayer.makeShop(sign)
