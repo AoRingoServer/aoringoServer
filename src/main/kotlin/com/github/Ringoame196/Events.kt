@@ -383,10 +383,7 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item.itemMeta?.displayName
         val title = gui.title
         val playerOpenInventory = player.openInventory.topInventory
-        if (playerOpenInventory != e.clickedInventory) {
-            if (playerOpenInventory.type != InventoryType.WORKBENCH) {
-                return
-            }
+        if (playerOpenInventory != e.clickedInventory && playerOpenInventory.type == InventoryType.WORKBENCH) {
             if (!item.hasItemMeta()) {
                 return
             }
@@ -403,14 +400,17 @@ class Events(private val plugin: Plugin) : Listener {
                 e.isCancelled = true
             }
             "${ChatColor.RED}エンチャント" -> {
-                val book = gui.getItem(4) ?: return
-                if (book.type != Material.BOOK) { return }
-                if (book.hasItemMeta()) { return }
-                if (book.amount != 1) { return }
                 player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
                 when (item.type) {
                     Material.BOOK -> {}
-                    Material.ENCHANTING_TABLE -> Block().giveEnchantBook(player, gui, plugin)
+                    Material.ENCHANTING_TABLE -> {
+                        e.isCancelled = true
+                        val book = gui.getItem(4) ?: return
+                        if (book.type != Material.BOOK) { return }
+                        if (book.hasItemMeta()) { return }
+                        if (book.amount != 1) { return }
+                        Block().giveEnchantBook(player, gui, plugin)
+                    }
                     else -> e.isCancelled = true
                 }
             }

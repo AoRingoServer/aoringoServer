@@ -84,7 +84,7 @@ class CookManager() {
                 in 0..100 -> 100
                 in 101..1000 -> 1000
                 in 1001..10000 -> 10000
-                else -> 0a
+                else -> 0
             }
             val remainingLevel = nextLevel - Scoreboard().getValue("cookCount", player.uniqueId.toString())
             com.github.Ringoame196.Entity.AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${remainingLevel}料理")
