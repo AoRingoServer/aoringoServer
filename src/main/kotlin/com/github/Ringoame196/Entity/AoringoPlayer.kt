@@ -25,6 +25,7 @@ import org.bukkit.block.Sign
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
+import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
@@ -256,5 +257,14 @@ class AoringoPlayer(val player: Player) {
     }
     fun sendNoOpMessage() {
         sendErrorMessage("このコマンドはOPのみ実行可能です")
+    }
+    fun hpEnemyShow(entity: Mob, damage: Double) {
+        val health = maxOf(0.0, entity.health - damage).toInt()
+        sendActionBar("${ChatColor.RED}${health}HP")
+    }
+    fun causeDamageAdditional(entity: Mob) {
+        val power = Scoreboard().getValue("status_Power", player.uniqueId.toString())
+        val addPowerPercentage = 0.1
+        entity.damage(power * addPowerPercentage)
     }
 }

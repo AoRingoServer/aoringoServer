@@ -722,7 +722,7 @@ class Events(private val plugin: Plugin) : Listener {
         when {
             entity.type == EntityType.ARROW && (world != "Survival" && world != "dungeon" && world != "dungeonBoss") -> e.isCancelled = true
             ngMobs.contains(entity.type) -> entity.remove()
-            entity is Villager && (world == "Survival" || world == "Home") -> entity.remove()
+            entity is Villager && (world == "Survival" || world == "Home" || world == "pvpSurvival" || world == "hardcore") -> entity.remove()
             entity is Wither && (world != "Survival") -> {
                 entity.remove()
                 witherSummonBlocks.forEach { item -> entity.world.dropItem(entity.location, ItemStack(item)) }
@@ -741,14 +741,12 @@ class Events(private val plugin: Plugin) : Listener {
         if (player !is org.bukkit.entity.Player) {
             return
         }
-        val health = maxOf(0.0, entity.health - damage).toInt()
+        val aoringoPlayer = AoringoPlayer(player)
         if (entity is Villager) {
             e.isCancelled = true
         }
-        AoringoPlayer(player).sendActionBar("${ChatColor.RED}${health}HP")
-        val power = Scoreboard().getValue("status_Power", player.uniqueId.toString())
-        val addPowerPercentage = 0.1
-        entity.damage(power * addPowerPercentage)
+        aoringoPlayer.hpEnemyShow(entity, damage)
+        aoringoPlayer.causeDamageAdditional(entity)
     }
 
     @EventHandler
@@ -764,8 +762,8 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val world = player.world
         val worldName = world.name
-        val respawnWorldName = WorldManager(plugin).changeRespawn(worldName, player)?:return
-        e.respawnLocation = Bukkit.getWorld(respawnWorldName)?.spawnLocation?:return
+        val respawnWorldName = WorldManager(plugin).changeRespawn(worldName, player) ?: return
+        e.respawnLocation = Bukkit.getWorld(respawnWorldName)?.spawnLocation ?: return
         if (worldName == "hardcore") {
             HardcoreWorld().toBan(player, plugin)
         }
@@ -786,13 +784,8 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val block = player.location.clone().add(0.0, -1.0, 0.0).block
         val downBlock = player.location.clone().add(0.0, -2.0, 0.0).block
-        val supportedWorld = mapOf(
-            Material.IRON_BLOCK to { player.openInventory(Resource(plugin).createSelectTpGUI()) },
-            Material.QUARTZ_BLOCK to { aoringoPlayer.teleporterWorld("shop") },
-            Material.GOLD_BLOCK to { aoringoPlayer.teleporterWorld("Home") }
-        )
         if (downBlock.type == Material.COMMAND_BLOCK) {
-            supportedWorld[block.type]?.invoke()
+            WorldManager(plugin).survivalTeleport(aoringoPlayer, block.type)
         }
     }
 
