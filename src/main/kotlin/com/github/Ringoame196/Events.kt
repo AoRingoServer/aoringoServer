@@ -763,11 +763,18 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val world = player.world
         val worldName = world.name
+        val respawnTarget = mapOf(
+            "Survival" to "world",
+            "dungeon" to "world",
+            "pvpSurvival" to "world",
+            "dungeonBoss" to "dungeon",
+            "hardcore" to "world"
+        )
         AoringoPlayer(player).reduceFoodLevel(plugin)
-        if (worldName == "Survival" || worldName == "dungeon" || worldName == "pvpSurvival") {
-            e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
-        } else if (worldName == "hardcore") {
-            e.respawnLocation = Bukkit.getWorld("world")?.spawnLocation ?: return
+        if (respawnTarget.contains(worldName)){
+            e.respawnLocation = Bukkit.getWorld(respawnTarget[worldName]?:"")?.spawnLocation ?: return
+        }
+        if (worldName == "hardcore") {
             HardcoreWorld().toBan(player, plugin)
         }
     }
