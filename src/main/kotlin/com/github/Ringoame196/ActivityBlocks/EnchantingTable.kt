@@ -22,6 +22,7 @@ class EnchantingTable : closingGUI, ActivityBlock {
         val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.RED}エンチャント")
         val putInSlot = 4
         val enchantButtonSlot = 8
+        e.isCancelled = true
         if (aoringoPlayer.player.foodLevel < 10) {
             aoringoPlayer.sendErrorMessage("満腹度が足りません")
             return

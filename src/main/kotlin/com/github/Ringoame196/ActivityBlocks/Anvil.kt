@@ -4,6 +4,7 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.GUIs.closingGUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.GameMode
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -21,6 +22,8 @@ class Anvil : closingGUI, ActivityBlock {
     }
 
     override fun clickBlock(e: PlayerInteractEvent, aoringoPlayer: AoringoPlayer) {
+        if (aoringoPlayer.player.gameMode == GameMode.CREATIVE) { return }
+        e.isCancelled = true
         if (aoringoPlayer.acquisitionJob() != "${ChatColor.GRAY}鍛冶屋") {
             aoringoPlayer.sendErrorMessage("金床は鍛冶屋以外使用できません")
             return
