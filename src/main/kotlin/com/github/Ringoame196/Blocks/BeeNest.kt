@@ -19,19 +19,19 @@ class BeeNest(private val block: Block?) : ActivityBlock {
         val player = aoringoPlayer.player
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.type != Material.GLASS_BOTTLE) { return }
+        if (!isMax(beeNestData)) { return }
         player.sendMessage("☒")
-        if (isMax(beeNestData)) { return }
         emptyBeeNest(beeNestData)
         val expiryDate = 14
         val honeyBottle = ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(expiryDate))
         player.inventory.addItem(honeyBottle)
         ItemManager().reduceMainItem(player)
     }
-    fun isMax(beeNestData: Beehive): Boolean {
+    private fun isMax(beeNestData: Beehive): Boolean {
         Bukkit.broadcastMessage(beeNestData.honeyLevel.toString())
-        return beeNestData.honeyLevel == 5
+        return beeNestData.honeyLevel == beeNestData.maximumHoneyLevel
     }
-    fun emptyBeeNest(beeNestData: Beehive) {
+    private fun emptyBeeNest(beeNestData: Beehive) {
         if (block == null) { return }
         beeNestData.honeyLevel = 0
         block.blockData = beeNestData
