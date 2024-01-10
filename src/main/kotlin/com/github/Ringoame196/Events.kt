@@ -103,7 +103,9 @@ class Events(private val plugin: Plugin) : Listener {
             Material.DAMAGED_ANVIL to Anvil(),
             Material.ENCHANTING_TABLE to EnchantingTable(),
             Material.SMITHING_TABLE to SmithingTable(),
-            Material.SMOKER to com.github.Ringoame196.ActivityBlocks.Smoker()
+            Material.SMOKER to com.github.Ringoame196.ActivityBlocks.Smoker(),
+            Material.BEE_NEST to BeeNest(block),
+            Material.BEEHIVE to BeeNest(block)
         )
         if (activtitys.contains(block?.type)) {
             activtitys[block?.type]?.clickBlock(e, aoringoPlayer)
@@ -195,19 +197,6 @@ class Events(private val plugin: Plugin) : Listener {
                     player.sendMessage("${ChatColor.YELLOW}シフト クリックで送金")
                 }
             }
-        }
-        if (block?.type == Material.BEE_NEST || block?.type == Material.BEEHIVE) {
-            if (item.type != Material.GLASS_BOTTLE) { return }
-            e.isCancelled = true
-            val beeNest = block.blockData as org.bukkit.block.data.type.Beehive
-            val beeNestClass = BeeNest(beeNest)
-            if (!beeNestClass.isMax()) { return }
-            if (player.inventory.itemInMainHand.type != Material.GLASS_BOTTLE) { return }
-            beeNestClass.emptyBeeNest(e.clickedBlock ?: return)
-            val expiryDate = 14
-            val honeyBottle = ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(expiryDate))
-            player.inventory.addItem(honeyBottle)
-            ItemManager().reduceMainItem(player)
         }
         if (item.type == Material.EMERALD) {
             item.itemMeta?.customModelData.let {
