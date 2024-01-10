@@ -20,7 +20,6 @@ class BeeNest(private val block: Block?) : ActivityBlock {
         val playerItem = player.inventory.itemInMainHand
         if (playerItem.type != Material.GLASS_BOTTLE) { return }
         if (!isMax(beeNestData)) { return }
-        player.sendMessage("☒")
         emptyBeeNest(beeNestData)
         val expiryDate = 14
         val honeyBottle = ItemManager().make(Material.HONEY_BOTTLE, "${ChatColor.GOLD}ハチミツ", FoodManager().makeExpirationDate(expiryDate))

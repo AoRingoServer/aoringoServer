@@ -80,7 +80,7 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val aoringoPlayer = AoringoPlayer(player)
         val participatedTags = "member"
-        if (!player.scoreboardTags.contains(participatedTags)) {
+        if (!aoringoPlayer.isFirstTimePlayer(participatedTags)) {
             e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
             aoringoPlayer.fastJoin()
         }
