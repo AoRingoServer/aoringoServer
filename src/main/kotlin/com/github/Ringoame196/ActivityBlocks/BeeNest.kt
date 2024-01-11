@@ -1,6 +1,5 @@
-package com.github.Ringoame196.Blocks
+package com.github.Ringoame196.ActivityBlocks
 
-import com.github.Ringoame196.ActivityBlocks.ActivityBlock
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager

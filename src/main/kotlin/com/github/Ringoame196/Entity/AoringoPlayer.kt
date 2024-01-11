@@ -137,11 +137,11 @@ class AoringoPlayer(val player: Player) {
         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 1f, 1f)
     }
     fun upDataEnderChestLevel(plugin: Plugin) {
-        when (val level = EnderChest().investigateEnderChestSize(player)) {
+        when (val level = EnderChest().investigateEnderChestSize(this)) {
             6 -> sendErrorMessage("これ以上拡張することはできません")
             else -> {
-                Scoreboard().set("haveEnderChest", player.uniqueId.toString(), level + 1)
-                changePermission("enderchest.size.$level", true, plugin)
+                luckPerms.revokePermission("enderchest.size.$level")
+                luckPerms.addPermission("enderchest.size.${level + 1}")
                 player.sendMessage("${ChatColor.AQUA}エンダーチェスト容量UP")
                 player.playSound(player, Sound.ENTITY_PLAYER_LEVELUP, 1f, 1f)
                 ItemManager().reduceMainItem(player)

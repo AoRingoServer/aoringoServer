@@ -21,7 +21,6 @@ class Main : JavaPlugin() {
         scoreboard.make("evaluationVote", "evaluationVote")
         scoreboard.make("protectionContract", "protectionContract")
         scoreboard.make("admingift", "admingift")
-        scoreboard.make("haveEnderChest", "haveEnderChest")
         scoreboard.make("money", "money")
         scoreboard.make("status_Power", "status_Power")
         scoreboard.make("status_HP", "status_HP")

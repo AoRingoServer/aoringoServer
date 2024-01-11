@@ -1,15 +1,16 @@
 package com.github.Ringoame196
 
-import org.bukkit.entity.Player
+import com.github.Ringoame196.Entity.AoringoPlayer
 
 class EnderChest {
-    fun investigateEnderChestSize(player: Player): Int {
-        val level = mutableListOf(6, 5, 4, 3, 2, 1)
+    fun investigateEnderChestSize(aoringoPlayer: AoringoPlayer): Int {
+        val level = mutableListOf(6, 5, 4, 3, 2)
         for (i in level) {
-            if (player.hasPermission("enderchest.size.$i")) {
+            if (aoringoPlayer.luckPerms.hasPermission("enderchest.size.$i")) {
+                aoringoPlayer.player.sendMessage(i.toString())
                 return i
             }
         }
-        return 0
+        return 1
     }
 }

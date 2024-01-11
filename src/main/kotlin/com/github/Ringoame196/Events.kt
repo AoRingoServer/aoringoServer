@@ -2,9 +2,9 @@ package com.github.Ringoame196
 
 import com.github.Ringoame196.ActivityBlocks.ActivityBlock
 import com.github.Ringoame196.ActivityBlocks.Anvil
+import com.github.Ringoame196.ActivityBlocks.BeeNest
 import com.github.Ringoame196.ActivityBlocks.EnchantingTable
 import com.github.Ringoame196.ActivityBlocks.SmithingTable
-import com.github.Ringoame196.Blocks.BeeNest
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
