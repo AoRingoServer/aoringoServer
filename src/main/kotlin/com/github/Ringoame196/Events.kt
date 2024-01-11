@@ -58,6 +58,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.event.player.AsyncPlayerChatEvent
 import org.bukkit.event.player.PlayerChangedWorldEvent
+import org.bukkit.event.player.PlayerCommandPreprocessEvent
 import org.bukkit.event.player.PlayerDropItemEvent
 import org.bukkit.event.player.PlayerFishEvent
 import org.bukkit.event.player.PlayerInteractEntityEvent
@@ -852,6 +853,15 @@ class Events(private val plugin: Plugin) : Listener {
         if (ItemProtectionApplication().isProtection(item.itemStack)) {
             e.isCancelled = true
             AoringoPlayer(player).sendErrorMessage("[アイテム保護]保護アイテムを捨てることはできません")
+        }
+    }
+    @EventHandler
+    fun onPlayerCommandPreprocess(e: PlayerCommandPreprocessEvent) {
+        val player = e.player
+        val command = e.message
+        if (player.isOp) { return }
+        if (command.contains("rg")) {
+            e.isCancelled = true
         }
     }
 }

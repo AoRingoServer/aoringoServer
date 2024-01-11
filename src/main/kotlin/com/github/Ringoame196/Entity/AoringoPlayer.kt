@@ -109,13 +109,16 @@ class AoringoPlayer(val player: Player) {
     }
     fun setProtectionPermission(plugin: Plugin) {
         if (player.isOp) { return }
-        val judgement = when (player.world.name) {
+        val worldName = player.world.name
+        val judgement = when (worldName) {
             "Survival" -> true
             "Home" -> true
             else -> false
         }
+        val protectiveAuthority = worldName == "Home"
         changePermission("blocklocker.protect", judgement, plugin)
-        changePermission("worldguard.region.claim", judgement, plugin)
+        changePermission("worldguard.region.claim", protectiveAuthority, plugin)
+        changePermission("worldedit.selection.*", protectiveAuthority, plugin)
     }
     fun fastJoin() {
         player.scoreboardTags.add("member")
