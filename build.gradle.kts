@@ -36,6 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("com.sk89q.worldguard:worldguard-bukkit:7.0.1")
     compileOnly ("com.sk89q.worldguard:worldguard-bukkit:VERSION")
+    compileOnly ("net.luckperms:api:5.4")
 }
 
 configure<BukkitPluginDescription> {

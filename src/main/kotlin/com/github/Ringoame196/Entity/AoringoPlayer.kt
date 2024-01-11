@@ -267,7 +267,7 @@ class AoringoPlayer(val player: Player) {
         val addPowerPercentage = 0.1
         entity.damage(power * addPowerPercentage)
     }
-    fun isFirstTimePlayer(participatedTags:String):Boolean{
+    fun isFirstTimePlayer(participatedTags: String): Boolean {
         return player.scoreboardTags.contains(participatedTags)
     }
 }
