@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Shop
 
-import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyUseCase
 import org.bukkit.Bukkit

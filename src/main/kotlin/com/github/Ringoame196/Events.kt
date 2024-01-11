@@ -5,9 +5,9 @@ import com.github.Ringoame196.ActivityBlocks.Anvil
 import com.github.Ringoame196.ActivityBlocks.EnchantingTable
 import com.github.Ringoame196.ActivityBlocks.SmithingTable
 import com.github.Ringoame196.Blocks.BeeNest
-import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
+import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.GUIs.closingGUI
 import com.github.Ringoame196.Items.ApplicationForRemittance

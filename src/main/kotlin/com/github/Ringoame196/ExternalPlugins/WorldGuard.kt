@@ -1,4 +1,4 @@
-package com.github.Ringoame196.Data
+package com.github.Ringoame196.ExternalPlugins
 
 import com.sk89q.worldedit.bukkit.BukkitAdapter
 import com.sk89q.worldguard.WorldGuard

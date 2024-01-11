@@ -1,8 +1,9 @@
 package com.github.Ringoame196.Entity
 
 import com.github.Ringoame196.Contract
-import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.EnderChest
+import com.github.Ringoame196.ExternalPlugins.LuckPerms
+import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
@@ -34,6 +35,7 @@ class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(player)
     val moneyUseCase = MoneyUseCase()
     val jobManager = JobManager()
+    val luckPerms = LuckPerms(this)
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
         var chatSettingItem: String? = null

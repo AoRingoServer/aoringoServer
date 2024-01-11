@@ -1,8 +1,8 @@
 package com.github.Ringoame196.Smartphone.APKs
 
 import com.github.Ringoame196.Admin
-import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml

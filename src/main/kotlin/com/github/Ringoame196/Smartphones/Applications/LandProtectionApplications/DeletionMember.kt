@@ -1,7 +1,7 @@
 package com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications
 
-import com.github.Ringoame196.Data.WorldGuard
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import org.bukkit.entity.Player
 
