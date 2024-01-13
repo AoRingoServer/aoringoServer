@@ -1,5 +1,6 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Commands.Aoringoop
 import com.github.Ringoame196.Commands.Money
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
@@ -12,6 +13,7 @@ class Main : JavaPlugin() {
         val event = Events(this)
         server.pluginManager.registerEvents(event, this)
         getCommand("money")!!.setExecutor(Money())
+        getCommand("aoringoop")!!.setExecutor(Aoringoop(this))
 
         yml.makePluginFolder(this)
         yml.makePlayerDataFolder(this)

@@ -48,6 +48,10 @@ configure<BukkitPluginDescription> {
             description = "お金を管理するコマンド"
             usage = "/money [メニュー] [プレイヤー] [値段]"
         }
+        register("aoringoop") {
+            description = "OP用コマンド"
+            permission = "op"
+        }
     }
 
     tasks.withType<ShadowJar> {
