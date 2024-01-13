@@ -52,6 +52,10 @@ configure<BukkitPluginDescription> {
             description = "OP用コマンド"
             permission = "aoringo.server.OP"
         }
+        register("write") {
+            description = "書き込み用のコマンド"
+            usage = "/write [入力1] [入力2]..."
+        }
     }
         permissions{
             register("aoringo.server.OP") {
@@ -74,6 +78,10 @@ configure<BukkitPluginDescription> {
             copy {
                 from(buildDir.resolve("libs/${project.name}.jar"))
                 into("D:/デスクトップ")
+            }
+            exec {
+                workingDir("D:/plugin/aoringoServer") // バッチファイルの作業ディレクトリを設定
+                commandLine("cmd", "/c", "transfer.bat")
             }
         }
     }
