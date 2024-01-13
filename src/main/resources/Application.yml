@@ -16,10 +16,7 @@
 "§a土地保護":
   customModelData: 6
   lore: "生活ワールドの土地に保護をかけることができる"
-"§eOP用":
-  customModelData: 7
-  lore: "OPのみ使用可能"
-"§eアプリ並び替え":
+"§eアプリ並べ替え":
   customModelData: 8
   lore: "ベータ版 インストールしアプリを並び替えれる"
 "§bヘルスケア":
