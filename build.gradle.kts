@@ -50,7 +50,13 @@ configure<BukkitPluginDescription> {
         }
         register("aoringoop") {
             description = "OP用コマンド"
-            permission = "op"
+            permission = "aoringo.server.OP"
+        }
+    }
+        permissions{
+            register("aoringo.server.OP") {
+                description = "青リンゴサーバーのオーナー権限"
+                default = BukkitPluginDescription.Permission.Default.OP // TRUE, FALSE, OP or NOT_OP
         }
     }
 
