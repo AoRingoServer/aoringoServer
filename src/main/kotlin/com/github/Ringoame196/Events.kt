@@ -443,12 +443,6 @@ class Events(private val plugin: Plugin) : Listener {
                     else -> return
                 }
             }
-
-            "${ChatColor.YELLOW}OP用" -> {
-                e.isCancelled = true
-                Smartphone().opClick(item, plugin, e.isShiftClick, player)
-            }
-
             "${ChatColor.BLUE}プレイヤー評価" -> {
                 val playerRatingApplication = PlayerRatingApplication()
                 e.isCancelled = true

@@ -7,8 +7,6 @@ import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.MoneyUseCase
-import com.github.Ringoame196.ResourcePack
-import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
@@ -23,7 +21,6 @@ import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplication
 import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionCreationButton
 import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionInformation
 import com.github.Ringoame196.Smartphones.Applications.LandProtectionApplications.ProtectionListButton
-import com.github.Ringoame196.Smartphones.Applications.OPApplication
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
 import com.github.Ringoame196.Smartphones.Applications.TeleportApplication
@@ -49,7 +46,6 @@ class Smartphone {
         "${ChatColor.GREEN}テレポート" to TeleportApplication(),
         "${ChatColor.GREEN}プレイヤー評価" to PlayerRatingApplication(),
         "${ChatColor.GREEN}土地保護" to LandProtectionApplication(),
-        "${ChatColor.YELLOW}OP用" to OPApplication(),
         "${ChatColor.YELLOW}アプリ並べ替え" to SortApplication(),
         "${ChatColor.AQUA}ヘルスケア" to HealthCcareApplication(),
     )
@@ -130,25 +126,6 @@ class Smartphone {
         val playerLocation = player.location
         val location = getWorldSpawnLocation(worldID ?: return)
         player.teleport(location ?: playerLocation)
-    }
-    fun opClick(item: ItemStack, plugin: Plugin, shift: Boolean, player: org.bukkit.entity.Player) {
-        when (item.itemMeta?.displayName) {
-            "${ChatColor.RED}ショップ保護リセット" -> {
-                if (!shift) { return }
-                val list = Yml().getList(plugin, "conservationLand", "", "protectedName") ?: return
-                for (name in list) {
-                    if (Scoreboard().getValue("protectionContract", name) == 2) {
-                        Scoreboard().reduce("protectionContract", name, 1)
-                        continue
-                    }
-                    WorldGuard().reset(name, Bukkit.getWorld("shop") ?: return)
-                    Yml().removeToList(plugin, "", "conservationLand", "protectedName", name)
-                }
-                Bukkit.broadcastMessage("${ChatColor.RED}[ショップ] ショップの購入土地がリセットされました")
-            }
-            "${ChatColor.YELLOW}リソパ更新" -> ResourcePack(plugin).update()
-            "${ChatColor.GREEN}テストワールド" -> player.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: return)
-        }
     }
     fun wgClick(item: ItemStack, plugin: Plugin, player: Player, shift: Boolean) {
         val playerClass = AoringoPlayer(player)
