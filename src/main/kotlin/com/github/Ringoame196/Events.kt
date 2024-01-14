@@ -10,6 +10,7 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.GUIs.closingGUI
+import com.github.Ringoame196.Items.Cookware.Bowl
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
 import com.github.Ringoame196.Items.Cookware.Fryer
@@ -290,7 +291,7 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 player.playSound(player, Sound.BLOCK_BREWING_STAND_BREW, 1f, 1f)
-                CookManager().mix(player, block.state as Barrel)
+                Bowl().mix(player, block.state as Barrel)
                 ItemManager().breakHandle(itemFrame, aoringoPlayer)
             }
             "${ChatColor.RED}ポスト" -> {

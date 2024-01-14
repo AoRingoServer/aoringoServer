@@ -4,11 +4,9 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
-import org.bukkit.block.Barrel
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import kotlin.random.Random
@@ -39,28 +37,6 @@ class CookManager() {
         meta?.lore = mutableListOf("切れ味:$sharpness")
         item.setItemMeta(meta)
         return item
-    }
-    fun mix(player: Player, barrel: Barrel) {
-        if (Random.nextInt(0, 8) != 0) { return }
-        val recipe = mutableListOf<String>()
-        var expiration = false
-        for (i in 0 until barrel.inventory.size) {
-            val item = barrel.inventory.getItem(i) ?: continue
-            recipe.add(item.itemMeta?.displayName ?: continue)
-            if (foodManager.isExpirationDateHasExpired(player, item)) {
-                expiration = true
-            }
-        }
-        val finishFood = if (expiration) { cookData.fermentationMix(recipe) } else { cookData.mix(recipe) } ?: return
-        if (!isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
-            return
-        }
-        barrel.world.dropItem(barrel.location.clone().add(0.5, 1.5, 0.5), finishFood)
-        for (i in 0 until barrel.inventory.size) {
-            val item = barrel.inventory.getItem(i) ?: continue
-            item.amount = barrel.inventory.getItem(i)!!.amount - 1
-        }
-        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
     fun completionItem(item: ItemStack, player: Player): ItemStack {
         val itemName = item.itemMeta?.displayName ?: ""
