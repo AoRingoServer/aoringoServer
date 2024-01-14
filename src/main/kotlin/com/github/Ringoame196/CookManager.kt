@@ -63,19 +63,14 @@ class CookManager() {
     fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
-        player.sendMessage(cookLevel.toString())
         levelUP(player, itemName)
         return cookLevel <= level
     }
     private fun getcookLevel(itemName: String): Int {
         val key = "level"
 
-        val recoveryQuantity = PluginData.DataManager.FoodData?.get("$itemName.$key").toString()
-        return try {
-            return recoveryQuantity.toInt()
-        } catch (e: NumberFormatException) {
-            return 0
-        }
+        val recoveryQuantity = FoodManager().ymlInfoAcquisition(itemName, key) ?: "0"
+        return recoveryQuantity.toInt()
     }
     fun levelUP(player: Player, itemName: String) {
         if (!itemName.contains("[完成品]")) { return }

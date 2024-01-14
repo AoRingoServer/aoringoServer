@@ -14,16 +14,20 @@ import java.util.Calendar
 import java.util.Date
 
 class FoodManager {
+    fun ymlInfoAcquisition(itemName: String, key: String): String? {
+        val foodData = PluginData.DataManager.FoodData
+        return try {
+            return foodData?.get("$itemName.$key").toString()
+        } catch (e: NumberFormatException) {
+            return null
+        }
+    }
     private fun acquisitionRecoveryAmount(item: ItemStack): Int {
         val itemName = item.itemMeta?.displayName ?: ""
         val key = "recoveryQuantity"
 
-        val recoveryQuantity = PluginData.DataManager.FoodData?.get("$itemName.$key").toString()
-        return try {
-            return recoveryQuantity.toInt()
-        } catch (e: NumberFormatException) {
-            return 2
-        }
+        val recoveryQuantity = ymlInfoAcquisition(itemName, key) ?: "2"
+        return recoveryQuantity.toInt()
     }
     fun calculateFoodLevel(player: Player, food: ItemStack): Int {
         val playerFoodLevel = player.foodLevel
