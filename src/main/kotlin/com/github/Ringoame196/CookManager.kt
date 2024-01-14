@@ -67,8 +67,13 @@ class CookManager() {
         return cookLevel <= level
     }
     private fun getcookLevel(itemName: String): Int {
-        return when (itemName) {
-            else -> 0
+        val key = "level"
+
+        val recoveryQuantity = PluginData.DataManager.FoodData?.get("$itemName.$key").toString()
+        return try {
+            return recoveryQuantity.toInt()
+        } catch (e: NumberFormatException) {
+            return 0
         }
     }
     fun levelUP(player: Player, itemName: String) {

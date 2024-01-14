@@ -1,49 +1,33 @@
 package com.github.Ringoame196.Foods
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.PluginData
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
-import org.bukkit.plugin.Plugin
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
-import org.yaml.snakeyaml.Yaml
-import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 
 class FoodManager {
-    private fun returnFoodHasLevel(item: ItemStack, plugin: Plugin): Int {
+    private fun acquisitionRecoveryAmount(item: ItemStack): Int {
         val itemName = item.itemMeta?.displayName ?: ""
-        val ymlFile = File(plugin.dataFolder, "FoodData.yml")
-        val recoveryAmountKey = "recoveryQuantity"
+        val key = "recoveryQuantity"
 
-        try {
-            java.io.FileReader(ymlFile).use { fileReader ->
-                val yaml = Yaml()
-                val yamlData = yaml.load(fileReader) as? Map<String, Any>
-
-                // itemNameに対応する値があるか確認
-                if (yamlData != null) {
-                    val itemData = yamlData[itemName] as? Map<String, Int>
-
-                    if (itemData != null && itemData.containsKey(recoveryAmountKey)) {
-                        return itemData[recoveryAmountKey] ?: 2
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        val recoveryQuantity = PluginData.DataManager.FoodData?.get("$itemName.$key").toString()
+        return try {
+            return recoveryQuantity.toInt()
+        } catch (e: NumberFormatException) {
+            return 2
         }
-
-        return 2
     }
-    fun calculateFoodLevel(player: Player, food: ItemStack, plugin: Plugin): Int {
+    fun calculateFoodLevel(player: Player, food: ItemStack): Int {
         val playerFoodLevel = player.foodLevel
-        val foodHasLevel = returnFoodHasLevel(food, plugin)
+        val foodHasLevel = acquisitionRecoveryAmount(food)
         val totalFoodLevel = playerFoodLevel + foodHasLevel
         return if (totalFoodLevel > 20) { 20 } else { totalFoodLevel }
     }
