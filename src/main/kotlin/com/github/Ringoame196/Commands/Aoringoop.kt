@@ -17,7 +17,7 @@ class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
         "updateResourcePack" to { ResourcePack(plugin).update() },
         "testWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
         "resetShopLand" to { FshopManager().resetShopLand(plugin) },
-        "recovery" to {
+        "fullRecovery" to {
             player?.health = 20.0
             player?.foodLevel = 20
             player?.saturation = 20.0f
