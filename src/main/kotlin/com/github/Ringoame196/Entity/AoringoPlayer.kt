@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Entity
 
-import com.github.Ringoame196.Contract
 import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.ExternalPlugins.LuckPerms
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
@@ -28,7 +27,6 @@ import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
-import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 
 class AoringoPlayer(val player: Player) {
@@ -188,39 +186,6 @@ class AoringoPlayer(val player: Player) {
                 makeConservationLand(name)
             }
         )
-    }
-    fun writeContractRequest(money: Int) {
-        val item = player.inventory.itemInMainHand
-        val meta = item.itemMeta as BookMeta
-        meta.setDisplayName("${ChatColor.YELLOW}契約書[契約待ち]")
-        val bookMessage = meta.getPage(1)
-            .replace("甲方：[プレイヤー名]\nUUID：[UUID]", "甲方：${player.name}\nUUID：${player.uniqueId}")
-            .replace("取引金額：[値段]", "取引金額：${money}円")
-        meta.setPage(1, bookMessage)
-        item.setItemMeta(meta)
-        player.inventory.setItemInMainHand(item)
-        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
-    }
-    fun createContractBook(money: Int) {
-        val item = player.inventory.itemInMainHand
-        val meta = item.itemMeta as BookMeta
-        val bookMessage = meta.getPage(1)
-        val priceIndex = bookMessage.indexOf("取引金額：")
-        val priceMessage = bookMessage.substring(priceIndex + "取引金額：".length).replace("円", "").toInt()
-        if (money != priceMessage) {
-            sendErrorMessage("金額が違います")
-            return
-        }
-        if (moneyUseCase.getMoney(playerAccount) < money) {
-            sendErrorMessage("お金が足りません")
-            return
-        }
-        moneyUseCase.reduceMoney(this, money)
-        val setBookMessage = Contract().writeContractDate(meta, player, money)
-        meta.setPage(1, setBookMessage)
-        item.setItemMeta(meta)
-        player.inventory.setItemInMainHand(item)
-        player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
     fun breakVegetables(block: org.bukkit.block.Block, plugin: Plugin) {
         val itemManager = ItemManager()

@@ -11,28 +11,6 @@ import org.bukkit.inventory.ItemStack
 class ApplicationForRemittance(private val player: Player, book: ItemStack) {
     private val aoringoPlayer = AoringoPlayer(player)
     private val writtenBook = WrittenBook(book)
-    private val pageText = writtenBook.getCharactersPage(1)
-    fun remittanceAccountRegistration(targetAccount: String) {
-        writtenBook.edit(player, 1, pageText.replace("送金先口座：[記入]", "送金先口座：$targetAccount"))
-        finalize()
-    }
-    fun registrationAmount(price: UInt) {
-        writtenBook.edit(player, 1, pageText.replace("送金金額：[記入]", "送金金額：${price}円"))
-        finalize()
-    }
-    fun registerMyAccount() {
-        writtenBook.edit(player, 1, pageText.replace("お客様口座：[記入]", "お客様口座：${player.uniqueId}"))
-        finalize()
-    }
-    private fun finalize() {
-        if (!isFinished()) { return }
-        writtenBook.changeItemName("${ChatColor.YELLOW}送金申込書")
-    }
-    private fun isFinished(): Boolean {
-        val playerItem = player.inventory.itemInMainHand
-        val newPageText = WrittenBook(playerItem).getCharactersPage(1)
-        return !newPageText.contains("[記入]")
-    }
     fun remittance() {
         val pageText = writtenBook.getCharactersPage(1)
         val remittanceAccount = writtenBook.conversionMap(pageText)["送金先口座"] ?: return

@@ -148,15 +148,11 @@ class Events(private val plugin: Plugin) : Listener {
             else -> {}
         }
         val importantDocumentMessage = mapOf(
-            "${ChatColor.YELLOW}契約書[未記入]" to "${ChatColor.YELLOW}契約書を発行するには [!契約 (値段)]",
-            "${ChatColor.YELLOW}契約書[契約待ち]" to "${ChatColor.YELLOW}契約書を完了するには [!契約 (契約書に書かれているお金)]",
-            "${ChatColor.YELLOW}送金申込書[未記入]" to "${ChatColor.YELLOW}[送金申し込み書メニュー]\n" +
-                "${ChatColor.AQUA}!送金 口座 [口座名]\n" +
-                "${ChatColor.AQUA}!送金 金額 [値段]\n" +
-                "${ChatColor.AQUA}!送金 口座登録"
+            "${ChatColor.YELLOW}契約書[未記入]" to "${ChatColor.YELLOW}契約書を発行するには [/write (値段)]",
+            "${ChatColor.YELLOW}契約書[契約待ち]" to "${ChatColor.YELLOW}契約書を完了するには [/write (契約書に書かれているお金)]",
+            "${ChatColor.YELLOW}送金申込書[未記入]" to "${ChatColor.YELLOW}送金申し込みするには [/write (送金先口座) (振込金額)]"
         )
         if (importantDocumentMessage.contains(itemName)) {
-            e.isCancelled = true
             player.sendMessage(importantDocumentMessage[itemName])
             return
         }
@@ -213,7 +209,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (player.isSneaking) {
                 Contract().returnMoney(player)
             } else {
-                aoringoPlayer.sendActionBar("お金を受け取るにはシフトをしてください")
+                aoringoPlayer.sendErrorMessage("お金を受け取るにはシフトをしてください")
             }
         } else if (itemName.contains("[アプリケーション]")) {
             ApplicationManager().install(player, itemName, plugin)
@@ -799,40 +795,6 @@ class Events(private val plugin: Plugin) : Listener {
         if (message.contains("@")) {
             e.isCancelled = true
             aoringoPlayer.sendErrorMessage("${ChatColor.RED}メッセージに@を入れることは禁止されています")
-        } else if (message.contains("!契約")) {
-            e.isCancelled = true
-            if (playerItem.amount != 1) {
-                aoringoPlayer.sendErrorMessage("アイテムを1つのみ持ってください")
-                return
-            }
-            val contractMoney = message.replace("!契約 ", "").toInt()
-            if (contractMoney == 0) { return }
-            when (playerItem.itemMeta?.displayName) {
-                "${ChatColor.YELLOW}契約書[未記入]" -> aoringoPlayer.writeContractRequest(contractMoney)
-                "${ChatColor.YELLOW}契約書[契約待ち]" -> aoringoPlayer.createContractBook(contractMoney)
-            }
-        } else if (message.contains("!送金")) {
-            val applicationForRemittance = ApplicationForRemittance(player, playerItem)
-            e.isCancelled = true
-            if (playerItem.itemMeta?.displayName != "${ChatColor.YELLOW}送金申込書[未記入]") { return }
-            if (playerItem.amount != 1) {
-                aoringoPlayer.sendErrorMessage("アイテムを1つのみ持ってください")
-                return
-            }
-            val subCommand = message.replace("!送金 ", "")
-            if (subCommand.contains("口座 ")) {
-                val targetAccount = subCommand.replace("口座 ", "")
-                applicationForRemittance.remittanceAccountRegistration(targetAccount)
-            } else if (subCommand.contains("金額 ")) {
-                try {
-                    val price = subCommand.replace("金額 ", "").toUInt()
-                    applicationForRemittance.registrationAmount(price)
-                } catch (e: NumberFormatException) {
-                    aoringoPlayer.sendErrorMessage("数字を入力してください")
-                }
-            } else if (subCommand == "口座登録") {
-                applicationForRemittance.registerMyAccount()
-            }
         }
     }
     @EventHandler

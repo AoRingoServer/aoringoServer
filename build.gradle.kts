@@ -73,6 +73,7 @@ configure<BukkitPluginDescription> {
     }
 
     tasks.named("build") {
+        dependsOn("formatKotlin")
         dependsOn("shadowJar")
         doFirst {
             copy {
