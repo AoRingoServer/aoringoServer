@@ -63,6 +63,7 @@ class CookManager() {
     fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
+        player.sendMessage(cookLevel.toString())
         levelUP(player, itemName)
         return cookLevel <= level
     }

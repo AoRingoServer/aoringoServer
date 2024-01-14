@@ -1,48 +1,64 @@
 "§c[完成品]ステーキ":
   recoveryQuantity : 4
+  level : 0
 
 "§e[完成品]ハンバーグ":
   recoveryQuantity : 4
+  level : 0
 
 "§e[完成品]焼き鳥":
   recoveryQuantity : 5
+  level : 0
 
 "§e[完成品]からあげ":
   recoveryQuantity : 3
+  level : 0
 
 "§e[完成品]とんかつ":
   recoveryQuantity : 4
+  level : 0
 
 "§e[完成品]フライドポテト":
   recoveryQuantity: 4
+  level : 0
 
 "§6[完成品]サーモンの握り":
   recoveryQuantity: 5
+  level : 1
 
 "§c[完成品]マグロの握り":
   recoveryQuantity: 5
+  level : 1
 
 "[完成品]おにぎり":
   recoveryQuantity : 6
+  level : 0
 
 "§a[完成品]サラダ":
   recoveryQuantity : 4
+  level : 0
 
 "§e[完成品]スパゲッティー":
   recoveryQuantity: 6
+  level : 1
 
 "§e[完成品]カレーライス":
   recoveryQuantity: 10
+  level : 2
 
 "§e[完成品]カレーうどん":
   recoveryQuantity: 10
+  level : 2
 
 "§6[完成品]ビール":
   recoveryQuantity: 4
+  level : 3
 
 "§e[完成品]酢豚":
   recoveryQuantity: 5
+  level : 1
 
 "§5[完成品]麻婆なす":
   recoveryQuantity: 5
+  level : 1
 

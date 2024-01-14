@@ -87,14 +87,14 @@ class CookData {
             rawMaterial.toSet() -> food("${ChatColor.YELLOW}生生地", 18)
             tomatoPaste.toSet() -> food("${ChatColor.RED}トマトペースト", 12)
             bread.toSet() -> food("生食パン", 89)
-            spaghetti.toSet() -> food("${ChatColor.YELLOW}[完成]スパゲッティー", 46)
+            spaghetti.toSet() -> food("${ChatColor.YELLOW}[完成品]スパゲッティー", 46)
             rawHamburge.toSet() -> food("${ChatColor.RED}生ハンバーグ", 22)
             rawYakitori.toSet() -> food("${ChatColor.RED}生焼き鳥", 99)
             octopusNigiri.toSet() -> food("${ChatColor.RED}タコの握り", 73)
             squidNigiri.toSet() -> food("イカの握り", 72)
             wort.toSet() -> ItemManager().make(Material.MILK_BUCKET, "${ChatColor.GREEN}麦汁", FoodManager().makeExpirationDate(0), 2, 1)
-            curryrRice.toSet() -> food("${ChatColor.YELLOW}[完成]カレーライス", 44)
-            curryrUdon.toSet() -> food("${ChatColor.YELLOW}[完成]カレーうどん", 61)
+            curryrRice.toSet() -> food("${ChatColor.YELLOW}[完成品]カレーライス", 44)
+            curryrUdon.toSet() -> food("${ChatColor.YELLOW}[完成品]カレーうどん", 61)
             else -> null
         }
     }
