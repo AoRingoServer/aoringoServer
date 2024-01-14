@@ -61,4 +61,6 @@
 "§5[完成品]麻婆なす":
   recoveryQuantity: 5
   level : 1
+"§c[完成品]失敗料理":
+  recoveryQuantity: 1
 

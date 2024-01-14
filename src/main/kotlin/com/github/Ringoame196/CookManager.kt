@@ -43,7 +43,7 @@ class CookManager() {
         if (isCookLevel(itemName, player)) {
             return item
         } else {
-            val failureCuisine = ItemManager().make(Material.MELON_SLICE, "${ChatColor.RED}[完成品]失敗料理", customModelData = 109)
+            val failureCuisine = ItemManager().make(Material.MELON_SLICE, "${ChatColor.RED}[完成品]失敗料理", customModelData = 62)
             AoringoPlayer(player).sendErrorMessage("レベルの高い料理に挑戦したが失敗した")
             return failureCuisine
         }
