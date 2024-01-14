@@ -10,12 +10,12 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.GUIs.closingGUI
-import com.github.Ringoame196.Items.ApplicationForRemittance
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
 import com.github.Ringoame196.Items.Cookware.Fryer
 import com.github.Ringoame196.Items.Cookware.GasBurner
 import com.github.Ringoame196.Items.Cookware.Pot
+import com.github.Ringoame196.Items.ImportantDocuments.RemittanceBook
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
@@ -189,7 +189,7 @@ class Events(private val plugin: Plugin) : Listener {
             "${ChatColor.YELLOW}送金申込書" -> {
                 if (player.isSneaking) {
                     e.isCancelled = true
-                    ApplicationForRemittance(player, playerItem).remittance()
+                    RemittanceBook().remittance(player)
                 } else {
                     player.sendMessage("${ChatColor.YELLOW}シフト クリックで送金")
                 }
