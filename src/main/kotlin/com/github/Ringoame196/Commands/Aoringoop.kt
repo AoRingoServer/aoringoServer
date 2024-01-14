@@ -15,7 +15,7 @@ class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
     private var player: Player? = null
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
-        "testWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
+        "tpTestWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
         "resetShopLand" to { FshopManager().resetShopLand(plugin) },
         "fullRecovery" to {
             player?.health = 20.0
