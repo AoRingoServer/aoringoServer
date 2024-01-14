@@ -20,11 +20,7 @@ class ChoppingBoard(private val cookManager: CookManager = CookManager()) {
         if (cookManager.foodManager.isExpirationDateHasExpired(player, entity.item)) {
             return
         }
-        val cutItem = cookManager.cookData.cut(item) ?: return
-        val ingredientName = cutItem.itemMeta?.displayName
-        if (!cookManager.isCookLevel(ingredientName?:return, player)) {
-            return
-        }
+        val cutItem = cookManager.completionItem(cookManager.cookData.cut(item) ?: return, player)
         val usedKnife = reduceDurability(playerItem)
         player.inventory.addItem(cutItem)
         entity.setItem(ItemStack(Material.AIR))

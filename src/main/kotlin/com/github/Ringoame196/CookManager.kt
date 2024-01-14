@@ -1,7 +1,10 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.Foods.FoodManager
+import com.github.Ringoame196.Items.ItemManager
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.Sound
@@ -59,8 +62,18 @@ class CookManager() {
         }
         player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
     }
+    fun completionItem(item: ItemStack, player: Player): ItemStack {
+        val itemName = item.itemMeta?.displayName ?: ""
+        if (isCookLevel(itemName, player)) {
+            return item
+        } else {
+            val failureCuisine = ItemManager().make(Material.MELON_SLICE, "${ChatColor.RED}[完成品]失敗料理", customModelData = 109)
+            AoringoPlayer(player).sendErrorMessage("レベルの高い料理に挑戦したが失敗した")
+            return failureCuisine
+        }
+    }
 
-    fun isCookLevel(itemName: String, player: Player): Boolean {
+    private fun isCookLevel(itemName: String, player: Player): Boolean {
         val level = Scoreboard().getValue("cookLevel", player.uniqueId.toString())
         val cookLevel = getcookLevel(itemName)
         levelUP(player, itemName)
@@ -70,7 +83,11 @@ class CookManager() {
         val key = "level"
 
         val recoveryQuantity = FoodManager().ymlInfoAcquisition(itemName, key) ?: "0"
-        return recoveryQuantity.toInt()
+        return try {
+            recoveryQuantity.toInt()
+        } catch (e: NumberFormatException) {
+            0
+        }
     }
     fun levelUP(player: Player, itemName: String) {
         if (!itemName.contains("[完成品]")) { return }

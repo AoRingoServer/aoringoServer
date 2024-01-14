@@ -62,11 +62,8 @@ class GasBurner(private val cookManager: CookManager = CookManager()) {
         world.playSound(ironPlate.location, Sound.ENTITY_GENERIC_EXPLODE, 1f, 1f)
     }
     private fun completeBaking(item: ItemStack, player: Player, ironPlate: org.bukkit.entity.ItemFrame) {
-        val bakeItem = cookManager.cookData.bake(item) ?: return
+        val bakeItem = cookManager.completionItem(cookManager.cookData.bake(item) ?: return, player)
         val world = player.world
-        if (!cookManager.isCookLevel(bakeItem.itemMeta?.displayName?:return, player)) {
-            return
-        }
         ironPlate.setItem(bakeItem)
         world.playSound(ironPlate.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
     }

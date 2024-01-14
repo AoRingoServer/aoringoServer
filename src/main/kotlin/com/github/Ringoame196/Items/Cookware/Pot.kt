@@ -22,10 +22,7 @@ class Pot(private val cookManager: CookManager = CookManager()) {
             ingredients.add(item.itemMeta?.displayName ?: continue)
             if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) { return }
         }
-        val finishFood = cookManager.cookData.pot(ingredients) ?: return
-        if (!cookManager.isCookLevel(finishFood.itemMeta?.displayName?:return, player)) {
-            return
-        }
+        val finishFood = cookManager.completionItem(cookManager.cookData.pot(ingredients) ?: return, player)
         for (item in barrel.inventory) {
             item ?: continue
             item.amount = item.amount - 1

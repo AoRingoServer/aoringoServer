@@ -12,10 +12,7 @@ class FryBatter(private val cookManager: CookManager = CookManager()) {
     fun dressing(player: Player, entity: ItemFrame) {
         val item = player.inventory.itemInMainHand
         if (cookManager.foodManager.isExpirationDateHasExpired(player, entity.item)) { return }
-        val dressingItem = cookManager.cookData.dressing(item) ?: return
-        if (!cookManager.isCookLevel(dressingItem.itemMeta?.displayName?:return, player)) {
-            return
-        }
+        val dressingItem = cookManager.completionItem(cookManager.completionItem(cookManager.cookData.dressing(item) ?: return, player) ?: return, player)
         itemManagerClass.reduceMainItem(player)
         player.inventory.addItem(dressingItem)
         val particleLocation = entity.location.add(0.0, 1.0, 0.0)

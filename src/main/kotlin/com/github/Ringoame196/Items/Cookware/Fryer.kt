@@ -13,10 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable
 
 class Fryer(private val cookManager: CookManager = CookManager()) {
     fun deepFry(player: Player, block: Block, item: ItemStack, plugin: Plugin) {
-        val fryItem = cookManager.cookData.fly(item) ?: return
-        if (!cookManager.isCookLevel(fryItem.itemMeta?.displayName ?: return, player)) {
-            return
-        }
+        val fryItem = cookManager.completionItem(cookManager.cookData.fly(item) ?: return, player)
         ItemManager().reduceMainItem(player)
         player.playSound(player, Sound.ITEM_BUCKET_EMPTY, 1f, 1f)
         if (cookManager.foodManager.isExpirationDateHasExpired(player, item)) { return }
@@ -34,7 +31,7 @@ class Fryer(private val cookManager: CookManager = CookManager()) {
                 block.world.playSound(block.location, Sound.BLOCK_LAVA_POP, 1f, 1f)
                 if (c == 0) {
                     val dropLocation = block.location.clone().add(0.5, 1.0, 0.5)
-                    ItemManager().drop(dropLocation, cookManager.cookData.fly(item) ?: return)
+                    ItemManager().drop(dropLocation, fryItem)
                     timer.remove()
                     block.world.playSound(block.location, Sound.BLOCK_FIRE_EXTINGUISH, 1f, 1f)
                     this.cancel()

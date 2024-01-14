@@ -32,7 +32,7 @@ class Write : CommandExecutor, TabExecutor {
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
         val player = sender as Player
         val item = player.inventory.itemInMainHand
-        val subCommand = processingPerItem[item.itemMeta?.displayName ?: ""]?.subCommand(args.size)
+        val subCommand = processingPerItem[item.itemMeta?.displayName ?: ""]?.subCommand(args.size) ?: mutableListOf("非対応アイテム")
         return subCommand ?: mutableListOf()
     }
 }
