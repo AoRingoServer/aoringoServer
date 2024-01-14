@@ -3,6 +3,7 @@ package com.github.Ringoame196.Commands
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.FshopManager
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -15,7 +16,13 @@ class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
         "testWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
-        "resetShopLand" to { FshopManager().resetShopLand(plugin) }
+        "resetShopLand" to { FshopManager().resetShopLand(plugin) },
+        "recovery" to {
+            player?.health = 20.0
+            player?.foodLevel = 20
+            player?.saturation = 20.0f
+            player?.sendMessage("${ChatColor.AQUA}全回復しました")
+        }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player

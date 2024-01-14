@@ -1,7 +1,6 @@
 package com.github.Ringoame196.Foods
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import de.schlichtherle.io.FileReader
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
