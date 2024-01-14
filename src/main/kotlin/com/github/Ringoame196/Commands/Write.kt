@@ -1,5 +1,6 @@
 package com.github.Ringoame196.Commands
 
+import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ImportantDocuments.ContractBook
 import com.github.Ringoame196.Items.ImportantDocuments.ImportantDocument
 import com.github.Ringoame196.Items.ImportantDocuments.RemittanceBook
@@ -20,6 +21,10 @@ class Write : CommandExecutor, TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val player = sender as Player
         val item = player.inventory.itemInMainHand
+        if (item.amount != 1) {
+            AoringoPlayer(player).sendErrorMessage("アイテムを一つだけ持ってください")
+            return true
+        }
         processingPerItem[item.itemMeta?.displayName ?: ""]?.write(player, args)
         return true
     }
