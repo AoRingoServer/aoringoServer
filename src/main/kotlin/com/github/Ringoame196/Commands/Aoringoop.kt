@@ -1,7 +1,9 @@
 package com.github.Ringoame196.Commands
 
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.FshopManager
+import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -13,6 +15,7 @@ import org.bukkit.plugin.Plugin
 
 class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
     private var player: Player? = null
+    private var subCommands: Array<out String>? = null
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
         "tpTestWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
@@ -22,6 +25,10 @@ class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
             player?.foodLevel = 20
             player?.saturation = 20.0f
             player?.sendMessage("${ChatColor.AQUA}全回復しました")
+        },
+        "loadYML" to {
+            Yml().callData(plugin)
+            player?.sendMessage("${ChatColor.YELLOW}[青リンゴサーバー] ymlファイルを再読込しました")
         }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {

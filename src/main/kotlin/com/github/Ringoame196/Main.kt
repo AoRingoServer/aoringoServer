@@ -39,7 +39,7 @@ class Main : JavaPlugin() {
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
 
-        PluginData.DataManager.FoodData = Yml().getYml(this, "", "FoodData")
+        Yml().callData(this)
         for (player in Bukkit.getOnlinePlayers()) {
             val aoringoPlayer = AoringoPlayer(player)
             aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
