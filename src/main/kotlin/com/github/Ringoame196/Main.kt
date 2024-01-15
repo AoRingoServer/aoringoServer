@@ -36,6 +36,7 @@ class Main : JavaPlugin() {
         saveResource("World.yml", true)
         saveResource("FoodData.yml", true)
         saveResource("Application.yml", true)
+        saveResource("DropItem.yml", true)
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
 

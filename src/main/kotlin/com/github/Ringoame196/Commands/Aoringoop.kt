@@ -1,6 +1,5 @@
 package com.github.Ringoame196.Commands
 
-import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.FshopManager
 import com.github.Ringoame196.Yml

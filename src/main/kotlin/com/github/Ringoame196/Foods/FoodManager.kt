@@ -4,6 +4,8 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.PluginData
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.event.entity.EntityDeathEvent
 import org.bukkit.inventory.ItemStack
@@ -109,5 +111,19 @@ class FoodManager {
             afterItem.amount = item.amount
             e.drops.add(afterItem)
         }
+    }
+    fun getBeafInfo(ymlFile: YamlConfiguration, entity: Entity, material: Material?): ItemStack? {
+
+        // MaterialがnullでないかつcustomModelDataも取得できた場合に処理を続行
+        if (material != null) {
+            val name = ymlFile.getString("${entity.type}.Name")
+            val customModelData = ymlFile.getInt("${entity.type}.customModelData")
+
+            if (name != null && customModelData != null) {
+                // FoodManagerの処理を行う
+                return FoodManager().makeItem(name, customModelData)
+            }
+        }
+        return null
     }
 }

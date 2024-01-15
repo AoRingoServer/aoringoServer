@@ -20,10 +20,6 @@ class Money : CommandExecutor, TabCompleter {
         "追加" to "add",
         "設定" to "set"
     )
-    private val processingMap = mapOf(
-        tabMap["確認"] to {
-        }
-    )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return false }
         val aoringoPlayer = AoringoPlayer(sender)

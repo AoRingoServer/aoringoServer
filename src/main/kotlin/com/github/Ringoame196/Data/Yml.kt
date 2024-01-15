@@ -91,7 +91,7 @@ class Yml {
             println("Error while saving data: ${e.message}")
         }
     }
-    fun callData(plugin: Plugin){
+    fun callData(plugin: Plugin) {
         PluginData.DataManager.FoodData = Yml().getYml(plugin, "", "FoodData")
     }
 }

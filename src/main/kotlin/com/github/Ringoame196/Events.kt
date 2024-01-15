@@ -673,8 +673,15 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onEntityDeath(e: EntityDeathEvent) {
         val entity = e.entity
-        val dropITem = ItemData().getEntityDropItem(entity.type) ?: return
-        FoodManager().dropReplacement(e, dropITem.material, FoodManager().makeItem(dropITem.displayName, dropITem.customModelData))
+        val yml = Yml()
+        val ymlFile = yml.getYml(plugin, "", "DropItem")
+        val materialString = ymlFile.getString("${entity.type}.Material")
+        val material: Material? = try {
+            Material.valueOf(materialString ?: return)
+        } catch (e: IllegalArgumentException) {
+            null // 変換不可の場合はnull
+        }
+        FoodManager().dropReplacement(e, material ?: return, FoodManager().getBeafInfo(ymlFile, entity, material) ?: return)
     }
 
     @EventHandler

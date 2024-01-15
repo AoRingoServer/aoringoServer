@@ -1,0 +1,16 @@
+COW:
+  Material: BEEF
+  Name: "§c牛肉"
+  customModelData: 78
+SHEEP:
+  Material: MUTTON
+  Name: "§c羊肉"
+  customModelData: 79
+PIG:
+  Material: PORKCHOP
+  Name: "§c豚肉"
+  customModelData: 81
+CHICKEN:
+  Material: CHICKEN
+  Name: "§c鶏肉"
+  customModelData: 80
