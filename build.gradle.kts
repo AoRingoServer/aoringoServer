@@ -75,10 +75,6 @@ configure<BukkitPluginDescription> {
     tasks.named("build") {
         dependsOn("shadowJar")
         doFirst {
-            copy {
-                from(buildDir.resolve("libs/${project.name}.jar"))
-                into("D:/デスクトップ")
-            }
             exec {
                 workingDir("D:/plugin/aoringoServer") // バッチファイルの作業ディレクトリを設定
                 commandLine("cmd", "/c", "transfer.bat")
