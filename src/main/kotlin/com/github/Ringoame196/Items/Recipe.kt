@@ -33,6 +33,8 @@ class Recipe {
         bunMold(plugin)
         remove("bambooSkewer", plugin)
         bambooSkewer(plugin)
+        remove("sugar", plugin)
+        sugar(plugin)
     }
     fun repairKit() {
         val customItemManager = ItemManager().make(Material.FLINT, "${ChatColor.YELLOW}修理キット", customModelData = 1)
@@ -103,6 +105,16 @@ class Recipe {
         customRecipe.setIngredient('S', Material.STICK)
 
         // レシピをサーバーに登録
+        Bukkit.addRecipe(customRecipe)
+    }
+    private fun sugar(plugin: Plugin) {
+        val recipeKey = NamespacedKey(plugin, "sugar")
+
+        // レシピの作成
+        val customRecipe = ShapelessRecipe(recipeKey, ItemManager().make(Material.SUGAR, "砂糖"))
+        customRecipe.addIngredient(Material.SUGAR_CANE)
+
+        // レシピを登録
         Bukkit.addRecipe(customRecipe)
     }
     private fun knife(sword: Material, block: Material, kinds: String, id: String, plugin: Plugin) {
