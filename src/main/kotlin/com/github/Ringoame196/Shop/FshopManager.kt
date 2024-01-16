@@ -31,8 +31,6 @@ class FshopManager {
         dumperOptions.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
 
         val yaml = Yaml(dumperOptions)
-
-        File("${plugin.dataFolder.path}/shopData/").mkdirs()
         try {
             FileWriter(filePath).use { writer ->
                 yaml.dump(data, writer)

@@ -94,4 +94,7 @@ class Yml {
     fun callData(plugin: Plugin) {
         PluginData.DataManager.FoodData = Yml().getYml(plugin, "", "FoodData")
     }
+    fun makeShopDataFolder(plugin: Plugin){
+        File("${plugin.dataFolder.path}/shopData/").mkdirs()
+    }
 }
