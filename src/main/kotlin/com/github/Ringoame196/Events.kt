@@ -215,18 +215,6 @@ class Events(private val plugin: Plugin) : Listener {
         } else if (itemName.contains("[アプリケーション]")) {
             ApplicationManager().install(player, itemName, plugin)
             e.isCancelled = true
-        } else if (item.type == Material.ENDER_EYE) {
-            if (player.world.name == "dungeon") {
-                if (itemName != "${ChatColor.GOLD}エンダーアイ[ダンジョン仕様]") { e.isCancelled = true }
-                return
-            }
-            e.isCancelled = true
-            if (!player.isSneaking) {
-                aoringoPlayer.sendErrorMessage("シフトクリックするとダンジョンへ移動することができます")
-                return
-            }
-            aoringoPlayer.teleporterWorld("dungeon")
-            aoringoPlayer.sendTeleportDungeonMessage()
         }
     }
 
