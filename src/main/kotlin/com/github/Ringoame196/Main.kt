@@ -6,7 +6,6 @@ import com.github.Ringoame196.Commands.Write
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
-import java.io.File
 
 class Main : JavaPlugin() {
     override fun onEnable() {
@@ -20,7 +19,6 @@ class Main : JavaPlugin() {
 
         yml.makePluginFolder(this)
         yml.makePlayerDataFolder(this)
-        yml.makeShopDataFolder(this)
         Recipe().add(this)
 
         scoreboard.delete("evaluationVote")

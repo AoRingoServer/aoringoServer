@@ -20,7 +20,6 @@ import com.github.Ringoame196.Items.ImportantDocuments.RemittanceBook
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.Shop.Fshop
-import com.github.Ringoame196.Shop.Shop
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
@@ -121,12 +120,9 @@ class Events(private val plugin: Plugin) : Listener {
                 when (signTitle) {
                     "Fshop" -> {
                         e.isCancelled = true
-                        val shop = Shop(plugin)
-                        val price = try { sign.getLine(1).toUInt() } catch (e: NumberFormatException) {
-                            aoringoPlayer.sendErrorMessage("値段は数字で入力してください")
-                            return
-                        }
-                        shop.createShop(aoringoPlayer, sign, price.toString())
+                        e.isCancelled = true
+                        aoringoPlayer.makeShop(sign)
+                        sign.block.type = Material.AIR
                     }
                     "[土地販売]" -> {
                         if (!player.isOp) { return }
