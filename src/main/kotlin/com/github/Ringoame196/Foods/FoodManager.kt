@@ -29,10 +29,10 @@ class FoodManager {
         val key = "recoveryQuantity"
 
         val recoveryQuantity = ymlInfoAcquisition(itemName, key) ?: "2"
-        return try{
+        return try {
             recoveryQuantity.toInt()
-        } catch (e:NumberFormatException){
-            0
+        } catch (e: NumberFormatException) {
+            2
         }
     }
     fun calculateFoodLevel(player: Player, food: ItemStack): Int {

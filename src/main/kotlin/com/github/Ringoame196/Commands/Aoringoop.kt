@@ -2,6 +2,7 @@ package com.github.Ringoame196.Commands
 
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.FshopManager
+import com.github.Ringoame196.Worlds.HardcoreWorld
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -28,7 +29,8 @@ class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
         "loadYML" to {
             Yml().callData(plugin)
             player?.sendMessage("${ChatColor.YELLOW}[青リンゴサーバー] ymlファイルを再読込しました")
-        }
+        },
+        "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
