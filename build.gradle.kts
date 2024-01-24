@@ -25,6 +25,7 @@ repositories {
     maven(url = "https://oss.sonatype.org/content/groups/public/")
     maven(url = "https://jitpack.io")
     maven(url ="https://maven.enginehub.org/repo/")
+    maven(url ="https://m2.dv8tion.net/releases")
 }
 
 val shadowImplementation: Configuration by configurations.creating
@@ -35,6 +36,7 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:$pluginVersion-R0.1-SNAPSHOT")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("com.sk89q.worldguard:worldguard-bukkit:7.0.1")
+    implementation("net.dv8tion:JDA:4.3.0_277")
     compileOnly ("com.sk89q.worldguard:worldguard-bukkit:VERSION")
     compileOnly ("net.luckperms:api:5.4")
 }
