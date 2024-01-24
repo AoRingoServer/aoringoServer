@@ -230,7 +230,7 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val name = entity.customName ?: ""
         val item = entity.item
-        val itemName = item.itemMeta?.displayName
+        val itemName = item.itemMeta?.displayName ?: ""
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name.contains("@Fshop")) {
             val fshop = Fshop(itemFrame)

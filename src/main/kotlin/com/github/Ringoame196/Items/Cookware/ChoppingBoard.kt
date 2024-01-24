@@ -12,6 +12,7 @@ import kotlin.random.Random
 class ChoppingBoard(private val cookManager: CookManager = CookManager()) {
     fun cutFoods(item: ItemStack, player: Player, entity: ItemFrame) {
         val playerItem = player.inventory.itemInMainHand
+        if (!playerItem.hasItemMeta()) { return }
         if (playerItem.itemMeta?.customModelData != 1) { return }
         if (!checkCut(playerItem)) {
             player.playSound(player, Sound.BLOCK_NOTE_BLOCK_BELL, 1f, 1f)
