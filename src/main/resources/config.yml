@@ -4,6 +4,11 @@ Database:
   userName: ""
   password: ""
 GetResourcePackURL: ""
+ResourcePack:
+  URL:
+  GET:
 Discord:
   token: ""
-  shopPromotion: ""
+  status:
+    channelID:
+    messageID:

@@ -6,6 +6,7 @@ import net.minecrell.pluginyml.bukkit.BukkitPluginDescription
 
 plugins {
     kotlin("jvm") version "1.6.10"
+    kotlin("plugin.serialization") version "1.5.31"
     id("net.minecrell.plugin-yml.bukkit") version "0.5.1"
     id("com.github.ben-manes.versions") version "0.41.0"
     id("com.palantir.git-version") version "0.12.3"
@@ -25,7 +26,6 @@ repositories {
     maven(url = "https://oss.sonatype.org/content/groups/public/")
     maven(url = "https://jitpack.io")
     maven(url ="https://maven.enginehub.org/repo/")
-    maven(url ="https://m2.dv8tion.net/releases")
 }
 
 val shadowImplementation: Configuration by configurations.creating
@@ -36,9 +36,13 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:$pluginVersion-R0.1-SNAPSHOT")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("com.sk89q.worldguard:worldguard-bukkit:7.0.1")
-    implementation("net.dv8tion:JDA:4.3.0_277")
     compileOnly ("com.sk89q.worldguard:worldguard-bukkit:VERSION")
     compileOnly ("net.luckperms:api:5.4")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.exposed:exposed-core:0.34.1")
+    implementation("org.jetbrains.exposed:exposed-dao:0.34.1")
+    implementation("org.jetbrains.exposed:exposed-jdbc:0.34.1")
+    implementation("org.xerial:sqlite-jdbc:3.34.0")
 }
 
 configure<BukkitPluginDescription> {

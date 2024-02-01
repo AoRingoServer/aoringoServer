@@ -41,6 +41,7 @@ class Main : JavaPlugin() {
         Config(PluginData.DataManager, config).getDiscordWebhook()
 
         Yml().callData(this)
+
         for (player in Bukkit.getOnlinePlayers()) {
             val aoringoPlayer = AoringoPlayer(player)
             aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
