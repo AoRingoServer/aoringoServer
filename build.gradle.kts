@@ -36,13 +36,8 @@ dependencies {
     compileOnly("org.spigotmc:spigot-api:$pluginVersion-R0.1-SNAPSHOT")
     implementation("com.fasterxml.jackson.core:jackson-databind:2.13.0")
     implementation("com.sk89q.worldguard:worldguard-bukkit:7.0.1")
-    compileOnly ("com.sk89q.worldguard:worldguard-bukkit:VERSION")
-    compileOnly ("net.luckperms:api:5.4")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("org.jetbrains.exposed:exposed-core:0.34.1")
-    implementation("org.jetbrains.exposed:exposed-dao:0.34.1")
-    implementation("org.jetbrains.exposed:exposed-jdbc:0.34.1")
-    implementation("org.xerial:sqlite-jdbc:3.34.0")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:VERSION")
+    compileOnly("net.luckperms:api:5.4")
 }
 
 configure<BukkitPluginDescription> {
@@ -61,6 +56,10 @@ configure<BukkitPluginDescription> {
         register("write") {
             description = "書き込み用のコマンド"
             usage = "/write [入力1] [入力2]..."
+        }
+        register("fshop") {
+            description = "ショップ管理のコマンド"
+            usage = "/fshop [入力1] [入力2]"
         }
     }
         permissions{
