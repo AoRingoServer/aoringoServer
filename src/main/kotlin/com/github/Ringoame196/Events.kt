@@ -198,7 +198,9 @@ class Events(private val plugin: Plugin) : Listener {
             }
         }
         if (item.type == Material.EMERALD) {
-            item.itemMeta?.customModelData.let {
+            val meta = item.itemMeta ?: return
+            if (!meta.hasCustomModelData()) { return }
+            if (meta.customModelData <= 4) {
                 val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
                 if (money == 0) {
                     return

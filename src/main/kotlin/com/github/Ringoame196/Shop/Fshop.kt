@@ -76,7 +76,9 @@ class Fshop(private val shop: ItemFrame) {
     }
     private fun replenishment() {
         val block = shop.location.add(0.0, -1.0, 0.0).block
-        if (block.type != Material.BARREL) { return }
+        if (block.type != Material.BARREL) {
+            return
+        }
         val barrel = block.state as Barrel
         shop.setItem(ItemStack(Material.AIR))
         for (item in barrel.inventory) {

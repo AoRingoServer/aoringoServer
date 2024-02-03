@@ -3,7 +3,6 @@ package com.github.Ringoame196
 import com.github.Ringoame196.Commands.Aoringoop
 import com.github.Ringoame196.Commands.Money
 import com.github.Ringoame196.Commands.Write
-import com.github.Ringoame196.Data.DatabaseFile
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
@@ -11,7 +10,6 @@ import org.bukkit.plugin.java.JavaPlugin
 class Main : JavaPlugin() {
     override fun onEnable() {
         val yml = Yml()
-        val databaseFile = DatabaseFile()
         val scoreboard = Scoreboard()
         val event = Events(this)
         server.pluginManager.registerEvents(event, this)
@@ -43,8 +41,6 @@ class Main : JavaPlugin() {
         Config(PluginData.DataManager, config).getDiscordWebhook()
 
         Yml().callData(this)
-
-        databaseFile.make("jdbc:sqlite:${this.dataFolder.path}/money.db")
 
         for (player in Bukkit.getOnlinePlayers()) {
             val aoringoPlayer = AoringoPlayer(player)
