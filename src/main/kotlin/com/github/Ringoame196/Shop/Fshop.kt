@@ -10,12 +10,15 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
 import org.bukkit.block.Sign
+import org.bukkit.command.Command
+import org.bukkit.command.CommandExecutor
+import org.bukkit.command.CommandSender
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class Fshop() {
+class Fshop : CommandExecutor {
     private val moneyUseCase = MoneyUseCase()
     private val worldguard = WorldGuard()
     private fun shopInfo(shop: ItemFrame): String {
@@ -99,5 +102,9 @@ class Fshop() {
             item.amount = item.amount - 1
             return
         }
+    }
+
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        TODO("Not yet implemented")
     }
 }
