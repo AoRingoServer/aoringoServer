@@ -200,7 +200,8 @@ class Events(private val plugin: Plugin) : Listener {
         if (item.type == Material.EMERALD) {
             val meta = item.itemMeta ?: return
             if (!meta.hasCustomModelData()) { return }
-            if (meta.customModelData <= 4) {
+            val moneyAssigningMaximumValue = 4
+            if (meta.customModelData <= moneyAssigningMaximumValue) {
                 val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
                 if (money == 0) {
                     return
