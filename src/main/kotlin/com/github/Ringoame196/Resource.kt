@@ -15,7 +15,6 @@ import org.bukkit.plugin.Plugin
 class Resource(val plugin: Plugin) {
     private val worldNames = mutableListOf<String>(
         "${ChatColor.GREEN}資源ワールド",
-        "${ChatColor.YELLOW}pvp有り資源ワールド",
         "${ChatColor.RED}ハードコア資源ワールド",
         "${ChatColor.RED}ネザー"
     )
