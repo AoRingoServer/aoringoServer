@@ -780,7 +780,6 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val message = e.message
         val aoringoPlayer = AoringoPlayer(player)
-        val playerItem = player.inventory.itemInMainHand
         val playerData = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }
         val chatSetting = mapOf(
             "rg" to { aoringoPlayer.namingConservationLand(plugin, message) },
