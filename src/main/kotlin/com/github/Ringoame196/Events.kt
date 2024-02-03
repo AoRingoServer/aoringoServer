@@ -121,7 +121,7 @@ class Events(private val plugin: Plugin) : Listener {
                     "Fshop" -> {
                         e.isCancelled = true
                         e.isCancelled = true
-                        aoringoPlayer.makeShop(sign)
+                        Fshop().make(sign, player)
                         sign.block.type = Material.AIR
                     }
                     "[土地販売]" -> {
@@ -236,9 +236,9 @@ class Events(private val plugin: Plugin) : Listener {
         val itemName = item.itemMeta?.displayName ?: ""
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name.contains("@Fshop")) {
-            val fshop = Fshop(itemFrame)
+            val fshop = Fshop()
             player.sendMessage(itemFrame.uniqueId)
-            if (item.type == Material.AIR && fshop.isOwner(player)) {
+            if (item.type == Material.AIR && fshop.isOwner(player, entity)) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
             } else {
                 e.isCancelled = true
@@ -246,7 +246,7 @@ class Events(private val plugin: Plugin) : Listener {
                     aoringoPlayer.sendErrorMessage("売り物が設定されていません 土地のオーナー または メンバーのみ売り物を設定可能です")
                     return
                 }
-                player.openInventory(fshop.makeBuyGUI(item))
+                player.openInventory(fshop.makeBuyGUI(item, entity))
             }
         } else if (name == "まな板") {
             val choppingBoard = ChoppingBoard()
@@ -405,10 +405,10 @@ class Events(private val plugin: Plugin) : Listener {
                 val shopUUID = shopInfo.itemMeta?.lore?.get(shopUUIDinfoNumber) ?: return
                 val shop = Bukkit.getEntity(UUID.fromString(shopUUID))
                 if (shop !is ItemFrame) { return }
-                val fshop = Fshop(shop)
+                val fshop = Fshop()
                 if (itemName == "${ChatColor.GREEN}購入") {
                     val goodsSlot = 3
-                    fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return,)
+                    fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return, shop)
                 }
             }
             "${ChatColor.BLUE}スマートフォン" -> {

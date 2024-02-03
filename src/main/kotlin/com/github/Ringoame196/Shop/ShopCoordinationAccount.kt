@@ -1,9 +1,10 @@
 package com.github.Ringoame196.Shop
 
 import com.github.Ringoame196.Account
+import org.bukkit.entity.ItemFrame
 
-class ShopCoordinationAccount(private val fshop: Fshop) : Account {
+class ShopCoordinationAccount(private val shop: ItemFrame) : Account {
     override fun getAccountID(): String {
-        return fshop.getAccountID()
+        return Fshop().getAccountID(shop)
     }
 }
