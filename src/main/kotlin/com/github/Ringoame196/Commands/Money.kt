@@ -14,12 +14,6 @@ import org.bukkit.entity.Player
 class Money : CommandExecutor, TabCompleter {
     private val playerManager = PlayerManager()
     private val moneyManager = MoneyManager()
-    private val tabMap = mapOf(
-        "確認" to "show",
-        "送金" to "pay",
-        "追加" to "add",
-        "設定" to "set"
-    )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return false }
         val aoringoPlayer = AoringoPlayer(sender)
@@ -29,15 +23,19 @@ class Money : CommandExecutor, TabCompleter {
             return true
         }
         if (size == 1) { return false }
+        if (!aoringoPlayer.isOperator()) {
+            aoringoPlayer.sendNoOpMessage()
+            return true
+        }
         val menu = args[0]
         val targetPlayer = playerManager.acquisitionPlayer(args[1])
         val targetAccount = JointAccount(targetPlayer.uniqueId.toString())
-        if (menu == tabMap["確認"]) {
-            if (!aoringoPlayer.isOperator()) {
-                aoringoPlayer.sendNoOpMessage()
-                return true
-            }
+        val companyAccount = JointAccount(args[1])
+        if (menu == "show") {
             aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name ?: return false, targetAccount, sender)
+            return true
+        } else if (menu == "companyShow") {
+            aoringoPlayer.moneyUseCase.showTargetAccount(companyAccount, sender)
             return true
         }
         if (size == 2) { return false }
@@ -47,25 +45,21 @@ class Money : CommandExecutor, TabCompleter {
             return false
         }
         when (menu) {
-            tabMap["送金"] -> {
+            "pay" -> {
                 if (!aoringoPlayer.moneyUseCase.tradeMoney(aoringoPlayer, targetAccount, price)) { return true }
                 aoringoPlayer.player.sendMessage("${org.bukkit.ChatColor.GREEN}[お金] ${targetPlayer.name}さんに$price 円送金しました")
             }
-            tabMap["追加"] -> {
-                if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendNoOpMessage()
-                    return true
-                }
+            "add" -> {
                 moneyManager.addMoney(targetAccount, price)
                 aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金] ${targetPlayer.name}の所持金を${price}円追加しました")
             }
-            tabMap["設定"] -> {
-                if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendNoOpMessage()
-                    return true
-                }
+            "set" -> {
                 moneyManager.setMoney(targetAccount, price)
                 aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${targetPlayer.name}の所持金を${price}円に設定しました")
+            }
+            "companySet" -> {
+                moneyManager.setMoney(companyAccount, price)
+                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${companyAccount.getAccountID()}の所持金を${price}円に設定しました")
             }
         }
         return true
@@ -73,7 +67,7 @@ class Money : CommandExecutor, TabCompleter {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
         return when (args.size) {
-            1 -> mutableListOf(tabMap["確認"] ?: "", tabMap["送金"] ?: "", tabMap["追加"] ?: "", tabMap["設定"] ?: "")
+            1 -> mutableListOf("show", "pay", "add", "set", "companyShow", "companySet")
             2 -> playerManager.acquisitionPlayerNameList()
             3 -> mutableListOf("[値段(数字)]")
             else -> mutableListOf("")
