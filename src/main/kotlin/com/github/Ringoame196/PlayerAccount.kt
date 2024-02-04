@@ -6,4 +6,8 @@ class PlayerAccount(val player: OfflinePlayer) : Account {
     override fun getAccountID(): String {
         return player.uniqueId.toString()
     }
+
+    override fun getRegisteredPerson(): String {
+        return player.name ?: "オフラインのプレイヤー"
+    }
 }

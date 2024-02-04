@@ -7,4 +7,8 @@ class ShopCoordinationAccount(private val shop: ItemFrame) : Account {
     override fun getAccountID(): String {
         return Fshop().getAccountID(shop)
     }
+
+    override fun getRegisteredPerson(): String {
+        return Fshop().getAccountID(shop)
+    }
 }

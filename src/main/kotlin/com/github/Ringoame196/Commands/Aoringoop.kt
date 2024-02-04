@@ -15,7 +15,6 @@ import org.bukkit.plugin.Plugin
 
 class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
     private var player: Player? = null
-    private var subCommands: Array<out String>? = null
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
         "tpTestWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },

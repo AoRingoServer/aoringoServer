@@ -23,19 +23,24 @@ class Money : CommandExecutor, TabCompleter {
             return true
         }
         if (size == 1) { return false }
-        if (!aoringoPlayer.isOperator()) {
-            aoringoPlayer.sendNoOpMessage()
-            return true
-        }
         val menu = args[0]
         val targetPlayer = playerManager.acquisitionPlayer(args[1])
         val targetAccount = JointAccount(targetPlayer.uniqueId.toString())
         val companyAccount = JointAccount(args[1])
         if (menu == "show") {
+            if (!aoringoPlayer.isOperator()) {
+                aoringoPlayer.sendNoOpMessage()
+                return true
+            }
             aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name ?: return false, targetAccount, sender)
             return true
-        } else if (menu == "companyShow") {
-            aoringoPlayer.moneyUseCase.showTargetAccount(companyAccount, sender)
+        }
+        if (menu == "companyShow") {
+            if (!aoringoPlayer.isOperator()) {
+                aoringoPlayer.sendNoOpMessage()
+                return true
+            }
+            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(companyAccount.getAccountID(), companyAccount, sender)
             return true
         }
         if (size == 2) { return false }
@@ -50,16 +55,28 @@ class Money : CommandExecutor, TabCompleter {
                 aoringoPlayer.player.sendMessage("${org.bukkit.ChatColor.GREEN}[お金] ${targetPlayer.name}さんに$price 円送金しました")
             }
             "add" -> {
+                if (!aoringoPlayer.isOperator()) {
+                    aoringoPlayer.sendNoOpMessage()
+                    return true
+                }
                 moneyManager.addMoney(targetAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金] ${targetPlayer.name}の所持金を${price}円追加しました")
+                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金] ${targetAccount.getRegisteredPerson()}の所持金を${price}円追加しました")
             }
             "set" -> {
+                if (!aoringoPlayer.isOperator()) {
+                    aoringoPlayer.sendNoOpMessage()
+                    return true
+                }
                 moneyManager.setMoney(targetAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${targetPlayer.name}の所持金を${price}円に設定しました")
+                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${targetAccount.getRegisteredPerson()}の所持金を${price}円に設定しました")
             }
             "companySet" -> {
+                if (!aoringoPlayer.isOperator()) {
+                    aoringoPlayer.sendNoOpMessage()
+                    return true
+                }
                 moneyManager.setMoney(companyAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${companyAccount.getAccountID()}の所持金を${price}円に設定しました")
+                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${companyAccount.getRegisteredPerson()}の所持金を${price}円に設定しました")
             }
         }
         return true
