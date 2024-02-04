@@ -81,7 +81,7 @@ class CookManager() {
                 else -> 0
             }
             val remainingLevel = nextLevel - Scoreboard().getValue("cookCount", player.uniqueId.toString())
-            com.github.Ringoame196.Entity.AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${remainingLevel}料理")
+            AoringoPlayer(player).sendActionBar("${ChatColor.AQUA}レベルマップまで残り${remainingLevel}料理")
         }
     }
 }
