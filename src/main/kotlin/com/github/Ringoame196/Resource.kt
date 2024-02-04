@@ -22,7 +22,7 @@ class Resource(val plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.GREEN}資源テレポート")
         val guiSize = worldNames.size
         val amount: Int = 9 / guiSize
-        var inventoryNumber = - 1
+        var inventoryNumber = - 2
         for (worldName in worldNames) {
             inventoryNumber += amount
             val item = ItemManager().make(Material.CRAFTING_TABLE, worldName)

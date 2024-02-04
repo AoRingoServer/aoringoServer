@@ -1,5 +1,7 @@
 package com.github.Ringoame196
 
+import com.github.Ringoame196.Entity.AoringoPlayer
+
 class MoneyManager {
     fun getMoney(targetAccount: Account): Int {
         val accountID = targetAccount.getAccountID()
@@ -18,9 +20,14 @@ class MoneyManager {
     fun setMoney(targetAccount: Account, money: Int) {
         val accountID = targetAccount.getAccountID()
         Scoreboard().set("money", accountID, money)
+        if (targetAccount is PlayerAccount) {
+            updateDisplay(targetAccount)
+        }
     }
-    fun isTargetPlayer(targetAccount: Account): Boolean {
-        return targetAccount is PlayerAccount
+    private fun updateDisplay(account: PlayerAccount) {
+        val player = account.getPlayer() ?: return
+        val aoringoPlayer = AoringoPlayer(player)
+        aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
     }
 
     fun addMoney(targetAccount: Account, amount: Int) {

@@ -6,7 +6,6 @@ import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.MoneyManager
-import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphones.Applications.Application
 import com.github.Ringoame196.Smartphones.Applications.ConversionMoneyApplication
@@ -111,7 +110,6 @@ class Smartphone {
             if ((item.itemMeta?.customModelData ?: return) > 4) { return }
             val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
             moneyItem(player, money, item)
-            MoneyUseCase().reduceMoney(AoringoPlayer(player), money)
         }
     }
     private fun getWorldSpawnLocation(worldName: String): Location? {
@@ -177,7 +175,7 @@ class Smartphone {
         val playerAccount = aoringoPlayer.playerAccount
         val playerMoney = aoringoPlayer.moneyUseCase.getMoney(playerAccount)
         if (playerMoney < money) {
-            com.github.Ringoame196.Entity.AoringoPlayer(player).sendErrorMessage("お金が足りません")
+            AoringoPlayer(player).sendErrorMessage("お金が足りません")
         } else {
             val giveItem = item.clone()
             giveItem.amount = 1

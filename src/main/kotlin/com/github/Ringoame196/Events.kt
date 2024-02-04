@@ -202,13 +202,7 @@ class Events(private val plugin: Plugin) : Listener {
             if (!meta.hasCustomModelData()) { return }
             val moneyAssigningMaximumValue = 4
             if (meta.customModelData <= moneyAssigningMaximumValue) {
-                val money = itemName.replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
-                if (money == 0) {
-                    return
-                }
-                val totalAmount = item.amount * money
-                moneyUseCase.addMoney(aoringoPlayer, totalAmount)
-                player.inventory.remove(item)
+                aoringoPlayer.moneyUseCase.paymentItem(player)
             }
         } else if (itemName.contains("${ChatColor.RED}契約本")) {
             if (player.isSneaking) {
