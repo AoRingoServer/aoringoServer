@@ -7,7 +7,7 @@ import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
-import com.github.Ringoame196.PlayerAccount
+import com.github.Ringoame196.Accounts.PlayerAccount
 import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard

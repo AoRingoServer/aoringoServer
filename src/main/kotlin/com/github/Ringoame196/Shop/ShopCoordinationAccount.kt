@@ -1,6 +1,6 @@
 package com.github.Ringoame196.Shop
 
-import com.github.Ringoame196.Account
+import com.github.Ringoame196.Accounts.Account
 import org.bukkit.entity.ItemFrame
 
 class ShopCoordinationAccount(private val shop: ItemFrame) : Account {

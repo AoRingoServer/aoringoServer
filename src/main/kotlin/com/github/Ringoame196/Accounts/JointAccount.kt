@@ -1,4 +1,4 @@
-package com.github.Ringoame196
+package com.github.Ringoame196.Accounts
 
 class JointAccount(private val accountID: String) : Account {
     override fun getAccountID(): String {

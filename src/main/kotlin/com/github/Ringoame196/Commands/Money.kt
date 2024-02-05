@@ -1,7 +1,8 @@
 package com.github.Ringoame196.Commands
 
+import com.github.Ringoame196.Accounts.Account
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.JointAccount
+import com.github.Ringoame196.Accounts.JointAccount
 import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.PlayerManager
 import net.md_5.bungee.api.ChatColor
@@ -28,19 +29,11 @@ class Money : CommandExecutor, TabCompleter {
         val targetAccount = JointAccount(targetPlayer.uniqueId.toString())
         val companyAccount = JointAccount(args[1])
         if (menu == "show") {
-            if (!aoringoPlayer.isOperator()) {
-                aoringoPlayer.sendNoOpMessage()
-                return true
-            }
-            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(targetPlayer.name ?: return false, targetAccount, sender)
+            showing(aoringoPlayer,targetAccount)
             return true
         }
         if (menu == "companyShow") {
-            if (!aoringoPlayer.isOperator()) {
-                aoringoPlayer.sendNoOpMessage()
-                return true
-            }
-            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(companyAccount.getAccountID(), companyAccount, sender)
+            showing(aoringoPlayer,companyAccount)
             return true
         }
         if (size == 2) { return false }
@@ -50,34 +43,10 @@ class Money : CommandExecutor, TabCompleter {
             return false
         }
         when (menu) {
-            "pay" -> {
-                if (!aoringoPlayer.moneyUseCase.tradeMoney(aoringoPlayer, targetAccount, price)) { return true }
-                aoringoPlayer.player.sendMessage("${org.bukkit.ChatColor.GREEN}[お金] ${targetPlayer.name}さんに$price 円送金しました")
-            }
-            "add" -> {
-                if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendNoOpMessage()
-                    return true
-                }
-                moneyManager.addMoney(targetAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金] ${targetAccount.getRegisteredPerson()}の所持金を${price}円追加しました")
-            }
-            "set" -> {
-                if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendNoOpMessage()
-                    return true
-                }
-                moneyManager.setMoney(targetAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${targetAccount.getRegisteredPerson()}の所持金を${price}円に設定しました")
-            }
-            "companySet" -> {
-                if (!aoringoPlayer.isOperator()) {
-                    aoringoPlayer.sendNoOpMessage()
-                    return true
-                }
-                moneyManager.setMoney(companyAccount, price)
-                aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${companyAccount.getRegisteredPerson()}の所持金を${price}円に設定しました")
-            }
+            "pay" -> remittance(aoringoPlayer, targetAccount, price)
+            "add" -> add(aoringoPlayer, targetAccount, price)
+            "set" -> set(aoringoPlayer, targetAccount, price)
+            "companySet" -> set(aoringoPlayer, companyAccount, price)
         }
         return true
     }
@@ -89,5 +58,31 @@ class Money : CommandExecutor, TabCompleter {
             3 -> mutableListOf("[値段(数字)]")
             else -> mutableListOf("")
         }
+    }
+    private fun showing(aoringoPlayer: AoringoPlayer, account: Account){
+        if (!authorityMissingMessage(aoringoPlayer)) { return }
+        val possessionMoney = moneyManager.getMoney(account)
+        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}${account.getRegisteredPerson()}の所持金は$possessionMoney")
+    }
+    private fun remittance(aoringoPlayer: AoringoPlayer,targetAccount:Account,price:Int){
+        if (!aoringoPlayer.moneyUseCase.tradeMoney(aoringoPlayer, targetAccount, price)) { return}
+        aoringoPlayer.player.sendMessage("${org.bukkit.ChatColor.GREEN}[お金] ${targetAccount.getRegisteredPerson()}に$price 円送金しました")
+    }
+    private fun add(aoringoPlayer: AoringoPlayer,targetAccount: Account,price: Int){
+        if (!authorityMissingMessage(aoringoPlayer)) { return }
+        moneyManager.addMoney(targetAccount, price)
+        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金] ${targetAccount.getRegisteredPerson()}の所持金を${price}円追加しました")
+    }
+    private fun set(aoringoPlayer: AoringoPlayer,targetAccount: Account,price: Int){
+        if (!authorityMissingMessage(aoringoPlayer)) { return }
+        moneyManager.setMoney(targetAccount, price)
+        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}[お金]  ${targetAccount.getRegisteredPerson()}の所持金を${price}円に設定しました")
+    }
+    private fun authorityMissingMessage(aoringoPlayer: AoringoPlayer):Boolean{
+        if (!aoringoPlayer.isOperator()) {
+            aoringoPlayer.sendNoOpMessage()
+            return false
+        }
+        return true
     }
 }
