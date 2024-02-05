@@ -87,8 +87,8 @@ class Money : CommandExecutor, TabCompleter {
         }
         return true
     }
-    private fun mePossessionGoldDisplay(aoringoPlayer: AoringoPlayer){
+    private fun mePossessionGoldDisplay(aoringoPlayer: AoringoPlayer) {
         val account = aoringoPlayer.playerAccount
-        aoringoPlayer.player.sendMessage("あなたの所持金は${aoringoPlayer.moneyUseCase.getMoney(account)}")
+        aoringoPlayer.player.sendMessage("${ChatColor.GOLD}あなたの所持金は${aoringoPlayer.moneyUseCase.getMoney(account)}円です")
     }
 }
