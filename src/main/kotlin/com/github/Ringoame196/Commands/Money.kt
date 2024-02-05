@@ -20,7 +20,7 @@ class Money : CommandExecutor, TabCompleter {
         val aoringoPlayer = AoringoPlayer(sender)
         val size = args.size
         if (args.isEmpty()) {
-            aoringoPlayer.moneyUseCase.showTargetPlayerAccount(sender.name, aoringoPlayer.playerAccount, sender)
+            mePossessionGoldDisplay(aoringoPlayer)
             return true
         }
         if (size == 1) { return false }
@@ -64,7 +64,7 @@ class Money : CommandExecutor, TabCompleter {
     private fun showing(aoringoPlayer: AoringoPlayer, account: Account) {
         if (!authorityMissingMessage(aoringoPlayer)) { return }
         val possessionMoney = moneyManager.getMoney(account)
-        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}${account.getRegisteredPerson()}の所持金は$possessionMoney")
+        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}${account.getRegisteredPerson()}の所持金は${possessionMoney}円です")
     }
     private fun remittance(aoringoPlayer: AoringoPlayer, targetAccount: Account, price: Int) {
         if (!aoringoPlayer.moneyUseCase.tradeMoney(aoringoPlayer, targetAccount, price)) { return }
@@ -86,5 +86,9 @@ class Money : CommandExecutor, TabCompleter {
             return false
         }
         return true
+    }
+    private fun mePossessionGoldDisplay(aoringoPlayer: AoringoPlayer){
+        val account = aoringoPlayer.playerAccount
+        aoringoPlayer.player.sendMessage("あなたの所持金は${aoringoPlayer.moneyUseCase.getMoney(account)}")
     }
 }
