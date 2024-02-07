@@ -13,6 +13,7 @@ import org.bukkit.block.Sign
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -33,9 +34,9 @@ class Fshop : CommandExecutor {
     fun getAccountID(shop: ItemFrame): String {
         return acquisitionAccountName(shop)
     }
-    fun isOwner(player: Player, shop: ItemFrame): Boolean {
-        val location = shop.location
-        return worldguard.getOwnerOfRegion(location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(location)?.contains(player.uniqueId) == true
+    fun isOwner(player: Player, entity: Entity?): Boolean {
+        entity ?: return false
+        return worldguard.getOwnerOfRegion(entity.location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(entity.location)?.contains(player.uniqueId) == true
     }
     private fun acquisitionAccountName(shop: ItemFrame): String {
         val shopInfo = shopInfo(shop)

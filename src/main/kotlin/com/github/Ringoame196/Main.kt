@@ -4,7 +4,7 @@ import com.github.Ringoame196.Commands.Aoringoop
 import com.github.Ringoame196.Commands.Money
 import com.github.Ringoame196.Commands.Write
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.Shop.Fshop
+import com.github.Ringoame196.Shop.FshopManager
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 
@@ -17,7 +17,7 @@ class Main : JavaPlugin() {
         getCommand("money")!!.setExecutor(Money())
         getCommand("aoringoop")!!.setExecutor(Aoringoop(this))
         getCommand("write")!!.setExecutor(Write())
-        getCommand("fshop")!!.setExecutor(Fshop())
+        getCommand("fshop")!!.setExecutor(FshopManager())
 
         yml.makePluginFolder(this)
         yml.makePlayerDataFolder(this)
