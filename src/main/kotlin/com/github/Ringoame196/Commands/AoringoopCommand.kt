@@ -13,7 +13,7 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
-class Aoringoop(plugin: Plugin) : CommandExecutor, TabExecutor {
+class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
     private var player: Player? = null
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },

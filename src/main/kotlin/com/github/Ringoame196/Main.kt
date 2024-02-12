@@ -1,8 +1,8 @@
 package com.github.Ringoame196
 
-import com.github.Ringoame196.Commands.Aoringoop
-import com.github.Ringoame196.Commands.Money
-import com.github.Ringoame196.Commands.Write
+import com.github.Ringoame196.Commands.AoringoopCommand
+import com.github.Ringoame196.Commands.MoneyCommand
+import com.github.Ringoame196.Commands.WriteCommand
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Shop.FshopManager
 import org.bukkit.Bukkit
@@ -14,9 +14,9 @@ class Main : JavaPlugin() {
         val scoreboard = Scoreboard()
         val event = Events(this)
         server.pluginManager.registerEvents(event, this)
-        getCommand("money")!!.setExecutor(Money())
-        getCommand("aoringoop")!!.setExecutor(Aoringoop(this))
-        getCommand("write")!!.setExecutor(Write())
+        getCommand("money")!!.setExecutor(MoneyCommand())
+        getCommand("aoringoop")!!.setExecutor(AoringoopCommand(this))
+        getCommand("write")!!.setExecutor(WriteCommand())
         getCommand("fshop")!!.setExecutor(FshopManager())
 
         yml.makePluginFolder(this)

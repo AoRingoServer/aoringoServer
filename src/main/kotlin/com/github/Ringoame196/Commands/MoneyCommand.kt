@@ -13,7 +13,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabCompleter
 import org.bukkit.entity.Player
 
-class Money : CommandExecutor, TabCompleter {
+class MoneyCommand : CommandExecutor, TabCompleter {
     private val playerManager = PlayerManager()
     private val moneyManager = MoneyManager()
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {

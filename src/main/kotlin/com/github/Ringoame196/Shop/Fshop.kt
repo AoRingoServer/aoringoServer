@@ -19,7 +19,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
-class Fshop : CommandExecutor {
+class Fshop {
     private val moneyUseCase = MoneyUseCase()
     private val worldguard = WorldGuard()
     private fun shopInfo(shop: ItemFrame): String {
@@ -103,9 +103,5 @@ class Fshop : CommandExecutor {
             item.amount = item.amount - 1
             return
         }
-    }
-
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        TODO("Not yet implemented")
     }
 }

@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
 
-class Write : CommandExecutor, TabExecutor {
+class WriteCommand : CommandExecutor, TabExecutor {
     private val processingPerItem = mapOf<String, ImportantDocument> (
         "${ChatColor.YELLOW}契約書[未記入]" to ContractBook(),
         "${ChatColor.YELLOW}契約書[契約待ち]" to WaitingListBook(),
