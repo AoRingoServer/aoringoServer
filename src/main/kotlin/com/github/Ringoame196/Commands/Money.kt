@@ -2,6 +2,7 @@ package com.github.Ringoame196.Commands
 
 import com.github.Ringoame196.Accounts.Account
 import com.github.Ringoame196.Accounts.JointAccount
+import com.github.Ringoame196.Accounts.PlayerAccount
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.MoneyManager
 import com.github.Ringoame196.PlayerManager
@@ -26,7 +27,7 @@ class Money : CommandExecutor, TabCompleter {
         if (size == 1) { return false }
         val menu = args[0]
         val targetPlayer = playerManager.acquisitionPlayer(args[1])
-        val targetAccount = JointAccount(targetPlayer.uniqueId.toString())
+        val targetAccount = PlayerAccount(targetPlayer)
         val companyAccount = JointAccount(args[1])
         val showMap = mapOf(
             "show" to { showing(aoringoPlayer, targetAccount) },
