@@ -10,9 +10,6 @@ import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
 import org.bukkit.block.Sign
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
 import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player

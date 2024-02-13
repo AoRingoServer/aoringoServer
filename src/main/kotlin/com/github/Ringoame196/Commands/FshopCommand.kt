@@ -9,13 +9,13 @@ import org.bukkit.command.TabExecutor
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
 
-class FshopCommand:CommandExecutor,TabExecutor {
+class FshopCommand : CommandExecutor, TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return true }
         val fshop = Fshop()
         val aoringoPlayer = AoringoPlayer(sender)
         val shop = aoringoPlayer.getEntityInSight(15)
-        if (shop?.type != EntityType.ITEM_FRAME || shop.customName?.contains("@Fshop") == false) {
+        if (shop?.type != EntityType.ITEM_FRAME || !shop.name.contains("@Fshop")) {
             aoringoPlayer.sendErrorMessage("ショップの樽に目線を合わせ、近づいてください")
             return true
         }
@@ -27,9 +27,9 @@ class FshopCommand:CommandExecutor,TabExecutor {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
-        return when(args.size){
-            0 -> mutableListOf("set")
-
+        return when (args.size) {
+            1 -> mutableListOf("set")
+            2 -> mutableListOf("lore", "price")
             else -> mutableListOf()
         }
     }

@@ -68,8 +68,10 @@ import org.bukkit.event.player.PlayerItemConsumeEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerPortalEvent
 import org.bukkit.event.player.PlayerRespawnEvent
+import org.bukkit.event.player.PlayerTakeLecternBookEvent
 import org.bukkit.event.player.PlayerToggleSneakEvent
 import org.bukkit.inventory.ItemStack
+import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 import org.bukkit.util.Vector
 import java.util.UUID
@@ -812,5 +814,16 @@ class Events(private val plugin: Plugin) : Listener {
         if (command.contains("rg")) {
             e.isCancelled = true
         }
+    }
+    @EventHandler
+    fun onPlayerTakeLecternBook(e: PlayerTakeLecternBookEvent) {
+        val player = e.player
+        val book = e.book ?: return
+        val meta = book.itemMeta as BookMeta
+        if (meta.author != Admin().writeBookAuthor) { return }
+        if (player.isOp && player.gameMode == GameMode.CREATIVE) { return }
+        e.isCancelled = true
+        player.closeInventory()
+        player.inventory.addItem(book)
     }
 }

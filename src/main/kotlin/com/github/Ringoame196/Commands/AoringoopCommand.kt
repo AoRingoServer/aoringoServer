@@ -1,16 +1,19 @@
 package com.github.Ringoame196.Commands
 
+import com.github.Ringoame196.Admin
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.FshopManager
 import com.github.Ringoame196.Worlds.HardcoreWorld
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
+import org.bukkit.Material
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.Player
+import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 
 class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
@@ -29,7 +32,8 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
             Yml().callData(plugin)
             player?.sendMessage("${ChatColor.YELLOW}[青リンゴサーバー] ymlファイルを再読込しました")
         },
-        "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) }
+        "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) },
+        "bookAuthorChange" to { bookAuthorChange(player) }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
@@ -39,5 +43,15 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
         return subCommand.keys.toMutableList()
+    }
+    private fun bookAuthorChange(player: Player?) {
+        val book = player?.inventory?.itemInMainHand ?: return
+        if (book.type != Material.WRITTEN_BOOK && book.type != Material.WRITABLE_BOOK) {
+            return
+        }
+        val meta = book.itemMeta as BookMeta
+        meta.author = Admin().writeBookAuthor
+        book.setItemMeta(meta)
+        player.sendMessage("${ChatColor.GREEN}著者を運営に変更しました")
     }
 }

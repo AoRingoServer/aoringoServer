@@ -1,17 +1,10 @@
 package com.github.Ringoame196.Shop
 
-import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
-import org.bukkit.command.Command
-import org.bukkit.command.CommandExecutor
-import org.bukkit.command.CommandSender
-import org.bukkit.command.TabExecutor
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
 class FshopManager {
