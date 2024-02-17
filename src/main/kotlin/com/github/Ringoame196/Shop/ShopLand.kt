@@ -7,7 +7,7 @@ import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.plugin.Plugin
 
-class FshopManager {
+class ShopLand {
     fun resetShopLand(plugin: Plugin) {
         val list = Yml().getList(plugin, "conservationLand", "", "protectedName") ?: return
         for (name in list) {

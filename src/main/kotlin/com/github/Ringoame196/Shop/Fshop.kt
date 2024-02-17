@@ -7,6 +7,7 @@ import com.github.Ringoame196.MoneyUseCase
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
+import org.bukkit.NamespacedKey
 import org.bukkit.Sound
 import org.bukkit.block.Barrel
 import org.bukkit.block.Sign
@@ -15,47 +16,54 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import org.bukkit.persistence.PersistentDataContainer
+import org.bukkit.persistence.PersistentDataType
+import org.bukkit.plugin.Plugin
 
-class Fshop {
+class Fshop(val plugin: Plugin) {
     private val moneyUseCase = MoneyUseCase()
     private val worldguard = WorldGuard()
-    private fun shopInfo(shop: ItemFrame): String {
-        return shop.customName ?: throw RuntimeException("ショップ情報を取得できませんでした")
-    }
+    private val priceKey = NamespacedKey(plugin, "price")
+    private val accountKey = NamespacedKey(plugin, "account")
+    private val loreKey = NamespacedKey(plugin, "lore")
     fun make(sign: Sign, player: Player) {
+        val aoringoPlayer = AoringoPlayer(player)
         val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
         if (downBlock.type != Material.BARREL) { return }
         val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
-        itemFrame.customName = "@Fshop,userID:${player.uniqueId},price:${sign.getLine(1)}"
+        itemFrame.customName = "@Fshop"
+        val price = sign.getLine(1)
+        additionalNbt(itemFrame, priceKey, price)
+        additionalNbt(itemFrame, accountKey, aoringoPlayer.playerAccount.getAccountID())
     }
-    fun getAccountID(shop: ItemFrame): String {
-        return acquisitionAccountName(shop)
+    fun acquisitionPrice(shop: ItemFrame): Int? {
+        val price = acquisitionNbt(shop, priceKey)
+        return try {
+            price?.toInt()
+        } catch (e: NumberFormatException) {
+            null
+        }
+    }
+    fun acquisitionAccount(shop: ItemFrame): String? {
+        return acquisitionNbt(shop, accountKey)
+    }
+    fun acquisitionLore(shop: ItemFrame): String {
+        return acquisitionNbt(shop, loreKey) ?: "未設定"
+    }
+    private fun additionalNbt(shop: ItemFrame, key: NamespacedKey, value: String) {
+        val persistentDataContainer = persistentDataContainer(shop)
+        persistentDataContainer.set(key, PersistentDataType.STRING, value)
+    }
+    private fun acquisitionNbt(shop: ItemFrame, key: NamespacedKey): String? {
+        val persistentDataContainer = persistentDataContainer(shop)
+        return persistentDataContainer.get(key, PersistentDataType.STRING)
+    }
+    private fun persistentDataContainer(shop: ItemFrame): PersistentDataContainer {
+        return shop.persistentDataContainer
     }
     fun isOwner(player: Player, entity: Entity?): Boolean {
         entity ?: return false
         return worldguard.getOwnerOfRegion(entity.location)?.contains(player.uniqueId) == true || WorldGuard().getMemberOfRegion(entity.location)?.contains(player.uniqueId) == true
-    }
-    private fun acquisitionAccountName(shop: ItemFrame): String {
-        val shopInfo = shopInfo(shop)
-        val userIDStartIndex = shopInfo.indexOf("userID:") + 7
-        val userIDEndIndex = shopInfo.indexOf(",", userIDStartIndex)
-
-        if (userIDStartIndex < 0 || userIDEndIndex < 0) {
-            throw RuntimeException("口座IDの取得に失敗しました")
-        }
-
-        return shopInfo.substring(userIDStartIndex, userIDEndIndex)
-    }
-    private fun acquisitionPrice(shop: ItemFrame): Int {
-        val shopInfo = shopInfo(shop)
-        val index = shopInfo.indexOf("price:")
-
-        if (index < 0) {
-            throw RuntimeException("価格の取得に失敗しました")
-        }
-
-        val priceSubstring = shopInfo.substring(index + 6)
-        return priceSubstring.toIntOrNull() ?: throw RuntimeException("価格の変換に失敗しました")
     }
     fun makeBuyGUI(goods: ItemStack, shop: ItemFrame): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
@@ -68,7 +76,7 @@ class Fshop {
     }
     fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack, shop: ItemFrame) {
         val sender = aoringoPlayer.player
-        val price = acquisitionPrice(shop)
+        val price = acquisitionPrice(shop) ?: return
         if (shop.item != item) {
             aoringoPlayer.sendErrorMessage("売り物が更新されました")
             return
@@ -78,7 +86,7 @@ class Fshop {
             return
         }
         sender.inventory.addItem(item)
-        val account = ShopCoordinationAccount(shop)
+        val account = ShopCoordinationAccount(shop, plugin)
         moneyUseCase.tradeMoney(aoringoPlayer, account, price)
         sender.sendMessage("${ChatColor.GREEN}購入しました")
         sender.playSound(sender, Sound.BLOCK_ANVIL_USE, 1f, 1f)

@@ -8,11 +8,12 @@ import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
 import org.bukkit.entity.EntityType
 import org.bukkit.entity.Player
+import org.bukkit.plugin.Plugin
 
-class FshopCommand : CommandExecutor, TabExecutor {
+class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return true }
-        val fshop = Fshop()
+        val fshop = Fshop(plugin)
         val aoringoPlayer = AoringoPlayer(sender)
         val shop = aoringoPlayer.getEntityInSight(15)
         if (shop?.type != EntityType.ITEM_FRAME || !shop.name.contains("@Fshop")) {

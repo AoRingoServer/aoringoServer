@@ -123,7 +123,7 @@ class Events(private val plugin: Plugin) : Listener {
                     "Fshop" -> {
                         e.isCancelled = true
                         e.isCancelled = true
-                        Fshop().make(sign, player)
+                        Fshop(plugin).make(sign, player)
                         sign.block.type = Material.AIR
                     }
                     "[土地販売]" -> {
@@ -231,8 +231,8 @@ class Events(private val plugin: Plugin) : Listener {
         val item = entity.item
         val itemName = item.itemMeta?.displayName ?: ""
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
-        if (name.contains("@Fshop")) {
-            val fshop = Fshop()
+        if (name == "@Fshop") {
+            val fshop = Fshop(plugin)
             player.sendMessage(itemFrame.uniqueId)
             if (item.type == Material.AIR && fshop.isOwner(player, entity)) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
@@ -243,6 +243,8 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 player.openInventory(fshop.makeBuyGUI(item, entity))
+                val lore = fshop.acquisitionLore(itemFrame)
+                player.sendMessage("${ChatColor.GREEN}[商品説明] $lore")
             }
         } else if (name == "まな板") {
             val choppingBoard = ChoppingBoard()
@@ -401,7 +403,7 @@ class Events(private val plugin: Plugin) : Listener {
                 val shopUUID = shopInfo.itemMeta?.lore?.get(shopUUIDinfoNumber) ?: return
                 val shop = Bukkit.getEntity(UUID.fromString(shopUUID))
                 if (shop !is ItemFrame) { return }
-                val fshop = Fshop()
+                val fshop = Fshop(plugin)
                 if (itemName == "${ChatColor.GREEN}購入") {
                     val goodsSlot = 3
                     fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return, shop)

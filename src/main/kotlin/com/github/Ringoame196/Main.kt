@@ -17,7 +17,7 @@ class Main : JavaPlugin() {
         getCommand("money")!!.setExecutor(MoneyCommand())
         getCommand("aoringoop")!!.setExecutor(AoringoopCommand(this))
         getCommand("write")!!.setExecutor(WriteCommand())
-        getCommand("fshop")!!.setExecutor(FshopCommand())
+        getCommand("fshop")!!.setExecutor(FshopCommand(this))
 
         yml.makePluginFolder(this)
         yml.makePlayerDataFolder(this)

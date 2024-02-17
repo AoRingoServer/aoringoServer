@@ -2,7 +2,7 @@ package com.github.Ringoame196.Commands
 
 import com.github.Ringoame196.Admin
 import com.github.Ringoame196.ResourcePack
-import com.github.Ringoame196.Shop.FshopManager
+import com.github.Ringoame196.Shop.ShopLand
 import com.github.Ringoame196.Worlds.HardcoreWorld
 import com.github.Ringoame196.Yml
 import org.bukkit.Bukkit
@@ -21,7 +21,7 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
         "tpTestWorld" to { player?.teleport(Bukkit.getWorld("testworld")?.spawnLocation ?: player?.location!!) },
-        "resetShopLand" to { FshopManager().resetShopLand(plugin) },
+        "resetShopLand" to { ShopLand().resetShopLand(plugin) },
         "fullRecovery" to {
             player?.health = 20.0
             player?.foodLevel = 20
