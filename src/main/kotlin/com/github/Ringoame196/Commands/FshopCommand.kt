@@ -25,19 +25,23 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
         }
         shop as ItemFrame
         val subCommand = args[1]
-        val entry = args[2]
         val processingMap = mapOf(
             "lore" to {
+                var lore = ""
+                for (i in 2 until args.size) {
+                    lore += args[i] + " "
+                }
                 val key = fshop.loreKey
-                fshop.additionalNbt(shop, key, entry)
+                fshop.additionalNbt(shop, key, lore)
                 aoringoPlayer.player.sendMessage("${ChatColor.YELLOW}[ショップ] 説明を設定しました")
             },
             "price" to {
                 val key = fshop.priceKey
-                if (!fshop.checkInt(entry)) {
+                val price = args[2]
+                if (!fshop.checkInt(price)) {
                     aoringoPlayer.sendErrorMessage("数字を入力してください")
                 } else {
-                    fshop.additionalNbt(shop, key, entry)
+                    fshop.additionalNbt(shop, key, price)
                     aoringoPlayer.player.sendMessage("${ChatColor.YELLOW}[ショップ] 値段を変更しました")
                 }
             }
