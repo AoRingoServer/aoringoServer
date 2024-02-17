@@ -83,7 +83,7 @@ class Fshop(val plugin: Plugin) {
         val itemManager = ItemManager()
         val lore = acquisitionLore(shop)
         gui.setItem(0, itemManager.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
-        gui.setItem(1, loreItem(lore))
+        gui.setItem(2, loreItem(lore))
         gui.setItem(3, goods)
         gui.setItem(4, itemManager.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
         return gui
