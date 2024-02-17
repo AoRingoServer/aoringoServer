@@ -50,7 +50,7 @@ class MoneyUseCase {
     private fun bossbarTitle(targetAccount: PlayerAccount): String {
         return "${ChatColor.GOLD}所持金${formalCurrency(moneyManager.getMoney(targetAccount))}円"
     }
-    private fun formalCurrency(money: Int): String {
+    fun formalCurrency(money: Int): String {
         return money.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")
     }
     fun getMoney(account: Account): Int {

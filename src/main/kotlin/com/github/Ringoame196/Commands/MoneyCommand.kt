@@ -5,6 +5,7 @@ import com.github.Ringoame196.Accounts.JointAccount
 import com.github.Ringoame196.Accounts.PlayerAccount
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.MoneyManager
+import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.PlayerManager
 import net.md_5.bungee.api.ChatColor
 import org.bukkit.command.Command
@@ -16,12 +17,14 @@ import org.bukkit.entity.Player
 class MoneyCommand : CommandExecutor, TabCompleter {
     private val playerManager = PlayerManager()
     private val moneyManager = MoneyManager()
+    private val moneyUseCase = MoneyUseCase()
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (sender !is Player) { return false }
         val aoringoPlayer = AoringoPlayer(sender)
         val size = args.size
         if (args.isEmpty()) {
             mePossessionGoldDisplay(aoringoPlayer)
+            moneyUseCase.displayMoney(aoringoPlayer)
             return true
         }
         if (size == 1) { return false }
@@ -65,7 +68,8 @@ class MoneyCommand : CommandExecutor, TabCompleter {
     private fun showing(aoringoPlayer: AoringoPlayer, account: Account) {
         if (!authorityMissingMessage(aoringoPlayer)) { return }
         val possessionMoney = moneyManager.getMoney(account)
-        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}${account.getRegisteredPerson()}の所持金は${possessionMoney}円です")
+        val possessionGoldDisplay = moneyUseCase.formalCurrency(possessionMoney)
+        aoringoPlayer.player.sendMessage("${ChatColor.GREEN}${account.getRegisteredPerson()}の所持金は${possessionGoldDisplay}円です")
     }
     private fun remittance(aoringoPlayer: AoringoPlayer, targetAccount: Account, price: Int) {
         if (!aoringoPlayer.moneyUseCase.tradeMoney(aoringoPlayer, targetAccount, price)) { return }
@@ -90,6 +94,8 @@ class MoneyCommand : CommandExecutor, TabCompleter {
     }
     private fun mePossessionGoldDisplay(aoringoPlayer: AoringoPlayer) {
         val account = aoringoPlayer.playerAccount
-        aoringoPlayer.player.sendMessage("${ChatColor.GOLD}あなたの所持金は${aoringoPlayer.moneyUseCase.getMoney(account)}円です")
+        val possessionMoney = moneyUseCase.getMoney(account)
+        val possessionGoldDisplay = moneyUseCase.formalCurrency(possessionMoney)
+        aoringoPlayer.player.sendMessage("${ChatColor.GOLD}あなたの所持金は${possessionGoldDisplay}円です")
     }
 }

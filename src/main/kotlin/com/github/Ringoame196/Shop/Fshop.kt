@@ -41,11 +41,11 @@ class Fshop(val plugin: Plugin) {
         additionalNbt(itemFrame, accountKey, aoringoPlayer.playerAccount.getAccountID())
     }
     fun checkInt(value: String): Boolean {
-        try {
+        return try {
             value.toInt()
-            return true
+            true
         } catch (e: NumberFormatException) {
-            return false
+            false
         }
     }
     fun acquisitionPrice(shop: ItemFrame): Int? {
@@ -79,13 +79,14 @@ class Fshop(val plugin: Plugin) {
     }
     fun makeBuyGUI(goods: ItemStack, shop: ItemFrame): Inventory {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
-        val price = acquisitionPrice(shop)
+        val price = acquisitionPrice(shop) ?: 0
+        val priceNotation = MoneyUseCase().formalCurrency(price)
         val itemManager = ItemManager()
         val lore = acquisitionLore(shop)
         gui.setItem(0, itemManager.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
         gui.setItem(2, loreItem(lore))
         gui.setItem(3, goods)
-        gui.setItem(4, itemManager.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
+        gui.setItem(4, itemManager.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${priceNotation}円"))
         return gui
     }
     private fun loreItem(lore: String): ItemStack {

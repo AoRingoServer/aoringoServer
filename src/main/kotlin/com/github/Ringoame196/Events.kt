@@ -233,7 +233,7 @@ class Events(private val plugin: Plugin) : Listener {
         val block = entity.location.clone().add(0.0, -1.0, 0.0).block
         if (name == "@Fshop") {
             val fshop = Fshop(plugin)
-            player.sendMessage(itemFrame.uniqueId)
+            PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }.lastTouchShop = itemFrame
             if (item.type == Material.AIR && fshop.isOwner(player, entity)) {
                 player.sendMessage("${ChatColor.GREEN}販売開始")
             } else {

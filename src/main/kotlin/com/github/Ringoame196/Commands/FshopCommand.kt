@@ -1,14 +1,14 @@
 package com.github.Ringoame196.Commands
 
 import com.github.Ringoame196.Entity.AoringoPlayer
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Shop.Fshop
 import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
-import org.bukkit.entity.EntityType
-import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
 
@@ -18,12 +18,11 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
         if (sender !is Player) { return true }
         val fshop = Fshop(plugin)
         val aoringoPlayer = AoringoPlayer(sender)
-        val shop = aoringoPlayer.getEntityInSight(15)
-        if (shop?.type != EntityType.ITEM_FRAME || shop.customName != ("@Fshop")) {
-            aoringoPlayer.sendErrorMessage("ショップの樽に目線を合わせ、近づいてください")
+        val shop = PluginData.DataManager.playerDataMap.getOrPut(aoringoPlayer.player.uniqueId) { AoringoPlayer.PlayerData() }.lastTouchShop
+        if (shop == null) {
+            aoringoPlayer.sendErrorMessage("変更したいショップを開いてください")
             return true
         }
-        shop as ItemFrame
         val subCommand = args[1]
         val processingMap = mapOf(
             "lore" to {
@@ -51,6 +50,7 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
             return true
         }
         processingMap[subCommand]?.invoke() ?: return false
+        aoringoPlayer.player.playSound(aoringoPlayer.player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
         return true
     }
 

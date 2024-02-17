@@ -26,10 +26,10 @@ import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
 import org.bukkit.entity.Entity
+import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
-import org.bukkit.util.BlockIterator
 
 class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(player)
@@ -38,7 +38,8 @@ class AoringoPlayer(val player: Player) {
     val luckPerms = LuckPerms(this)
     data class PlayerData(
         var titleMoneyBossbar: BossBar? = null,
-        var chatSettingItem: String? = null
+        var chatSettingItem: String? = null,
+        var lastTouchShop: ItemFrame? = null
     )
     fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()
@@ -229,18 +230,5 @@ class AoringoPlayer(val player: Player) {
     }
     fun isFirstTimePlayer(participatedTags: String): Boolean {
         return player.scoreboardTags.contains(participatedTags)
-    }
-    fun getEntityInSight(maxDistance: Int): Entity? {
-        val iterator = BlockIterator(player, maxDistance)
-        while (iterator.hasNext()) {
-            val block = iterator.next()
-            val entities = block.chunk.entities
-            for (entity in entities) {
-                if (entity.location.distance(player.eyeLocation) < 2.0) { // 視線の先にあるエンティティの最大距離
-                    return entity
-                }
-            }
-        }
-        return null
     }
 }

@@ -33,7 +33,7 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
             player?.sendMessage("${ChatColor.YELLOW}[青リンゴサーバー] ymlファイルを再読込しました")
         },
         "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) },
-        "bookAuthorChange" to { bookAuthorChange(player) }
+        "bookAuthorChange" to { bookAuthorChange(player) },
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
