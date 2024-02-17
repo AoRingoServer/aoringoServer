@@ -243,8 +243,6 @@ class Events(private val plugin: Plugin) : Listener {
                     return
                 }
                 player.openInventory(fshop.makeBuyGUI(item, entity))
-                val lore = fshop.acquisitionLore(itemFrame)
-                player.sendMessage("${ChatColor.GREEN}[商品説明] $lore")
             }
         } else if (name == "まな板") {
             val choppingBoard = ChoppingBoard()

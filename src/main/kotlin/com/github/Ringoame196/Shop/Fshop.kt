@@ -23,9 +23,9 @@ import org.bukkit.plugin.Plugin
 class Fshop(val plugin: Plugin) {
     private val moneyUseCase = MoneyUseCase()
     private val worldguard = WorldGuard()
-    private val priceKey = NamespacedKey(plugin, "price")
-    private val accountKey = NamespacedKey(plugin, "account")
-    private val loreKey = NamespacedKey(plugin, "lore")
+    val priceKey = NamespacedKey(plugin, "price")
+    val accountKey = NamespacedKey(plugin, "account")
+    val loreKey = NamespacedKey(plugin, "lore")
     fun make(sign: Sign, player: Player) {
         val aoringoPlayer = AoringoPlayer(player)
         val downBlock = sign.block.location.clone().add(0.0, -1.0, 0.0).block
@@ -33,8 +33,20 @@ class Fshop(val plugin: Plugin) {
         val itemFrame = sign.world.spawn(sign.location, org.bukkit.entity.ItemFrame::class.java)
         itemFrame.customName = "@Fshop"
         val price = sign.getLine(1)
+        if (!checkInt(price)) {
+            aoringoPlayer.sendErrorMessage("値段が不正です")
+            return
+        }
         additionalNbt(itemFrame, priceKey, price)
         additionalNbt(itemFrame, accountKey, aoringoPlayer.playerAccount.getAccountID())
+    }
+    fun checkInt(value: String): Boolean {
+        try {
+            value.toInt()
+            return true
+        } catch (e: NumberFormatException) {
+            return false
+        }
     }
     fun acquisitionPrice(shop: ItemFrame): Int? {
         val price = acquisitionNbt(shop, priceKey)
@@ -50,7 +62,7 @@ class Fshop(val plugin: Plugin) {
     fun acquisitionLore(shop: ItemFrame): String {
         return acquisitionNbt(shop, loreKey) ?: "未設定"
     }
-    private fun additionalNbt(shop: ItemFrame, key: NamespacedKey, value: String) {
+    fun additionalNbt(shop: ItemFrame, key: NamespacedKey, value: String) {
         val persistentDataContainer = persistentDataContainer(shop)
         persistentDataContainer.set(key, PersistentDataType.STRING, value)
     }
@@ -69,10 +81,20 @@ class Fshop(val plugin: Plugin) {
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}Fショップ")
         val price = acquisitionPrice(shop)
         val itemManager = ItemManager()
+        val lore = acquisitionLore(shop)
         gui.setItem(0, itemManager.make(Material.COMPASS, "ショップ", shop.uniqueId.toString()))
+        gui.setItem(1, loreItem(lore))
         gui.setItem(3, goods)
         gui.setItem(4, itemManager.make(Material.EMERALD_BLOCK, "${ChatColor.GREEN}購入", "${price}円"))
         return gui
+    }
+    private fun loreItem(lore: String): ItemStack {
+        val sign = ItemStack(Material.OAK_SIGN)
+        val meta = sign.itemMeta
+        meta?.setDisplayName("${ChatColor.GREEN}アイテム説明")
+        meta?.lore = lore.split(" ")
+        sign.setItemMeta(meta)
+        return sign
     }
     fun buy(aoringoPlayer: AoringoPlayer, item: ItemStack, shop: ItemFrame) {
         val sender = aoringoPlayer.player

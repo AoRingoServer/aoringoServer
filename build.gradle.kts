@@ -59,7 +59,7 @@ configure<BukkitPluginDescription> {
         }
         register("fshop") {
             description = "ショップ管理のコマンド"
-            usage = "/fshop [入力1] [入力2]"
+            usage = "/fshop set [lore,price] [入力]"
         }
     }
         permissions{
