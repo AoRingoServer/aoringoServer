@@ -1,9 +1,10 @@
 package com.github.Ringoame196.Commands
 
+import com.github.Ringoame196.Accounts.PlayerAccount
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.Shop.Fshop
-import org.bukkit.ChatColor
+import org.bukkit.Bukkit
 import org.bukkit.Sound
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -32,7 +33,7 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
                 }
                 val key = fshop.loreKey
                 fshop.additionalNbt(shop, key, lore)
-                aoringoPlayer.player.sendMessage("${ChatColor.YELLOW}[ショップ] 説明を設定しました")
+                fshop.sendShopMessage(aoringoPlayer.player, "説明を設定しました")
             },
             "price" to {
                 val key = fshop.priceKey
@@ -41,7 +42,19 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
                     aoringoPlayer.sendErrorMessage("数字を入力してください")
                 } else {
                     fshop.additionalNbt(shop, key, price)
-                    aoringoPlayer.player.sendMessage("${ChatColor.YELLOW}[ショップ] 値段を変更しました")
+                    fshop.sendShopMessage(aoringoPlayer.player, "値段を変更しました")
+                }
+            },
+            "account" to {
+                val entry = args[2]
+                val accountPlayer = Bukkit.getPlayer(entry)
+                if (accountPlayer == null) {
+                    aoringoPlayer.sendErrorMessage("プレイヤー名が取得できませんでした")
+                } else {
+                    val account = PlayerAccount(accountPlayer)
+                    val key = fshop.accountKey
+                    fshop.additionalNbt(shop, key, account.getAccountID())
+                    fshop.sendShopMessage(aoringoPlayer.player, "送金先口座を変更しました")
                 }
             }
         )
@@ -57,7 +70,7 @@ class FshopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
         return when (args.size) {
             1 -> mutableListOf("set")
-            2 -> mutableListOf("lore", "price")
+            2 -> mutableListOf("lore", "price", "account")
             else -> mutableListOf()
         }
     }

@@ -132,4 +132,7 @@ class Fshop(val plugin: Plugin) {
             return
         }
     }
+    fun sendShopMessage(player: Player, message: String) {
+        player.sendMessage("${ChatColor.YELLOW}[ショップ]$message")
+    }
 }

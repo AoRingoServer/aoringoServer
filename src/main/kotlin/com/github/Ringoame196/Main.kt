@@ -44,10 +44,15 @@ class Main : JavaPlugin() {
 
         Yml().callData(this)
 
-        for (player in Bukkit.getOnlinePlayers()) {
-            val aoringoPlayer = AoringoPlayer(player)
-            aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(
+            this,
+            Runnable {
+                for (player in Bukkit.getOnlinePlayers()) {
+                    val aoringoPlayer = AoringoPlayer(player)
+                    aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
+                }
+            }
+        )
     }
 
     override fun onDisable() {
