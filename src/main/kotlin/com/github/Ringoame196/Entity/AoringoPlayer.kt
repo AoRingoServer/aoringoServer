@@ -30,6 +30,7 @@ import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
 import org.bukkit.plugin.Plugin
+import java.io.File
 
 class AoringoPlayer(val player: Player) {
     val playerAccount = PlayerAccount(player)
@@ -121,9 +122,21 @@ class AoringoPlayer(val player: Player) {
         changePermission("worldguard.region.claim", protectiveAuthority, plugin)
         changePermission("worldedit.selection.*", protectiveAuthority, plugin)
     }
-    fun fastJoin() {
+    fun fastJoin(plugin: Plugin) {
         player.scoreboardTags.add("member")
         Scoreboard().set("money", player.uniqueId.toString(), 30000)
+        makePlayerDataFile(plugin)
+    }
+    private fun makePlayerDataFile(plugin: Plugin) {
+        val templateFile = plugin.getResource("PlayerData.yml") ?: return
+        val newDataFile = File("${plugin.dataFolder}/playerData/", "${player.uniqueId}.yml")
+
+        // テンプレートファイルの内容を新しいファイルにコピーする
+        templateFile.use { input ->
+            newDataFile.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
     }
     fun putItemInPost(post: Barrel) {
         val playerItem = player.inventory.itemInMainHand.clone()

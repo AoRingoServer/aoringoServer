@@ -86,7 +86,7 @@ class Events(private val plugin: Plugin) : Listener {
         val participatedTags = "member"
         if (!aoringoPlayer.isFirstTimePlayer(participatedTags)) {
             e.joinMessage = "${ChatColor.YELLOW}${player.name}さんが初めてサーバーに参加しました"
-            aoringoPlayer.fastJoin()
+            aoringoPlayer.fastJoin(plugin)
         }
         aoringoPlayer.setPlayer(plugin)
     }
