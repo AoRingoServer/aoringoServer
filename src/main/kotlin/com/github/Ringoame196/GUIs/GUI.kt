@@ -6,6 +6,6 @@ import org.bukkit.inventory.ItemStack
 
 interface GUI {
     val guiName: String
-    fun createGUI(player: Player): Inventory?
-    fun clickItem(player: Player, item: ItemStack)
+    fun createGUI(player: Player): Inventory
+    fun whenClickedItem(player: Player, item: ItemStack)
 }

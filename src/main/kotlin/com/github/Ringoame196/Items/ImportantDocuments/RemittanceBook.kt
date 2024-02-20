@@ -9,7 +9,7 @@ import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 
-class RemittanceBook() : ImportantDocument {
+class RemittanceBook : ImportantDocument {
     override fun write(player: Player, subCommand: Array<out String>) {
         val playerItem = player.inventory.itemInMainHand
         val writtenBook = WrittenBook(playerItem)

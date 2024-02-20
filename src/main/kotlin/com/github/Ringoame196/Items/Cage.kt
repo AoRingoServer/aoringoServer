@@ -15,7 +15,6 @@ import org.bukkit.plugin.Plugin
 class Cage : ClosingGUI {
     override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         val lore = mutableListOf<String>()
-
         for (item in gui.topInventory) {
             item ?: continue
             val meta = item.itemMeta
@@ -33,7 +32,7 @@ class Cage : ClosingGUI {
         val cage = player.inventory.itemInMainHand
         val meta = cage.itemMeta
         val airStatus = 0
-        val thingsStatus = 1
+        val thingsStatus = 2
         val status = lore.size == 0
         meta?.lore = lore
         if (status) {

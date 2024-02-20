@@ -16,7 +16,7 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.meta.BookMeta
 import org.bukkit.plugin.Plugin
 
-class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
+class AoringoopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
     private var player: Player? = null
     private val subCommand = mapOf(
         "updateResourcePack" to { ResourcePack(plugin).update() },
@@ -34,6 +34,7 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
         },
         "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) },
         "bookAuthorChange" to { bookAuthorChange(player) },
+        "updateYml" to {  }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
@@ -53,5 +54,8 @@ class AoringoopCommand(plugin: Plugin) : CommandExecutor, TabExecutor {
         meta.author = Admin().writeBookAuthor
         book.setItemMeta(meta)
         player.sendMessage("${ChatColor.GREEN}著者を運営に変更しました")
+    }
+    private fun updateYml(){
+
     }
 }

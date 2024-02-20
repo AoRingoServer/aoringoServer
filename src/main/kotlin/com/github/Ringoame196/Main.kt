@@ -7,6 +7,7 @@ import com.github.Ringoame196.Commands.WriteCommand
 import com.github.Ringoame196.Entity.AoringoPlayer
 import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
+import java.io.File
 
 class Main : JavaPlugin() {
     override fun onEnable() {
@@ -35,10 +36,13 @@ class Main : JavaPlugin() {
         scoreboard.make("playerRating", "playerRating")
 
         saveDefaultConfig()
-        saveResource("World.yml", true)
-        saveResource("FoodData.yml", true)
-        saveResource("Application.yml", true)
-        saveResource("DropItem.yml", true)
+        val resourcesFileNames = mutableListOf("World.yml","FoodData.yml","Application.yml","DropItem.yml")
+        for (fileName in resourcesFileNames){
+            val path = "${this.dataFolder.path}/$fileName"
+            val file = File(path)
+            if (file.exists()) { continue }
+            saveResource(fileName,false)
+        }
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
 

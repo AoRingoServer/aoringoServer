@@ -8,11 +8,14 @@ import java.io.IOException
 class Yml {
     fun makePluginFolder(plugin: Plugin) {
         val dataFolder = plugin.dataFolder
+        if (dataFolder.exists()) { return }
         dataFolder.mkdirs()
     }
     fun makePlayerDataFolder(plugin: Plugin) {
         val path = plugin.dataFolder.path + "/playerData"
-        File(path).mkdirs()
+        val file = File(path)
+        if (file.exists()) { return }
+        file.mkdirs()
     }
     fun addToList(plugin: Plugin, path: String, fileName: String, key: String, item: String) {
         val playerDataFolder = File(plugin.dataFolder, path)
