@@ -1,7 +1,7 @@
 package com.github.Ringoame196.ActivityBlocks
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.GUIs.closingGUI
+import com.github.Ringoame196.GUIs.ClosingGUI
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.GameMode
@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack
 import org.bukkit.inventory.meta.EnchantmentStorageMeta
 import org.bukkit.plugin.Plugin
 
-class Anvil : closingGUI, ActivityBlock {
+class Anvil : ClosingGUI, ActivityBlock {
     override fun close(gui: InventoryView, player: Player, plugin: Plugin) {
         returnItemFromPlayer(gui, player)
     }

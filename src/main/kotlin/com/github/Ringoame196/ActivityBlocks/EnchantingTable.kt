@@ -1,7 +1,7 @@
 package com.github.Ringoame196.ActivityBlocks
 
 import com.github.Ringoame196.Entity.AoringoPlayer
-import com.github.Ringoame196.GUIs.closingGUI
+import com.github.Ringoame196.GUIs.ClosingGUI
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -16,7 +16,7 @@ import org.bukkit.plugin.Plugin
 import org.bukkit.scheduler.BukkitRunnable
 import kotlin.random.Random
 
-class EnchantingTable : closingGUI, ActivityBlock {
+class EnchantingTable : ClosingGUI, ActivityBlock {
     override fun clickBlock(e: PlayerInteractEvent, aoringoPlayer: AoringoPlayer) {
         val guiSize = 9
         val gui = Bukkit.createInventory(null, guiSize, "${ChatColor.RED}エンチャント")
