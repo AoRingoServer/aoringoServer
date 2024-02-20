@@ -3,5 +3,5 @@ apkList:
 job: "無職"
 cookLevel : 0
 MaxHP : 20
-attackPower : 10
+addAttackDamage : 0
 evaluation : 0
