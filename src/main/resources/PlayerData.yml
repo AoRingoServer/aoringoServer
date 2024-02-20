@@ -1,8 +1,7 @@
 apkList:
   - §aテレポート
-job: ""
+job: "無職"
 cookLevel : 0
-enderChestSize : 0
 MaxHP : 20
 attackPower : 10
 evaluation : 0
