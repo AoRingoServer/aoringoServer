@@ -34,7 +34,7 @@ class AoringoopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
         },
         "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) },
         "bookAuthorChange" to { bookAuthorChange(player) },
-        "updateYml" to {  }
+        "updateResources" to { }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
@@ -43,7 +43,10 @@ class AoringoopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
     }
 
     override fun onTabComplete(sender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
-        return subCommand.keys.toMutableList()
+        return when (args.size) {
+            1 -> subCommand.keys.toMutableList()
+            else -> mutableListOf()
+        }
     }
     private fun bookAuthorChange(player: Player?) {
         val book = player?.inventory?.itemInMainHand ?: return
@@ -54,8 +57,5 @@ class AoringoopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
         meta.author = Admin().writeBookAuthor
         book.setItemMeta(meta)
         player.sendMessage("${ChatColor.GREEN}著者を運営に変更しました")
-    }
-    private fun updateYml(){
-
     }
 }

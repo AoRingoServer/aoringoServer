@@ -36,12 +36,11 @@ class Main : JavaPlugin() {
         scoreboard.make("playerRating", "playerRating")
 
         saveDefaultConfig()
-        val resourcesFileNames = mutableListOf("World.yml","FoodData.yml","Application.yml","DropItem.yml")
-        for (fileName in resourcesFileNames){
+        for (fileName in ResourcesManager().resourcesFileNames) {
             val path = "${this.dataFolder.path}/$fileName"
             val file = File(path)
             if (file.exists()) { continue }
-            saveResource(fileName,false)
+            saveResource(fileName, false)
         }
         Config(PluginData.DataManager, config).getDatabaseinfo()
         Config(PluginData.DataManager, config).getDiscordWebhook()
