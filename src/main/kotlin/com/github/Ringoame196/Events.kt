@@ -362,12 +362,12 @@ class Events(private val plugin: Plugin) : Listener {
         val guiName = gui.title
         val upDateResourcesGUI = UpDateResourcesGUI(plugin)
         val guiMap = mapOf(
-            upDateResourcesGUI.guiName to upDateResourcesGUI.whenClickedItem(player, item)
+            upDateResourcesGUI.guiName to upDateResourcesGUI
         )
-        if (guiMap.contains(guiName)) {
+        if (guiMap.keys.contains(guiName)) {
             e.isCancelled = true
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-            guiMap[guiName]
+            guiMap[guiName]?.whenClickedItem(player, item)
         }
         when (gui.title) { // インスタンスできるかも？
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)
