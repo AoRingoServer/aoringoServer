@@ -8,7 +8,6 @@ import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
-import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
@@ -38,7 +37,6 @@ class AoringoPlayer(val player: Player) {
     val jobManager = JobManager()
     val luckPerms = LuckPerms(this)
     data class PlayerData(
-        var titleMoneyBossbar: BossBar? = null,
         var chatSettingItem: String? = null,
         var lastTouchShop: ItemFrame? = null
     )
@@ -53,7 +51,6 @@ class AoringoPlayer(val player: Player) {
             teleporterWorld("world")
         }
         changePermission("enderchest.size.${scoreboardClass.getValue("haveEnderChest", player.uniqueId.toString()) + 1}", true, plugin)
-        moneyUseCase.displayMoney(this)
         if (player.isOp) {
             setOperatorName()
         }
@@ -169,7 +166,6 @@ class AoringoPlayer(val player: Player) {
     fun createBossbar(title: String): BossBar {
         val bossbar = Bukkit.createBossBar(title, BarColor.BLUE, BarStyle.SOLID)
         bossbar.addPlayer(player)
-        PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { PlayerData() }.titleMoneyBossbar = bossbar
         return bossbar
     }
     fun makeLandPurchase(sign: Sign) {

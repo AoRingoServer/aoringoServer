@@ -24,7 +24,6 @@ class MoneyCommand : CommandExecutor, TabCompleter {
         val size = args.size
         if (args.isEmpty()) {
             mePossessionGoldDisplay(aoringoPlayer)
-            moneyUseCase.displayMoney(aoringoPlayer)
             return true
         }
         if (size == 1) { return false }

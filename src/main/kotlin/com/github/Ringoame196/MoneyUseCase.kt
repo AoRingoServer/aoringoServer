@@ -1,14 +1,12 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Accounts.Account
-import com.github.Ringoame196.Accounts.PlayerAccount
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.Items.ItemManager
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
-import java.util.UUID
 
 class MoneyUseCase {
 
@@ -27,7 +25,6 @@ class MoneyUseCase {
     fun addMoney(aoringoPlayer: AoringoPlayer, amount: Int) {
         moneyManager.addMoney(aoringoPlayer.playerAccount, amount)
         aoringoPlayer.sendActionBar("${ChatColor.GREEN}+$amount")
-        displayMoney(aoringoPlayer)
     }
     fun reduceMoney(aoringoPlayer: AoringoPlayer, amount: Int) {
         if (moneyManager.reduceMoney(aoringoPlayer.playerAccount, amount)) {
@@ -35,20 +32,6 @@ class MoneyUseCase {
         } else {
             aoringoPlayer.sendErrorMessage("所持金が足りません")
         }
-        displayMoney(aoringoPlayer)
-    }
-    fun displayMoney(aoringoPlayer: AoringoPlayer) {
-        val playerUUID = UUID.fromString(aoringoPlayer.playerAccount.getAccountID())
-        var bossbar = PluginData.DataManager.playerDataMap.getOrPut(playerUUID) { AoringoPlayer.PlayerData() }.titleMoneyBossbar
-        if (bossbar == null) {
-            bossbar = aoringoPlayer.createBossbar(bossbarTitle(aoringoPlayer.playerAccount))
-        } else {
-            bossbar.setTitle(bossbarTitle(aoringoPlayer.playerAccount))
-        }
-        bossbar.addPlayer(aoringoPlayer.player)
-    }
-    private fun bossbarTitle(targetAccount: PlayerAccount): String {
-        return "${ChatColor.GOLD}所持金${formalCurrency(moneyManager.getMoney(targetAccount))}円"
     }
     fun formalCurrency(money: Int): String {
         return money.toString().replace(Regex("(\\d)(?=(\\d{3})+(?!\\d))"), "$1,")

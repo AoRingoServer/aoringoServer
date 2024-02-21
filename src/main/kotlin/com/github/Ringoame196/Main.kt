@@ -4,8 +4,6 @@ import com.github.Ringoame196.Commands.AoringoopCommand
 import com.github.Ringoame196.Commands.FshopCommand
 import com.github.Ringoame196.Commands.MoneyCommand
 import com.github.Ringoame196.Commands.WriteCommand
-import com.github.Ringoame196.Entity.AoringoPlayer
-import org.bukkit.Bukkit
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -46,19 +44,9 @@ class Main : JavaPlugin() {
         Config(PluginData.DataManager, config).getDiscordWebhook()
 
         Yml().callData(this)
-
-        for (player in Bukkit.getOnlinePlayers()) {
-            val aoringoPlayer = AoringoPlayer(player)
-            aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
-        }
     }
 
     override fun onDisable() {
-        for (player in Bukkit.getOnlinePlayers()) {
-            val playerData = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }
-            val bossbar = playerData.titleMoneyBossbar ?: continue
-            bossbar.removeAll()
-        }
         super.onDisable()
     }
 }

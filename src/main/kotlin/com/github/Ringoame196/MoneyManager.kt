@@ -1,9 +1,6 @@
 package com.github.Ringoame196
 
 import com.github.Ringoame196.Accounts.Account
-import com.github.Ringoame196.Accounts.PlayerAccount
-import com.github.Ringoame196.Entity.AoringoPlayer
-import org.bukkit.entity.Player
 
 class MoneyManager {
     fun getMoney(targetAccount: Account): Int {
@@ -23,15 +20,6 @@ class MoneyManager {
     fun setMoney(targetAccount: Account, money: Int) {
         val accountID = targetAccount.getAccountID()
         Scoreboard().set("money", accountID, money)
-        if (targetAccount is PlayerAccount) {
-            updateDisplay(targetAccount)
-        }
-    }
-    private fun updateDisplay(account: PlayerAccount) {
-        val player = account.player
-        if (player !is Player) { return }
-        val aoringoPlayer = AoringoPlayer(player)
-        aoringoPlayer.moneyUseCase.displayMoney(aoringoPlayer)
     }
 
     fun addMoney(targetAccount: Account, amount: Int) {
