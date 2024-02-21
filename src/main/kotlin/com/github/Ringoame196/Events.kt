@@ -10,6 +10,7 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.GUIs.ClosingGUI
+import com.github.Ringoame196.GUIs.UpDateResourcesGUI
 import com.github.Ringoame196.Items.Cookware.Bowl
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
@@ -357,6 +358,16 @@ class Events(private val plugin: Plugin) : Listener {
             }
             e.isCancelled = true
             return
+        }
+        val guiName = gui.title
+        val upDateResourcesGUI = UpDateResourcesGUI(plugin)
+        val guiMap = mapOf(
+            upDateResourcesGUI.guiName to upDateResourcesGUI.whenClickedItem(player, item)
+        )
+        if (guiMap.contains(guiName)) {
+            e.isCancelled = true
+            player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
+            guiMap[guiName]
         }
         when (gui.title) { // インスタンスできるかも？
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)
