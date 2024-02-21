@@ -1,6 +1,7 @@
 package com.github.Ringoame196.Commands
 
 import com.github.Ringoame196.Admin
+import com.github.Ringoame196.GUIs.UpDateResourcesGUI
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Shop.ShopLand
 import com.github.Ringoame196.Worlds.HardcoreWorld
@@ -34,7 +35,10 @@ class AoringoopCommand(val plugin: Plugin) : CommandExecutor, TabExecutor {
         },
         "resetHardcore" to { HardcoreWorld().resetHardCoreWorld(plugin) },
         "bookAuthorChange" to { bookAuthorChange(player) },
-        "updateResources" to { }
+        "updateResources" to {
+            val gui = UpDateResourcesGUI(plugin).createGUI(player)
+            player?.openInventory(gui)
+        }
     )
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         player = sender as Player
