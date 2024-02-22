@@ -351,6 +351,7 @@ class Events(private val plugin: Plugin) : Listener {
         val item = e.currentItem ?: return
         val itemName = item.itemMeta?.displayName
         val title = gui.title
+        val shift = e.isShiftClick
         val playerOpenInventory = player.openInventory.topInventory
         if (playerOpenInventory != e.clickedInventory && playerOpenInventory.type == InventoryType.WORKBENCH) {
             if (!item.hasItemMeta()) {
@@ -367,7 +368,7 @@ class Events(private val plugin: Plugin) : Listener {
         if (guiMap.keys.contains(guiName)) {
             e.isCancelled = true
             player.playSound(player, Sound.UI_BUTTON_CLICK, 1f, 1f)
-            guiMap[guiName]?.whenClickedItem(player, item)
+            guiMap[guiName]?.whenClickedItem(player, item, shift)
         }
         when (gui.title) { // インスタンスできるかも？
             "${ChatColor.YELLOW}カスタム金床" -> Anvil().click(player, item, e)

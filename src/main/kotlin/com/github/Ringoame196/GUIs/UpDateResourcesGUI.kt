@@ -13,7 +13,7 @@ class UpDateResourcesGUI(val plugin: Plugin) : GUI {
         return ResourcesManager().makeSelectFileGUI(guiName)
     }
 
-    override fun whenClickedItem(player: Player, item: ItemStack) {
+    override fun whenClickedItem(player: Player, item: ItemStack,shift:Boolean) {
         ResourcesManager().update(plugin, item.itemMeta?.displayName ?: "", player)
     }
 }
