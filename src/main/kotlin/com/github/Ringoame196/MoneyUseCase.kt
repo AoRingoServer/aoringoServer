@@ -59,4 +59,13 @@ class MoneyUseCase {
         aoringoPlayer.moneyUseCase.addMoney(aoringoPlayer, totalAmount)
         player.inventory.setItemInMainHand(ItemStack(Material.AIR))
     }
+    fun convertingInt(price: String, chatColor: String = ""): Int {
+        val colorPullOut = price.replace(chatColor, "")
+        val yenPullOut = colorPullOut.replace("円", "")
+        return try {
+            yenPullOut.toInt()
+        } catch (e: NumberFormatException) {
+            0
+        }
+    }
 }

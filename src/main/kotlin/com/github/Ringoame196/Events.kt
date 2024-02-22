@@ -10,7 +10,10 @@ import com.github.Ringoame196.Entity.ArmorStand
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
 import com.github.Ringoame196.GUIs.ClosingGUI
+import com.github.Ringoame196.GUIs.LandProtectiveGUI
+import com.github.Ringoame196.GUIs.SmartphoneGUI
 import com.github.Ringoame196.GUIs.UpDateResourcesGUI
+import com.github.Ringoame196.GUIs.WGGUI
 import com.github.Ringoame196.Items.Cookware.Bowl
 import com.github.Ringoame196.Items.Cookware.ChoppingBoard
 import com.github.Ringoame196.Items.Cookware.FryBatter
@@ -25,7 +28,6 @@ import com.github.Ringoame196.Smartphone.APKs.ItemProtectionApplication
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
 import com.github.Ringoame196.Smartphones.Applications.PlayerRatingApplication
 import com.github.Ringoame196.Smartphones.Applications.SortApplication
-import com.github.Ringoame196.Smartphones.Smartphone
 import com.github.Ringoame196.Worlds.HardcoreWorld
 import com.github.Ringoame196.Worlds.WorldManager
 import org.bukkit.Bukkit
@@ -161,6 +163,11 @@ class Events(private val plugin: Plugin) : Listener {
             player.sendMessage(importantDocumentMessage[itemName])
             return
         }
+        val itemMapToPutGUI = mapOf(
+            "${ChatColor.YELLOW}スマートフォン" to SmartphoneGUI(plugin)
+        )
+        val gui = itemMapToPutGUI[itemName]?.createGUI(player)
+        gui?.let { player.openInventory(it) }
         when (itemName) {
             "職業スター" -> player.openInventory(JobManager().makeSelectGUI())
             "まな板" -> {
@@ -182,7 +189,6 @@ class Events(private val plugin: Plugin) : Listener {
                 player.openInventory(Cage().createGUi(playerItem))
                 player.playSound(player, Sound.BLOCK_CHEST_OPEN, 1f, 1f)
             }
-            "${ChatColor.YELLOW}スマートフォン" -> player.openInventory(Smartphone().createGUI(plugin, player))
             "${ChatColor.RED}リンゴスクラッチ", "${ChatColor.YELLOW}金リンゴスクラッチ" -> {
                 ItemManager().reduceMainItem(player)
                 player.openInventory(Scratch().createGUI(itemName))
@@ -362,8 +368,14 @@ class Events(private val plugin: Plugin) : Listener {
         }
         val guiName = gui.title
         val upDateResourcesGUI = UpDateResourcesGUI(plugin)
+        val smartphoneGUI = SmartphoneGUI(plugin)
+        val wgGUI = WGGUI()
+        val landProtectiveGUi = LandProtectiveGUI()
         val guiMap = mapOf(
-            upDateResourcesGUI.guiName to upDateResourcesGUI
+            upDateResourcesGUI.guiName to upDateResourcesGUI,
+            smartphoneGUI.guiName to smartphoneGUI,
+            wgGUI.guiName to wgGUI,
+            landProtectiveGUi.guiName to landProtectiveGUi
         )
         if (guiMap.keys.contains(guiName)) {
             e.isCancelled = true
@@ -419,10 +431,6 @@ class Events(private val plugin: Plugin) : Listener {
                     fshop.buy(aoringoPlayer, gui.getItem(goodsSlot) ?: return, shop)
                 }
             }
-            "${ChatColor.BLUE}スマートフォン" -> {
-                e.isCancelled = true
-                Smartphone().startUpAKS(player, item, plugin, e.isShiftClick)
-            }
 
             "${ChatColor.GREEN}資源テレポート" -> {
                 e.isCancelled = true
@@ -447,11 +455,6 @@ class Events(private val plugin: Plugin) : Listener {
                 if (item.type == Material.STONE_BUTTON) {
                     playerRatingApplication.void(gui.getItem(2) ?: return, item.itemMeta?.displayName ?: return, player)
                 }
-            }
-
-            "${ChatColor.YELLOW}WorldGuardGUI" -> {
-                e.isCancelled = true
-                Smartphone().wgClick(item ?: return, plugin, player, e.isShiftClick)
             }
 
             "${ChatColor.BLUE}スマートフォン(並び替え)" -> {
@@ -485,9 +488,6 @@ class Events(private val plugin: Plugin) : Listener {
             WorldGuard().reduceMember(name, item.itemMeta?.displayName ?: return, player.world)
             player.playSound(player, Sound.BLOCK_ANVIL_USE, 1f, 1f)
             player.closeInventory()
-        } else if (title.contains("${ChatColor.BLUE}保護設定") && itemName == "${ChatColor.GREEN}作成") {
-            e.isCancelled = true
-            Smartphone().protection(player, item, title.replace("${ChatColor.BLUE}保護設定(", "").replace(")", ""))
         } else if (title == "${ChatColor.RED}リンゴスクラッチ" && e.clickedInventory != player.inventory) {
             e.isCancelled = true
             if (item.itemMeta?.displayName != "${ChatColor.RED}削る") { return }
@@ -790,7 +790,7 @@ class Events(private val plugin: Plugin) : Listener {
         val aoringoPlayer = AoringoPlayer(player)
         val playerData = PluginData.DataManager.playerDataMap.getOrPut(player.uniqueId) { AoringoPlayer.PlayerData() }
         val chatSetting = mapOf(
-            "rg" to { aoringoPlayer.namingConservationLand(plugin, message) },
+            "rg" to { aoringoPlayer.namingConservationLand(plugin, message, aoringoPlayer) },
             "playerVoid" to { PlayerRatingApplication().voidGUI(plugin, player, message) }
         )
         if (chatSetting.contains(playerData.chatSettingItem)) {

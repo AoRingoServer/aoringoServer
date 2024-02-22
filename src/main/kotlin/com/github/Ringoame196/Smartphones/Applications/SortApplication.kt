@@ -3,7 +3,6 @@ package com.github.Ringoame196.Smartphones.Applications
 import com.github.Ringoame196.ApplicationManager
 import com.github.Ringoame196.GUIs.ClosingGUI
 import com.github.Ringoame196.Items.ItemManager
-import com.github.Ringoame196.Smartphones.Smartphone
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
@@ -19,10 +18,10 @@ class SortApplication : Application, ClosingGUI {
         val applicationManager = ApplicationManager()
         val gui = Bukkit.createInventory(null, 18, "${ChatColor.BLUE}スマートフォン(並び替え)")
         player.openInventory(gui)
-        val apkList = applicationManager.get(plugin, player) ?: return
-        for (apkName in apkList) {
-            val apkLIst = Smartphone().apkList
-            val customModelData = apkLIst[apkName]?.getCustomModelData() ?: 0
+        val playerHaveApplication = applicationManager.get(plugin, player) ?: return
+        val apkLists = ApplicationManager().apkList
+        for (apkName in playerHaveApplication) {
+            val customModelData = apkLists[apkName]?.getCustomModelData() ?: 0
             gui.addItem(ItemManager().make(Material.GREEN_CONCRETE, "[アプリケーション]$apkName", customModelData = customModelData))
         }
     }

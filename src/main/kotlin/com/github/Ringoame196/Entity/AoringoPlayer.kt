@@ -5,13 +5,14 @@ import com.github.Ringoame196.EnderChest
 import com.github.Ringoame196.ExternalPlugins.LuckPerms
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Foods.FoodManager
+import com.github.Ringoame196.GUIs.LandProtectiveGUI
 import com.github.Ringoame196.Items.ItemManager
 import com.github.Ringoame196.Job.JobManager
 import com.github.Ringoame196.MoneyUseCase
+import com.github.Ringoame196.PluginData
 import com.github.Ringoame196.ResourcePack
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Smartphone.APKs.LandPurchase
-import com.github.Ringoame196.Smartphones.Smartphone
 import com.github.Ringoame196.Worlds.WorldManager
 import net.md_5.bungee.api.ChatMessageType
 import net.md_5.bungee.api.chat.TextComponent
@@ -24,7 +25,6 @@ import org.bukkit.block.Sign
 import org.bukkit.boss.BarColor
 import org.bukkit.boss.BarStyle
 import org.bukkit.boss.BossBar
-import org.bukkit.entity.Entity
 import org.bukkit.entity.ItemFrame
 import org.bukkit.entity.Mob
 import org.bukkit.entity.Player
@@ -38,7 +38,8 @@ class AoringoPlayer(val player: Player) {
     val luckPerms = LuckPerms(this)
     data class PlayerData(
         var chatSettingItem: String? = null,
-        var lastTouchShop: ItemFrame? = null
+        var lastTouchShop: ItemFrame? = null,
+        var entry: String? = null
     )
     fun setPlayer(plugin: Plugin) {
         val scoreboardClass = Scoreboard()
@@ -173,23 +174,23 @@ class AoringoPlayer(val player: Player) {
         sign.setLine(1, "${ChatColor.GREEN}${sign.getLine(1)}円")
         sign.update()
     }
-    fun makeConservationLand(name: String) {
-        val price = LandPurchase().calculatePrice(player)
-        if (price == 0) { return }
+    private fun makeConservationLand(name: String, aoringoPlayer: AoringoPlayer) {
         if (LandPurchase().doesRegionContainProtection(player)) {
             sendErrorMessage("保護範囲が含まれています")
         } else if (WorldGuard().getProtection(player.world, name)) {
             sendErrorMessage("同じ名前の保護を設定することは不可能です")
         } else {
-            player.openInventory(Smartphone().createProtectionGUI(player, name, price))
+            PluginData.DataManager.playerDataMap.getOrPut(aoringoPlayer.player.uniqueId) { AoringoPlayer.PlayerData() }.entry = name
+            val gui = LandProtectiveGUI().createGUI(player)
+            player.openInventory(gui)
         }
     }
-    fun namingConservationLand(plugin: Plugin, name: String) {
+    fun namingConservationLand(plugin: Plugin, name: String, aoringoPlayer: AoringoPlayer) {
         Bukkit.getScheduler().runTask(
             plugin,
             Runnable
             {
-                makeConservationLand(name)
+                makeConservationLand(name, aoringoPlayer)
             }
         )
     }

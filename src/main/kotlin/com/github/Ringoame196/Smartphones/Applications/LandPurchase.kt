@@ -4,6 +4,7 @@ import com.github.Ringoame196.Admin
 import com.github.Ringoame196.Entity.AoringoPlayer
 import com.github.Ringoame196.ExternalPlugins.WorldGuard
 import com.github.Ringoame196.Items.ItemManager
+import com.github.Ringoame196.MoneyUseCase
 import com.github.Ringoame196.Scoreboard
 import com.github.Ringoame196.Yml
 import com.sk89q.worldedit.IncompleteRegionException
@@ -84,19 +85,21 @@ class LandPurchase {
         return item
     }
     fun buyGUI(player: Player, sign: Sign) {
+        val worldGuard = WorldGuard()
         val aoringoPlayer = AoringoPlayer(player)
-        val money = sign.getLine(1).replace("${ChatColor.GREEN}", "").replace("円", "").toInt()
-        val name = WorldGuard().getName(sign.location) ?: return
-        if (WorldGuard().getOwnerOfRegion(sign.location)?.size() != 0) {
-            if (WorldGuard().getOwnerOfRegion(sign.location)?.contains(player.uniqueId) == true) {
-                openOwnerGUI(player, name, money)
+        val signWritten = sign.getLine(1)
+        val price = MoneyUseCase().convertingInt(signWritten, "${ChatColor.GREEN}")
+        val name = worldGuard.getName(sign.location)
+        if (worldGuard.getOwnerOfRegion(sign.location)?.size() != 0) {
+            if (worldGuard.getOwnerOfRegion(sign.location)?.contains(player.uniqueId) == true) {
+                openOwnerGUI(player, name, price)
             } else {
                 aoringoPlayer.sendErrorMessage("この土地は既に買われています")
             }
             return
         }
         val gui = Bukkit.createInventory(null, 9, "${ChatColor.BLUE}$name@土地購入")
-        gui.setItem(4, ItemManager().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${money}円"))
+        gui.setItem(4, ItemManager().make(Material.EMERALD, "${ChatColor.GREEN}購入", "${price}円"))
         player.openInventory(gui)
     }
     fun buy(player: Player, item: ItemStack, guiName: String, plugin: Plugin) {
